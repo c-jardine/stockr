@@ -1,12 +1,13 @@
-import { Button, Icon, IconButton, Stack, Text } from "@chakra-ui/react";
+import { Button, Icon, IconButton, Stack } from "@chakra-ui/react";
 import { FaHistory } from "react-icons/fa";
 import { FaFileImport, FaPlus } from "react-icons/fa6";
+import MaterialsTable from "~/components/MaterialsTable";
 import PageHeader from "~/components/PageHeader";
 import CreateMaterialForm from "../../features/createMaterial/components/CreateMaterialForm";
 
 export default function Materials() {
   return (
-    <Stack spacing={4}>
+    <Stack spacing={4} h="full">
       <PageHeader>
         <PageHeader.Content>
           <PageHeader.Title>Materials</PageHeader.Title>
@@ -35,7 +36,7 @@ export default function Materials() {
           <CreateMaterialForm />
         </PageHeader.Content>
       </PageHeader>
-      <Text>Materials</Text>
+      <MaterialsTable />
     </Stack>
   );
 }

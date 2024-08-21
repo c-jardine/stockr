@@ -14,6 +14,14 @@ export const materialRouter = createTRPCRouter({
       });
     }),
 
+  getAll: protectedProcedure.query(async ({ ctx }) => {
+    const materials = await ctx.db.material.findMany({
+      orderBy: { name: "asc" },
+    });
+
+    return materials ?? null;
+  }),
+
   getLatest: protectedProcedure.query(async ({ ctx }) => {
     const material = await ctx.db.material.findFirst({
       orderBy: { createdAt: "desc" },

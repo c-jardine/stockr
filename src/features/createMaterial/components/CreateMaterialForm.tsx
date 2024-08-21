@@ -43,6 +43,7 @@ export default function CreateMaterialForm() {
     resolver: zodResolver(createMaterialFormSchema),
   });
 
+  const utils = api.useUtils();
   const mutation = api.material.create.useMutation({
     onSuccess: (data) => {
       toast({
@@ -52,6 +53,7 @@ export default function CreateMaterialForm() {
       });
       onClose();
       reset();
+      utils.material.getAll.invalidate();
     },
   });
 
