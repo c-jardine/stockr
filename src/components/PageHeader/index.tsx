@@ -1,20 +1,23 @@
 import {
-  Container,
-  ContainerProps,
+  type ContainerProps,
   Heading,
-  HeadingProps,
+  type HeadingProps,
   HStack,
-  StackProps,
-  useColorModeValue,
+  type StackProps,
 } from "@chakra-ui/react";
 import React from "react";
+import Section from "../Section";
 
 interface PageHeaderContentProps extends StackProps {
   children: React.ReactNode;
 }
 
 function PageHeaderContent({ children, ...props }: PageHeaderContentProps) {
-  return <HStack gap={4} {...props}>{children}</HStack>;
+  return (
+    <HStack gap={4} {...props}>
+      {children}
+    </HStack>
+  );
 }
 
 interface PageHeaderTitleProps extends HeadingProps {
@@ -34,22 +37,7 @@ interface PageHeaderProps extends ContainerProps {
 }
 
 export default function PageHeader({ children, ...props }: PageHeaderProps) {
-  const bgColor = useColorModeValue("white", "zinc.900");
-  const borderColor = useColorModeValue("zinc.200", "zinc.800");
-
-  return (
-    <Container
-      p={4}
-      rounded="2xl"
-      maxW="full"
-      bg={bgColor}
-      border="1px"
-      borderColor={borderColor}
-      {...props}
-    >
-      {children}
-    </Container>
-  );
+  return <Section {...props}>{children}</Section>;
 }
 
 PageHeader.Content = PageHeaderContent;

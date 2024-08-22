@@ -51,7 +51,7 @@ export const StatusCellRenderer: FunctionComponent<
 
   return (
     <Flex alignItems="center" h="full">
-      <Tag fontWeight="light" {...getStyles(node.data?.status)} ico>
+      <Tag fontSize='xs' fontWeight="light" {...getStyles(node.data?.status)} ico>
         <TagLeftIcon as={FaCircle} boxSize={1.5} />
         <TagLabel>{node.data?.status}</TagLabel>
       </Tag>

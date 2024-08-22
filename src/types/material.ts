@@ -10,6 +10,13 @@ export const createMaterialFormSchema = z.object({
   stockUnitType: z.string(),
   minStockLevel: z.string(),
   notes: z.string(),
+  vendor: z.string(),
+  categories: z
+    .object({
+      label: z.string(),
+      value: z.string(),
+    })
+    .array(),
 });
 
 export type CreateMaterialForm = z.infer<typeof createMaterialFormSchema>;

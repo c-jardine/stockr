@@ -1,4 +1,4 @@
-import { Box, Flex } from "@chakra-ui/react";
+import { Flex } from "@chakra-ui/react";
 import { useSession } from "next-auth/react";
 import React from "react";
 import PuffLoader from "react-spinners/PuffLoader";
@@ -8,26 +8,61 @@ import "ag-grid-community/styles/ag-theme-quartz.css"; // Optional Theme applied
 import { AgGridReact } from "ag-grid-react"; // React Data Grid Component
 import { type ColDef } from "node_modules/ag-grid-community/dist/types/core/main";
 
-import { Prisma } from "@prisma/client";
+import useTableAutoSizeStrategy from "~/hooks/useTableAutoSizeStrategy";
+import useTableTheme from "~/hooks/useTableTheme";
+import { type StockStatus } from "~/types/status";
 import { api } from "~/utils/api";
+import { getStockAsText } from "~/utils/stock";
+import { getStockStatus } from "~/utils/stockStatus";
 import { StatusCellRenderer } from "./StatusCellRenderer";
 
-export type StockStatus = "Available" | "Low stock" | "Out of stock" | null;
+import { Poppins } from "next/font/google"; // Override table theme font
+import Section from "../Section";
+const poppins = Poppins({
+  weight: ["400"],
+  subsets: ["latin"],
+  display: "swap",
+});
 
-// const statusFormatter: ValueFormatterFunc = ({ value }) =>
-//   statuses[value as keyof typeof statuses] ?? "";
-
-export type MaterialTableColumnsDef = {
+type MaterialTableColumnsDef = {
   sku: string | null;
   name: string;
   status: StockStatus;
   stock: string | null;
+  vendor: string | null;
+  categories: string[] | null;
   notes: string | null;
 };
+
+const colDefs: ColDef[] = [
+  {
+    headerName: "SKU",
+    field: "sku",
+    editable: true,
+    filter: true,
+  },
+  {
+    headerName: "Name",
+    field: "name",
+    editable: true,
+    filter: true,
+    autoHeight: true,
+    flex: 1,
+  },
+  {
+    headerName: "Status",
+    field: "status",
+    cellRenderer: StatusCellRenderer,
+  },
+  { headerName: "Stock", field: "stock" },
+  { headerName: "Vendor", field: "vendor", filter: true },
+  { headerName: "Categories", field: "categories" },
+];
 
 export default function MaterialsTable() {
   const { data: session } = useSession();
 
+  // Fetch materials query
   const { data: materials, isLoading } = api.material.getAll.useQuery(
     undefined,
     {
@@ -35,69 +70,18 @@ export default function MaterialsTable() {
     }
   );
 
-  const colDefs: ColDef[] = [
-    {
-      headerName: "SKU",
-      field: "sku",
-      editable: true,
-      filter: true,
-      suppressSizeToFit: true,
-    },
-    {
-      headerName: "Name",
-      field: "name",
-      editable: true,
-      filter: true,
-      flex: 1,
-    },
-    {
-      headerName: "Status",
-      field: "status",
-      // valueFormatter: statusFormatter,
-      cellRenderer: StatusCellRenderer,
-    },
-    { headerName: "Stock", field: "stock" },
-    { headerName: "Notes", field: "notes", editable: true },
-  ];
+  // Table config
+  const theme = useTableTheme();
+  const autoSizeStrategy = useTableAutoSizeStrategy([
+    "sku",
+    "status",
+    "stock",
+    "vendor",
+    "categories",
+  ]);
 
+  // Materials data as state
   const [rowData, setRowData] = React.useState<MaterialTableColumnsDef[]>([]);
-
-  function calculateStatus(
-    stock: Prisma.Decimal | null,
-    minStock: Prisma.Decimal | null
-  ) {
-    if (!stock || !minStock) {
-      return null;
-    }
-
-    if (stock.equals(0)) {
-      return "Out of stock";
-    }
-
-    const ratio = stock.div(minStock);
-    if (ratio.lessThanOrEqualTo(0.5)) {
-      return "Low stock";
-    }
-
-    return "Available";
-  }
-
-  const getStatus = React.useCallback(
-    (stock: Prisma.Decimal | null, minStock: Prisma.Decimal | null) => {
-      return calculateStatus(
-        stock && new Prisma.Decimal(stock),
-        minStock && new Prisma.Decimal(minStock)
-      );
-    },
-    []
-  );
-
-  function getStock(stock: Prisma.Decimal | null, stockUnit: string | null) {
-    if (!stock) {
-      return "—";
-    }
-    return `${stock.toString()} ${stockUnit}`;
-  }
 
   // Update table data when the data is available.
   React.useEffect(() => {
@@ -106,14 +90,17 @@ export default function MaterialsTable() {
         materials.map((material) => ({
           sku: material.sku,
           name: material.name,
-          status: getStatus(material.stockLevel, material.minStockLevel),
-          stock: getStock(material.stockLevel, material.stockUnitType),
+          status: getStockStatus(material.stockLevel, material.minStockLevel),
+          stock: getStockAsText(material.stockLevel, material.stockUnitType),
+          vendor: material.vendor,
+          categories: material.categories?.map(({ category }) => category.name),
           notes: material.notes,
         }))
       );
     }
-  }, [getStatus, materials]);
+  }, [materials]);
 
+  // Show spinner if query is loading
   if (isLoading) {
     return (
       <Flex justifyContent="center" alignItems="center" flexGrow={1}>
@@ -127,15 +114,20 @@ export default function MaterialsTable() {
   }
 
   return (
-    <Box className="ag-theme-quartz" flexGrow={1}>
+    <Section
+      className={theme}
+      fontFamily={poppins.style.fontFamily}
+      fontSize="xs"
+      flexGrow={1}
+      p={0}
+      overflow='hidden'
+    >
       <AgGridReact
-        pagination={true}
-        paginationPageSize={20}
         rowData={rowData}
         columnDefs={colDefs}
         rowSelection="multiple"
-        rowMultiSelectWithClick={true}
+        autoSizeStrategy={autoSizeStrategy}
       />
-    </Box>
+    </Section>
   );
 }
