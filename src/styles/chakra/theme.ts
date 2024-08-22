@@ -5,6 +5,7 @@ import { colors } from "./colors";
 import { buttonTheme } from "./components/button";
 import { drawerTheme } from "./components/drawer";
 import { linkTheme } from "./components/link";
+import { modalTheme } from "./components/modal";
 
 const poppins = Poppins({
   weight: ["400", "600", "800"],
@@ -45,6 +46,7 @@ const themeOverride: ThemeOverride = {
     Button: buttonTheme,
     Drawer: drawerTheme,
     Link: linkTheme,
+    Modal: modalTheme,
   },
 };
 

@@ -5,6 +5,10 @@ const baseStyle = defineStyle({
   fontWeight: "400",
 });
 
+const solid = defineStyle({
+  fontSize: "sm",
+});
+
 const primary = defineStyle((props) => ({
   bg: "blue.600",
   color: "blue.50",
@@ -41,6 +45,7 @@ const menuButton = defineStyle({
 export const buttonTheme = defineStyleConfig({
   baseStyle,
   variants: {
+    solid,
     primary,
     menuButton,
   },

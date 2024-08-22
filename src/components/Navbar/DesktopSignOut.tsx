@@ -9,12 +9,11 @@ import {
   ModalOverlay,
   useDisclosure,
 } from "@chakra-ui/react";
-import { signOut, useSession } from "next-auth/react";
+import { signOut } from "next-auth/react";
 import { FaSignOutAlt } from "react-icons/fa";
+import { FaTriangleExclamation } from "react-icons/fa6";
 
 export default function DesktopSignOut() {
-  const { data: session } = useSession();
-
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   async function handleSignOut() {
@@ -33,8 +32,13 @@ export default function DesktopSignOut() {
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Sign out</ModalHeader>
-          <ModalBody>Are you sure you want to sign out?</ModalBody>
+          <ModalHeader display="flex" alignItems="center" gap={4}>
+            <Icon as={FaTriangleExclamation} boxSize={8} color="red.600" />
+            Sign out
+          </ModalHeader>
+          <ModalBody fontSize="sm">
+            Are you sure you want to sign out?
+          </ModalBody>
           <ModalFooter gap={4}>
             <Button colorScheme="red" onClick={handleSignOut}>
               Sign out
