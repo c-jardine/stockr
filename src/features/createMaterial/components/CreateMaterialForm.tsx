@@ -45,7 +45,7 @@ export default function CreateMaterialForm() {
 
   const utils = api.useUtils();
   const mutation = api.material.create.useMutation({
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
       toast({
         title: "Material created",
         description: `${data.name} has been created!`,
@@ -53,7 +53,7 @@ export default function CreateMaterialForm() {
       });
       onClose();
       reset();
-      utils.material.getAll.invalidate();
+      await utils.material.getAll.invalidate();
     },
   });
 
