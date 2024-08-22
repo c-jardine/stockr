@@ -6,13 +6,21 @@ import PuffLoader from "react-spinners/PuffLoader";
 import "ag-grid-community/styles/ag-grid.css"; // Mandatory CSS required by the Data Grid
 import "ag-grid-community/styles/ag-theme-quartz.css"; // Optional Theme applied to the Data Grid
 import { AgGridReact } from "ag-grid-react"; // React Data Grid Component
-import { ColDef } from "node_modules/ag-grid-community/dist/types/core/main";
+import { type ColDef } from "node_modules/ag-grid-community/dist/types/core/main";
 
+import { Prisma } from "@prisma/client";
 import { api } from "~/utils/api";
+import { StatusCellRenderer } from "./StatusCellRenderer";
 
-type ColumnType = {
+export type StockStatus = "Available" | "Low stock" | "Out of stock" | null;
+
+// const statusFormatter: ValueFormatterFunc = ({ value }) =>
+//   statuses[value as keyof typeof statuses] ?? "";
+
+export type MaterialTableColumnsDef = {
   sku: string | null;
   name: string;
+  status: StockStatus;
   stock: string | null;
   notes: string | null;
 };
@@ -20,9 +28,12 @@ type ColumnType = {
 export default function MaterialsTable() {
   const { data: session } = useSession();
 
-  const { data, isLoading } = api.material.getAll.useQuery(undefined, {
-    enabled: session?.user !== undefined,
-  });
+  const { data: materials, isLoading } = api.material.getAll.useQuery(
+    undefined,
+    {
+      enabled: session?.user !== undefined,
+    }
+  );
 
   const colDefs: ColDef[] = [
     {
@@ -39,27 +50,69 @@ export default function MaterialsTable() {
       filter: true,
       flex: 1,
     },
+    {
+      headerName: "Status",
+      field: "status",
+      // valueFormatter: statusFormatter,
+      cellRenderer: StatusCellRenderer,
+    },
     { headerName: "Stock", field: "stock" },
     { headerName: "Notes", field: "notes", editable: true },
   ];
 
-  const [rowData, setRowData] = React.useState<ColumnType[]>([]);
+  const [rowData, setRowData] = React.useState<MaterialTableColumnsDef[]>([]);
+
+  function calculateStatus(
+    stock: Prisma.Decimal | null,
+    minStock: Prisma.Decimal | null
+  ) {
+    if (!stock || !minStock) {
+      return null;
+    }
+
+    if (stock.equals(0)) {
+      return "Out of stock";
+    }
+
+    const ratio = stock.div(minStock);
+    if (ratio.lessThanOrEqualTo(0.5)) {
+      return "Low stock";
+    }
+
+    return "Available";
+  }
+
+  const getStatus = React.useCallback(
+    (stock: Prisma.Decimal | null, minStock: Prisma.Decimal | null) => {
+      return calculateStatus(
+        stock && new Prisma.Decimal(stock),
+        minStock && new Prisma.Decimal(minStock)
+      );
+    },
+    []
+  );
+
+  function getStock(stock: Prisma.Decimal | null, stockUnit: string | null) {
+    if (!stock) {
+      return "—";
+    }
+    return `${stock.toString()} ${stockUnit}`;
+  }
 
   // Update table data when the data is available.
   React.useEffect(() => {
-    if (data) {
+    if (materials) {
       setRowData(
-        data.map((row) => ({
-          sku: row.sku,
-          name: row.name,
-          stock: row.stockLevel
-            ? `${row.stockLevel}${row.stockUnitType && ` ${row.stockUnitType}`}`
-            : null,
-          notes: row.notes,
+        materials.map((material) => ({
+          sku: material.sku,
+          name: material.name,
+          status: getStatus(material.stockLevel, material.minStockLevel),
+          stock: getStock(material.stockLevel, material.stockUnitType),
+          notes: material.notes,
         }))
       );
     }
-  }, [data]);
+  }, [getStatus, materials]);
 
   if (isLoading) {
     return (
@@ -69,7 +122,7 @@ export default function MaterialsTable() {
     );
   }
 
-  if (!data) {
+  if (!materials) {
     return null;
   }
 
@@ -77,7 +130,7 @@ export default function MaterialsTable() {
     <Box className="ag-theme-quartz" flexGrow={1}>
       <AgGridReact
         pagination={true}
-        paginationPageSize={10}
+        paginationPageSize={20}
         rowData={rowData}
         columnDefs={colDefs}
         rowSelection="multiple"
