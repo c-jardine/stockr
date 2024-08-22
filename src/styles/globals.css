@@ -1,0 +1,48 @@
+/* Styles for AG Grid */
+
+/* Main wrapper */
+.ag-root-wrapper {
+  border: none !important;
+}
+
+/* For light theme */
+.ag-theme-quartz {
+  --ag-border-color: var(--chakra-colors-zinc-200) !important;
+  --ag-foreground-color: var(--chakra-colors-zinc-800) !important;
+  --ag-background-color: var(--chakra-colors-white) !important;
+
+  --ag-header-background-color: var(--chakra-colors-zinc-50) !important;
+  --ag-header-cell-hover-background-color: var(
+    --chakra-colors-zinc-200
+  ) !important;
+  --ag-header-cell-moving-background-color: var(
+    --chakra-colors-zinc-200
+  ) !important;
+
+  --ag-active-color: var(--chakra-colors-zinc-400) !important;
+  --ag-selected-row-background-color: color-mix(
+    in srgb,
+    transparent,
+    var(--chakra-colors-blue-200) 50%
+  ) !important;
+  --ag-range-selection-border-color: var(--chakra-colors-blue-400) !important;
+}
+
+/* For dark theme */
+.ag-theme-quartz-dark {
+  --ag-border-color: var(--chakra-colors-zinc-800) !important;
+  --ag-foreground-color: var(--chakra-colors-zinc-200) !important;
+  --ag-background-color: var(--chakra-colors-zinc-900) !important;
+
+  --ag-header-background-color: var(--chakra-colors-zinc-950) !important;
+  --ag-header-cell-hover-background-color: var(
+    --chakra-colors-blue-950
+  ) !important;
+  --ag-header-cell-moving-background-color: var(
+    --chakra-colors-blue-950
+  ) !important;
+
+  --ag-row-border-color: var(--chakra-colors-zinc-800) !important;
+  --ag-active-color: var(--chakra-colors-zinc-700) !important;
+  --ag-secondary-foreground-color: var(--chakra-colors-zinc-400) !important;
+}
