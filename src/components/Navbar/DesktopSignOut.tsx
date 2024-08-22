@@ -17,8 +17,8 @@ export default function DesktopSignOut() {
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  function handleSignOut() {
-    signOut();
+  async function handleSignOut() {
+    await signOut();
   }
 
   return (
