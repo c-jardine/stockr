@@ -10,7 +10,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <Box h="calc(100vh - 4rem)">
       <Navbar />
-      <Container mt={16} p={4} maxW="full" h="full">
+      <Container mt={16} p={4} maxW="1440px" h="full">
         {children}
       </Container>
     </Box>

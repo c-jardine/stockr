@@ -6,10 +6,10 @@ const baseStyle = defineStyle({
 });
 
 const primary = defineStyle((props) => ({
-  bg: "blue.500",
+  bg: "blue.600",
   color: "blue.50",
   _hover: {
-    bg: "blue.600",
+    bg: "blue.500",
   },
   _active: {
     bg: "blue.700",

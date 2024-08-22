@@ -3,7 +3,7 @@ import DesktopNavbar from "./DesktopNavbar";
 
 export default function Navbar() {
   const bgColor = useColorModeValue("white", "zinc.900");
-  const borderColor = useColorModeValue("zinc.200", "zinc.700");
+  const borderColor = useColorModeValue("zinc.200", "zinc.800");
 
   return (
     <Flex

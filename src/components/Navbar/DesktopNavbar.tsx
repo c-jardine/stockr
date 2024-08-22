@@ -19,6 +19,7 @@ import {
 } from "@chakra-ui/react";
 import { useSession } from "next-auth/react";
 import NextLink from "next/link";
+import { useRouter } from "next/router";
 import { FaEdit } from "react-icons/fa";
 import { FaChevronDown } from "react-icons/fa6";
 import ColorModeToggle from "../ColorModeToggle/ColorModeToggle";
@@ -26,29 +27,64 @@ import DesktopSignOut from "./DesktopSignOut";
 
 export default function DesktopNavbar() {
   const { data: session } = useSession();
+  const router = useRouter();
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
     <SimpleGrid gridTemplateColumns="1fr auto 1fr">
       <Box></Box>
-      <HStack justifySelf="center" gap={4}>
-        <Link as={NextLink} href="/">
+      <HStack justifySelf="center">
+        <Link
+          as={NextLink}
+          href="/"
+          variant={router.asPath === "/" ? "navbarLinkActive" : "navbarLink"}
+        >
           Dashboard
         </Link>
-        <Link as={NextLink} href="/materials">
+        <Link
+          as={NextLink}
+          href="/materials"
+          variant={
+            router.asPath === "/materials" ? "navbarLinkActive" : "navbarLink"
+          }
+        >
           Materials
         </Link>
-        <Link as={NextLink} href="/products">
+        <Link
+          as={NextLink}
+          href="/products"
+          variant={
+            router.asPath === "/products" ? "navbarLinkActive" : "navbarLink"
+          }
+        >
           Products
         </Link>
-        <Link as={NextLink} href="/blueprints">
+        <Link
+          as={NextLink}
+          href="/blueprints"
+          variant={
+            router.asPath === "/blueprints" ? "navbarLinkActive" : "navbarLink"
+          }
+        >
           Blueprints
         </Link>
-        <Link as={NextLink} href="/production">
+        <Link
+          as={NextLink}
+          href="/production"
+          variant={
+            router.asPath === "/production" ? "navbarLinkActive" : "navbarLink"
+          }
+        >
           Production
         </Link>
-        <Link as={NextLink} href="/history">
+        <Link
+          as={NextLink}
+          href="/history"
+          variant={
+            router.asPath === "/history" ? "navbarLinkActive" : "navbarLink"
+          }
+        >
           History
         </Link>
       </HStack>
