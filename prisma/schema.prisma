@@ -24,6 +24,7 @@ model Material {
     stockUnitType    String?
     minStockLevel    Decimal?
     notes            String?
+    vendor           String?
     categories       MaterialCategory[]
     productMaterials ProductMaterial[]
     createdAt        DateTime           @default(now())
