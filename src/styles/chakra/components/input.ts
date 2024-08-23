@@ -18,20 +18,6 @@ const baseStyle = helper.definePartsStyle((props) => ({
       },
     },
   },
-  // dialog: {
-  //   bg: mode("white", "zinc.950")(props),
-  //   border: "1px",
-  //   borderColor: mode("zinc.200", "zinc.800")(props),
-  // },
-  // header: {
-  //   p: 4,
-  // },
-  // body: {
-  //   p: 4,
-  // },
-  // footer: {
-  //   p: 4,
-  // },
 }));
 
 export const inputTheme = helper.defineMultiStyleConfig({
