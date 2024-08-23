@@ -24,4 +24,4 @@ export const createMaterialFormSchema = z.object({
     .array(),
 });
 
-export type CreateMaterialForm = z.infer<typeof createMaterialFormSchema>;
+export type CreateMaterialFormType = z.infer<typeof createMaterialFormSchema>;

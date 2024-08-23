@@ -3,7 +3,6 @@ import { signIn, signOut, useSession } from "next-auth/react";
 import Head from "next/head";
 
 import { api } from "~/utils/api";
-import CreateMaterialForm from "../features/createMaterial/components/CreateMaterialForm";
 
 export default function Home() {
   return (
@@ -38,7 +37,6 @@ function AuthShowcase() {
           {session && <span>Logged in as {session.user?.name}</span>}
           {secretMessage && <span> - {secretMessage}</span>}
         </p>
-        <CreateMaterialForm />
 
         <Link href="https://www.google.com" isExternal>
           Click here

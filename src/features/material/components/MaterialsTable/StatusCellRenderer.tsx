@@ -6,13 +6,13 @@ import {
   type TagProps,
 } from "@chakra-ui/react";
 import { type CustomCellRendererProps } from "ag-grid-react";
-import { type FunctionComponent } from "react";
 import { FaCircle } from "react-icons/fa6";
-import { type MaterialTableColumnsDef, type StockStatus } from ".";
+import { type StockStatus } from "~/types/status";
+import { type MaterialTableColumnsDef } from ".";
 
-export const StatusCellRenderer: FunctionComponent<
-  CustomCellRendererProps<MaterialTableColumnsDef>
-> = ({ node }) => {
+export function StatusCellRenderer({
+  node,
+}: CustomCellRendererProps<MaterialTableColumnsDef>) {
   function getStyles(status: StockStatus): TagProps {
     switch (status) {
       case "Available": {
@@ -51,10 +51,15 @@ export const StatusCellRenderer: FunctionComponent<
 
   return (
     <Flex alignItems="center" h="full">
-      <Tag fontSize='xs' fontWeight="light" {...getStyles(node.data?.status)} ico>
+      <Tag
+        fontSize="xs"
+        fontWeight="light"
+        {...getStyles(node.data?.status)}
+        ico
+      >
         <TagLeftIcon as={FaCircle} boxSize={1.5} />
         <TagLabel>{node.data?.status}</TagLabel>
       </Tag>
     </Flex>
   );
-};
+}

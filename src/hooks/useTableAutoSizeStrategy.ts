@@ -8,7 +8,7 @@ import React from "react";
  * blank will result in all columns being auto-sized.
  * @returns The auto size strategy.
  */
-export default function useTableSizing(
+export function useTableAutoSizeStrategy(
   columns?: SizeColumnsToContentStrategy["colIds"]
 ) {
   const autoSizeStrategy = React.useMemo<SizeColumnsToContentStrategy>(() => {

@@ -1,9 +1,10 @@
 import { Button, Icon, IconButton, Stack } from "@chakra-ui/react";
 import { FaHistory } from "react-icons/fa";
 import { FaFileImport, FaPlus } from "react-icons/fa6";
-import MaterialsTable from "~/components/MaterialsTable";
-import PageHeader from "~/components/PageHeader";
-import CreateMaterialForm from "../../features/createMaterial/components/CreateMaterialForm";
+
+import { PageHeader } from "~/components/PageHeader";
+import { CreateMaterialForm } from "~/features/material/components/CreateMaterialForm";
+import { MaterialsTable } from "~/features/material/components/MaterialsTable";
 
 export default function Materials() {
   return (

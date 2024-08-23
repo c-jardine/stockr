@@ -22,10 +22,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import { FaDollarSign, FaPlus } from "react-icons/fa6";
 import { NumericFormat } from "react-number-format";
-import ControlledSelect from "~/components/ControlledSelect";
-import TextInput from "~/components/TextInput";
+
+import { ControlledSelect } from "~/components/ControlledSelect";
+import { TextInput } from "~/components/TextInput";
 import {
-  type CreateMaterialForm,
+  type CreateMaterialFormType,
   createMaterialFormSchema,
 } from "~/types/material";
 import { api } from "~/utils/api";
@@ -35,7 +36,7 @@ type MultiSelectInput = {
   value: string;
 };
 
-export default function CreateMaterialForm() {
+export function CreateMaterialForm() {
   const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -46,7 +47,7 @@ export default function CreateMaterialForm() {
     handleSubmit,
     reset,
     formState: { errors, isSubmitting },
-  } = useForm<CreateMaterialForm>({
+  } = useForm<CreateMaterialFormType>({
     defaultValues: {
       categories: [],
     },
@@ -81,7 +82,7 @@ export default function CreateMaterialForm() {
     value: name,
   }));
 
-  function onSubmit(data: CreateMaterialForm) {
+  function onSubmit(data: CreateMaterialFormType) {
     mutation.mutate(data);
   }
 
@@ -165,7 +166,7 @@ export default function CreateMaterialForm() {
                 label="Min. stock level"
               />
 
-              <ControlledSelect<CreateMaterialForm, MultiSelectInput, true>
+              <ControlledSelect<CreateMaterialFormType, MultiSelectInput, true>
                 options={vendorOptions}
                 control={control}
                 name="vendor"
@@ -173,7 +174,7 @@ export default function CreateMaterialForm() {
                 useBasicStyles
               />
 
-              <ControlledSelect<CreateMaterialForm, MultiSelectInput, true>
+              <ControlledSelect<CreateMaterialFormType, MultiSelectInput, true>
                 options={categoryOptions}
                 isMulti
                 control={control}

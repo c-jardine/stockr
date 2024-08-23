@@ -8,8 +8,6 @@ import "ag-grid-community/styles/ag-theme-quartz.css"; // Optional Theme applied
 import { AgGridReact } from "ag-grid-react"; // React Data Grid Component
 import { type ColDef } from "node_modules/ag-grid-community/dist/types/core/main";
 
-import useTableAutoSizeStrategy from "~/hooks/useTableAutoSizeStrategy";
-import useTableTheme from "~/hooks/useTableTheme";
 import { type StockStatus } from "~/types/status";
 import { api } from "~/utils/api";
 import { getStockAsText } from "~/utils/stock";
@@ -17,14 +15,17 @@ import { getStockStatus } from "~/utils/stockStatus";
 import { StatusCellRenderer } from "./StatusCellRenderer";
 
 import { Poppins } from "next/font/google"; // Override table theme font
-import Section from "../Section";
+import { Section } from "~/components/Section";
+import { useTableAutoSizeStrategy } from "~/hooks/useTableAutoSizeStrategy";
+import { useTableTheme } from "~/hooks/useTableTheme";
+
 const poppins = Poppins({
   weight: ["400"],
   subsets: ["latin"],
   display: "swap",
 });
 
-type MaterialTableColumnsDef = {
+export type MaterialTableColumnsDef = {
   sku: string | null;
   name: string;
   status: StockStatus;
@@ -59,7 +60,7 @@ const colDefs: ColDef[] = [
   { headerName: "Categories", field: "categories" },
 ];
 
-export default function MaterialsTable() {
+export function MaterialsTable() {
   const { data: session } = useSession();
 
   // Fetch materials query
@@ -120,7 +121,7 @@ export default function MaterialsTable() {
       fontSize="xs"
       flexGrow={1}
       p={0}
-      overflow='hidden'
+      overflow="hidden"
     >
       <AgGridReact
         rowData={rowData}

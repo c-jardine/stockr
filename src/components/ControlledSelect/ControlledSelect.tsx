@@ -25,7 +25,7 @@ interface ControlledSelectProps<
  *
  * @param props - The combined props of the chakra-react-select component and the useController hook
  */
-export default function ControlledSelect<
+export function ControlledSelect<
   FormValues extends FieldValues = FieldValues,
   Option = unknown,
   IsMulti extends boolean = boolean,

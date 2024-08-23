@@ -22,10 +22,11 @@ import NextLink from "next/link";
 import { useRouter } from "next/router";
 import { FaEdit } from "react-icons/fa";
 import { FaChevronDown } from "react-icons/fa6";
-import ColorModeToggle from "../ColorModeToggle/ColorModeToggle";
-import DesktopSignOut from "./DesktopSignOut";
 
-export default function DesktopNavbar() {
+import { ColorModeToggle } from "../ColorModeToggle";
+import { DesktopSignOut } from "./DesktopSignOut";
+
+export function DesktopNavbar() {
   const { data: session } = useSession();
   const router = useRouter();
 

@@ -4,10 +4,9 @@ import {
   useColorMode,
   useColorModeValue,
 } from "@chakra-ui/react";
-import React from "react";
 import { FaMoon, FaSun } from "react-icons/fa6";
 
-export default function ColorModeToggle() {
+export function ColorModeToggle() {
   const { toggleColorMode } = useColorMode();
   const icon = useColorModeValue(FaSun, FaMoon);
   const iconColor = useColorModeValue("yellow.500", "indigo.500");

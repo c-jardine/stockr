@@ -6,7 +6,8 @@ import {
   type StackProps,
 } from "@chakra-ui/react";
 import React from "react";
-import Section from "../Section";
+
+import { Section } from "../Section";
 
 interface PageHeaderContentProps extends StackProps {
   children: React.ReactNode;
@@ -36,7 +37,7 @@ interface PageHeaderProps extends ContainerProps {
   children: React.ReactNode;
 }
 
-export default function PageHeader({ children, ...props }: PageHeaderProps) {
+export function PageHeader({ children, ...props }: PageHeaderProps) {
   return <Section {...props}>{children}</Section>;
 }
 

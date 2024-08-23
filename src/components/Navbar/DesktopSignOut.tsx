@@ -13,7 +13,7 @@ import { signOut } from "next-auth/react";
 import { FaSignOutAlt } from "react-icons/fa";
 import { FaTriangleExclamation } from "react-icons/fa6";
 
-export default function DesktopSignOut() {
+export function DesktopSignOut() {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   async function handleSignOut() {

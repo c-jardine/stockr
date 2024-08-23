@@ -9,7 +9,7 @@ interface SectionProps extends ContainerProps {
   children: React.ReactNode;
 }
 
-export default function Section({ children, ...props }: SectionProps) {
+export function Section({ children, ...props }: SectionProps) {
   const bgColor = useColorModeValue("white", "zinc.900");
   const borderColor = useColorModeValue("zinc.200", "zinc.800");
 

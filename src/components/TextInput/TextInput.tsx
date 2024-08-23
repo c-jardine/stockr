@@ -20,9 +20,7 @@ interface TextInputProps<FormValues extends FieldValues = FieldValues>
   children?: React.ReactNode;
 }
 
-export default function TextInput<
-  FormValues extends FieldValues = FieldValues
->({
+export function TextInput<FormValues extends FieldValues = FieldValues>({
   name,
   label,
   control,
