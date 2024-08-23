@@ -3,7 +3,6 @@ import {
   CreatableSelect,
   type GroupBase,
   type CreatableProps as SelectProps,
-  
 } from "chakra-react-select";
 import {
   useController,

@@ -23,22 +23,23 @@ import { Controller, useForm } from "react-hook-form";
 import { FaDollarSign, FaPlus } from "react-icons/fa6";
 import { NumericFormat } from "react-number-format";
 import ControlledSelect from "~/components/ControlledSelect";
+import TextInput from "~/components/TextInput";
 import {
   type CreateMaterialForm,
   createMaterialFormSchema,
 } from "~/types/material";
 import { api } from "~/utils/api";
 
-type CategoriesInput = {
+type MultiSelectInput = {
   label: string;
   value: string;
 };
 
 export default function CreateMaterialForm() {
   const toast = useToast();
-
   const { isOpen, onOpen, onClose } = useDisclosure();
 
+  // Form
   const {
     control,
     register,
@@ -46,6 +47,9 @@ export default function CreateMaterialForm() {
     reset,
     formState: { errors, isSubmitting },
   } = useForm<CreateMaterialForm>({
+    defaultValues: {
+      categories: [],
+    },
     resolver: zodResolver(createMaterialFormSchema),
   });
 
@@ -64,8 +68,13 @@ export default function CreateMaterialForm() {
   });
 
   const { data: categoriesQuery } = api.material.getCategories.useQuery();
-
   const categoryOptions = categoriesQuery?.map(({ category: { name } }) => ({
+    label: name,
+    value: name,
+  }));
+
+  const { data: vendorsQuery } = api.material.getVendors.useQuery();
+  const vendorOptions = vendorsQuery?.map(({ name }) => ({
     label: name,
     value: name,
   }));
@@ -85,7 +94,7 @@ export default function CreateMaterialForm() {
       >
         New material
       </Button>
-      <Drawer size="md" {...{ isOpen, onClose }}>
+      <Drawer size="sm" {...{ isOpen, onClose }}>
         <DrawerOverlay />
         <DrawerContent>
           <DrawerHeader>New material</DrawerHeader>
@@ -93,30 +102,20 @@ export default function CreateMaterialForm() {
             <Stack
               as="form"
               id="create-material-form"
-              onSubmit={handleSubmit(onSubmit, (error) => console.log(error))}
+              onSubmit={handleSubmit(onSubmit)}
               spacing={4}
             >
-              <FormControl isInvalid={!!errors.name}>
-                <FormLabel>Name</FormLabel>
-                <Input {...register("name")} />
-                {errors.name && (
-                  <FormErrorMessage>{errors.name.message}</FormErrorMessage>
-                )}
-              </FormControl>
-              <FormControl isInvalid={!!errors.url}>
-                <FormLabel>URL</FormLabel>
-                <Input {...register("url")} />
-                {errors.url && (
-                  <FormErrorMessage>{errors.url.message}</FormErrorMessage>
-                )}
-              </FormControl>
-              <FormControl isInvalid={!!errors.sku}>
-                <FormLabel>SKU</FormLabel>
-                <Input {...register("sku")} />
-                {errors.sku && (
-                  <FormErrorMessage>{errors.sku.message}</FormErrorMessage>
-                )}
-              </FormControl>
+              <TextInput
+                control={control}
+                name="name"
+                label="Name"
+                isRequired
+              />
+
+              <TextInput control={control} name="url" label="URL" />
+
+              <TextInput control={control} name="sku" label="SKU" />
+
               <FormControl isInvalid={!!errors.cost}>
                 <FormLabel>Cost</FormLabel>
                 <Controller
@@ -143,47 +142,37 @@ export default function CreateMaterialForm() {
                   <FormErrorMessage>{errors.cost.message}</FormErrorMessage>
                 )}
               </FormControl>
-              <SimpleGrid columns={4} gap={4}>
-                <FormControl
-                  isInvalid={!!errors.stockLevel}
-                  gridColumn="1 / span 3"
-                >
-                  <FormLabel>Stock Level</FormLabel>
-                  <Input {...register("stockLevel")} />
-                  {errors.stockLevel && (
-                    <FormErrorMessage>
-                      {errors.stockLevel.message}
-                    </FormErrorMessage>
-                  )}
-                </FormControl>
-                <FormControl isInvalid={!!errors.stockUnitType}>
-                  <FormLabel>Unit Type</FormLabel>
-                  <Input {...register("stockUnitType")} />
-                  {errors.stockUnitType && (
-                    <FormErrorMessage>
-                      {errors.stockUnitType.message}
-                    </FormErrorMessage>
-                  )}
-                </FormControl>
-              </SimpleGrid>
-              <FormControl isInvalid={!!errors.minStockLevel}>
-                <FormLabel>Min. Stock Level</FormLabel>
-                <Input {...register("minStockLevel")} />
-                {errors.minStockLevel && (
-                  <FormErrorMessage>
-                    {errors.minStockLevel.message}
-                  </FormErrorMessage>
-                )}
-              </FormControl>
-              <FormControl isInvalid={!!errors.vendor}>
-                <FormLabel>Vendor</FormLabel>
-                <Input {...register("vendor")} />
-                {errors.vendor && (
-                  <FormErrorMessage>{errors.vendor.message}</FormErrorMessage>
-                )}
-              </FormControl>
 
-              <ControlledSelect<CreateMaterialForm, CategoriesInput, true>
+              <SimpleGrid columns={2} gap={4}>
+                <TextInput
+                  control={control}
+                  name="stockLevel"
+                  label="Stock level"
+                />
+
+                <TextInput
+                  control={control}
+                  name="stockUnitType"
+                  label="Stock unit"
+                />
+              </SimpleGrid>
+
+              <TextInput
+                control={control}
+                name="minStockLevel"
+                label="Min. stock level"
+              />
+
+              <ControlledSelect<CreateMaterialForm, MultiSelectInput, true>
+                options={vendorOptions}
+                isMulti
+                control={control}
+                name="vendor"
+                label="Vendor"
+                useBasicStyles
+              />
+
+              <ControlledSelect<CreateMaterialForm, MultiSelectInput, true>
                 options={categoryOptions}
                 isMulti
                 control={control}

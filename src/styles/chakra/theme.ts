@@ -4,6 +4,8 @@ import { Poppins } from "next/font/google";
 import { colors } from "./colors";
 import { buttonTheme } from "./components/button";
 import { drawerTheme } from "./components/drawer";
+import { formErrorTheme } from "./components/formError";
+import { inputTheme } from "./components/input";
 import { linkTheme } from "./components/link";
 import { modalTheme } from "./components/modal";
 
@@ -45,6 +47,8 @@ const themeOverride: ThemeOverride = {
   components: {
     Button: buttonTheme,
     Drawer: drawerTheme,
+    FormError: formErrorTheme,
+    Input: inputTheme,
     Link: linkTheme,
     Modal: modalTheme,
   },

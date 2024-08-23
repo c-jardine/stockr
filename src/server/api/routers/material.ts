@@ -4,10 +4,11 @@ import { createMaterialFormSchema } from "~/types/material";
 export const materialRouter = createTRPCRouter({
   create: protectedProcedure
     .input(createMaterialFormSchema)
-    .mutation(async ({ ctx, input: { name, categories } }) => {
+    .mutation(async ({ ctx, input: { name, cost, categories } }) => {
       return ctx.db.material.create({
         data: {
           name,
+          cost,
           categories: {
             create: categories.map((category) => ({
               category: {
@@ -27,13 +28,22 @@ export const materialRouter = createTRPCRouter({
     const materials = await ctx.db.material.findMany({
       orderBy: { name: "asc" },
       include: {
+        vendor: true,
         categories: {
-          include: { category: { select: { name: true } } },
+          include: { category: true },
         },
       },
     });
 
     return materials ?? null;
+  }),
+
+  getVendors: protectedProcedure.query(async ({ ctx }) => {
+    const vendors = await ctx.db.vendor.findMany({
+      orderBy: { name: "asc" },
+    });
+
+    return vendors ?? null;
   }),
 
   getCategories: protectedProcedure.query(async ({ ctx }) => {
