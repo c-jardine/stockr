@@ -64,13 +64,15 @@ export default function CreateMaterialForm() {
       onClose();
       reset();
       await utils.material.getAll.invalidate();
+      await utils.material.getCategories.invalidate();
+      await utils.material.getVendors.invalidate();
     },
   });
 
   const { data: categoriesQuery } = api.material.getCategories.useQuery();
-  const categoryOptions = categoriesQuery?.map(({ category: { name } }) => ({
+  const categoryOptions = categoriesQuery?.map(({ id, name }) => ({
     label: name,
-    value: name,
+    value: id,
   }));
 
   const { data: vendorsQuery } = api.material.getVendors.useQuery();
@@ -165,7 +167,6 @@ export default function CreateMaterialForm() {
 
               <ControlledSelect<CreateMaterialForm, MultiSelectInput, true>
                 options={vendorOptions}
-                isMulti
                 control={control}
                 name="vendor"
                 label="Vendor"

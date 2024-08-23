@@ -93,7 +93,7 @@ export default function MaterialsTable() {
           status: getStockStatus(material.stockLevel, material.minStockLevel),
           stock: getStockAsText(material.stockLevel, material.stockUnitType),
           vendor: material.vendor?.name ?? null,
-          categories: material.categories?.map(({ category }) => category.name),
+          categories: material.categories?.map((category) => category.name),
           notes: material.notes,
         }))
       );

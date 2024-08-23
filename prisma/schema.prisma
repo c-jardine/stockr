@@ -23,18 +23,18 @@ model Material {
     stockLevel       Decimal?
     stockUnitType    String?
     minStockLevel    Decimal?
-    notes            String?
     vendor           Vendor?            @relation(fields: [vendorId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    vendorId         String?
     categories       MaterialCategory[]
     productMaterials ProductMaterial[]
+    notes            String?
     createdAt        DateTime           @default(now())
     updatedAt        DateTime           @updatedAt
 
-    createdBy   User    @relation("createdBy", fields: [createdById], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    createdBy   User   @relation("createdBy", fields: [createdById], references: [id], onDelete: Cascade, onUpdate: Cascade)
     createdById String
-    updatedBy   User    @relation("updatedBy", fields: [updatedById], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    updatedBy   User   @relation("updatedBy", fields: [updatedById], references: [id], onDelete: Cascade, onUpdate: Cascade)
     updatedById String
-    vendorId    String?
 }
 
 model Product {
@@ -63,36 +63,23 @@ model ProductMaterial {
     materialId String
 }
 
-model Category {
-    id                 String             @id @default(uuid())
-    name               String
-    materialCategories MaterialCategory[]
-    productCategories  ProductCategory[]
+model MaterialCategory {
+    id        String     @id @default(uuid())
+    name      String     @unique
+    materials Material[]
+}
+
+model ProductCategory {
+    id       String    @id @default(uuid())
+    name     String    @unique
+    products Product[]
 }
 
 model Vendor {
     id        String     @id @default(uuid())
-    name      String
+    name      String     @unique
     url       String?
     materials Material[]
-}
-
-model MaterialCategory {
-    materialId String
-    material   Material @relation(fields: [materialId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-    categoryId String
-    category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-
-    @@id([materialId, categoryId])
-}
-
-model ProductCategory {
-    productId  String
-    product    Product  @relation(fields: [productId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-    categoryId String
-    category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-
-    @@id([productId, categoryId])
 }
 
 model UserSettings {

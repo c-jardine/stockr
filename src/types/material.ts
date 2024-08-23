@@ -12,7 +12,8 @@ export const createMaterialFormSchema = z.object({
   notes: z.string().optional(),
   vendor: z
     .object({
-      name: z.string(),
+      label: z.string(),
+      value: z.string(),
     })
     .optional(),
   categories: z

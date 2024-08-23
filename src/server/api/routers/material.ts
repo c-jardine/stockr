@@ -4,20 +4,31 @@ import { createMaterialFormSchema } from "~/types/material";
 export const materialRouter = createTRPCRouter({
   create: protectedProcedure
     .input(createMaterialFormSchema)
-    .mutation(async ({ ctx, input: { name, cost, categories } }) => {
+    .mutation(async ({ ctx, input: { name, cost, vendor, categories } }) => {
       return ctx.db.material.create({
         data: {
           name,
           cost,
-          categories: {
-            create: categories.map((category) => ({
-              category: {
+          ...(vendor && {
+            vendor: {
+              connectOrCreate: {
+                where: {
+                  id: vendor.label,
+                },
                 create: {
-                  name: category.label,
+                  name: vendor.label,
                 },
               },
-            })),
-          },
+            },
+          }),
+          ...(categories && {
+            categories: {
+              connectOrCreate: categories.map((category) => ({
+                where: { id: category.value },
+                create: { name: category.label },
+              })),
+            },
+          }),
           createdBy: { connect: { id: ctx.session.user.id } },
           updatedBy: { connect: { id: ctx.session.user.id } },
         },
@@ -29,9 +40,7 @@ export const materialRouter = createTRPCRouter({
       orderBy: { name: "asc" },
       include: {
         vendor: true,
-        categories: {
-          include: { category: true },
-        },
+        categories: true,
       },
     });
 
@@ -48,8 +57,9 @@ export const materialRouter = createTRPCRouter({
 
   getCategories: protectedProcedure.query(async ({ ctx }) => {
     const categories = await ctx.db.materialCategory.findMany({
-      orderBy: { category: { name: "asc" } },
-      include: { category: { select: { name: true } } },
+      orderBy: {
+        name: "asc",
+      },
     });
 
     return categories ?? null;
