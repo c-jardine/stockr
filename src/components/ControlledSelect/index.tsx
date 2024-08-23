@@ -54,6 +54,16 @@ export default function ControlledSelect<
       {label && <FormLabel>{label}</FormLabel>}
       <CreatableSelect<Option, IsMulti, Group>
         options={options}
+        chakraStyles={{
+          option: (provided) => ({
+            ...provided,
+            fontSize: "sm",
+          }),
+          multiValueLabel: (provided) => ({
+            ...provided,
+            fontSize: "xs",
+          }),
+        }}
         {...selectProps}
         {...field}
       />
