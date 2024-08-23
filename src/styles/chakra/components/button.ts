@@ -28,6 +28,7 @@ const menuButton = defineStyle({
   rounded: "none",
   color: "zinc.600",
   textDecoration: "none !important",
+  fontSize: "sm",
   fontWeight: "normal",
   transition: "200ms ease-in-out",
   _hover: {
