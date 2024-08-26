@@ -1,3 +1,4 @@
+import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 import { createMaterialFormSchema } from "~/types/material";
 
@@ -46,6 +47,18 @@ export const materialRouter = createTRPCRouter({
 
     return materials ?? null;
   }),
+
+  deleteAll: protectedProcedure
+    .input(z.string().array())
+    .mutation(async ({ ctx, input }) => {
+      return ctx.db.material.deleteMany({
+        where: {
+          id: {
+            in: input,
+          },
+        },
+      });
+    }),
 
   getVendors: protectedProcedure.query(async ({ ctx }) => {
     const vendors = await ctx.db.vendor.findMany({

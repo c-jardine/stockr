@@ -1,4 +1,4 @@
-import { Flex } from "@chakra-ui/react";
+import { Flex, useToast } from "@chakra-ui/react";
 import { useSession } from "next-auth/react";
 import React from "react";
 import PuffLoader from "react-spinners/PuffLoader";
@@ -14,8 +14,8 @@ import "ag-grid-community/styles/ag-grid.css"; // Mandatory CSS required by the 
 import "ag-grid-community/styles/ag-theme-quartz.css"; // Optional Theme applied to the Data Grid
 import { type ColDef } from "node_modules/ag-grid-community/dist/types/core/main";
 
-export type ColType = {
-  id: string;
+// Table column type definition
+export type MaterialsTableColumns = {
   sku: string | null;
   name: string;
   status: StockStatus;
@@ -24,8 +24,6 @@ export type ColType = {
   categories: string[] | null;
   notes: string | null;
 };
-
-// const colDefs: ColDef<ColType>[] =
 
 export function MaterialsTable() {
   const { data: session } = useSession();
@@ -38,8 +36,26 @@ export function MaterialsTable() {
     }
   );
 
+  const toast = useToast();
+
+  const utils = api.useUtils();
+  const deleteMutation = api.material.deleteAll.useMutation({
+    onSuccess: async ({ count }) => {
+      toast({
+        title: "Deleted materials",
+        description: `Deleted ${count} materials`,
+        status: "success",
+      });
+      await utils.material.getAll.invalidate();
+    },
+  });
+
+  function onDelete(data: string[]) {
+    deleteMutation.mutate(data);
+  }
+
   // Materials data as state
-  const [rowData, setRowData] = React.useState<ColType[]>([]);
+  const [rowData, setRowData] = React.useState<MaterialsTableColumns[]>([]);
 
   // Update table data when the data is available
   React.useEffect(() => {
@@ -59,7 +75,7 @@ export function MaterialsTable() {
     }
   }, [materials]);
 
-  const colDefs: ColDef<ColType>[] = [
+  const colDefs: ColDef<MaterialsTableColumns>[] = [
     {
       headerName: "SKU",
       field: "sku",
@@ -110,13 +126,14 @@ export function MaterialsTable() {
   }
 
   return (
-    <Table<ColType>
+    <Table<MaterialsTableColumns>
       rowData={rowData}
       columnDefs={colDefs}
       autoSizeStrategy={{
         type: "fitCellContents",
         colIds: ["sku", "status", "stock", "vendor", "categories"],
       }}
+      onDelete={onDelete}
     />
   );
 }
