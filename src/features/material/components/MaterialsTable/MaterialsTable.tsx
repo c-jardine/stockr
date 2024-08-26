@@ -3,29 +3,19 @@ import { useSession } from "next-auth/react";
 import React from "react";
 import PuffLoader from "react-spinners/PuffLoader";
 
-import "ag-grid-community/styles/ag-grid.css"; // Mandatory CSS required by the Data Grid
-import "ag-grid-community/styles/ag-theme-quartz.css"; // Optional Theme applied to the Data Grid
-import { AgGridReact } from "ag-grid-react"; // React Data Grid Component
-import { type ColDef } from "node_modules/ag-grid-community/dist/types/core/main";
-
+import { Table } from "~/features/table/components/Table";
 import { type StockStatus } from "~/types/status";
 import { api } from "~/utils/api";
 import { getStockAsText } from "~/utils/stock";
 import { getStockStatus } from "~/utils/stockStatus";
 import { StatusCellRenderer } from "./StatusCellRenderer";
 
-import { Poppins } from "next/font/google"; // Override table theme font
-import { Section } from "~/components/Section";
-import { useTableAutoSizeStrategy } from "~/hooks/useTableAutoSizeStrategy";
-import { useTableTheme } from "~/hooks/useTableTheme";
+import "ag-grid-community/styles/ag-grid.css"; // Mandatory CSS required by the Data Grid
+import "ag-grid-community/styles/ag-theme-quartz.css"; // Optional Theme applied to the Data Grid
+import { type ColDef } from "node_modules/ag-grid-community/dist/types/core/main";
 
-const poppins = Poppins({
-  weight: ["400"],
-  subsets: ["latin"],
-  display: "swap",
-});
-
-export type MaterialTableColumnsDef = {
+export type ColType = {
+  id: string;
   sku: string | null;
   name: string;
   status: StockStatus;
@@ -35,30 +25,7 @@ export type MaterialTableColumnsDef = {
   notes: string | null;
 };
 
-const colDefs: ColDef[] = [
-  {
-    headerName: "SKU",
-    field: "sku",
-    editable: true,
-    filter: true,
-  },
-  {
-    headerName: "Name",
-    field: "name",
-    editable: true,
-    filter: true,
-    autoHeight: true,
-    flex: 1,
-  },
-  {
-    headerName: "Status",
-    field: "status",
-    cellRenderer: StatusCellRenderer,
-  },
-  { headerName: "Stock", field: "stock" },
-  { headerName: "Vendor", field: "vendor", filter: true },
-  { headerName: "Categories", field: "categories" },
-];
+// const colDefs: ColDef<ColType>[] =
 
 export function MaterialsTable() {
   const { data: session } = useSession();
@@ -71,24 +38,15 @@ export function MaterialsTable() {
     }
   );
 
-  // Table config
-  const theme = useTableTheme();
-  const autoSizeStrategy = useTableAutoSizeStrategy([
-    "sku",
-    "status",
-    "stock",
-    "vendor",
-    "categories",
-  ]);
-
   // Materials data as state
-  const [rowData, setRowData] = React.useState<MaterialTableColumnsDef[]>([]);
+  const [rowData, setRowData] = React.useState<ColType[]>([]);
 
-  // Update table data when the data is available.
+  // Update table data when the data is available
   React.useEffect(() => {
     if (materials) {
       setRowData(
         materials.map((material) => ({
+          id: material.id,
           sku: material.sku,
           name: material.name,
           status: getStockStatus(material.stockLevel, material.minStockLevel),
@@ -100,6 +58,43 @@ export function MaterialsTable() {
       );
     }
   }, [materials]);
+
+  const colDefs: ColDef<ColType>[] = [
+    {
+      headerName: "SKU",
+      field: "sku",
+      editable: true,
+      filter: true,
+      headerCheckboxSelection: true,
+      checkboxSelection: true,
+    },
+    {
+      headerName: "Name",
+      field: "name",
+      editable: true,
+      filter: true,
+      autoHeight: true,
+      flex: 1,
+    },
+    {
+      headerName: "Status",
+      field: "status",
+      cellRenderer: StatusCellRenderer,
+    },
+    {
+      headerName: "Stock",
+      field: "stock",
+    },
+    {
+      headerName: "Vendor",
+      field: "vendor",
+      filter: true,
+    },
+    {
+      headerName: "Categories",
+      field: "categories",
+    },
+  ];
 
   // Show spinner if query is loading
   if (isLoading) {
@@ -115,20 +110,13 @@ export function MaterialsTable() {
   }
 
   return (
-    <Section
-      className={theme}
-      fontFamily={poppins.style.fontFamily}
-      fontSize="xs"
-      flexGrow={1}
-      p={0}
-      overflow="hidden"
-    >
-      <AgGridReact
-        rowData={rowData}
-        columnDefs={colDefs}
-        rowSelection="multiple"
-        autoSizeStrategy={autoSizeStrategy}
-      />
-    </Section>
+    <Table<ColType>
+      rowData={rowData}
+      columnDefs={colDefs}
+      autoSizeStrategy={{
+        type: "fitCellContents",
+        colIds: ["sku", "status", "stock", "vendor", "categories"],
+      }}
+    />
   );
 }
