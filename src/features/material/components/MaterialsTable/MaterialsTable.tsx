@@ -77,20 +77,13 @@ export function MaterialsTable() {
 
   const colDefs: ColDef<MaterialsTableColumns>[] = [
     {
-      headerName: "SKU",
-      field: "sku",
-      editable: true,
-      filter: true,
-      headerCheckboxSelection: true,
-      checkboxSelection: true,
-    },
-    {
       headerName: "Name",
       field: "name",
-      editable: true,
       filter: true,
       autoHeight: true,
       flex: 1,
+      headerCheckboxSelection: true,
+      checkboxSelection: true,
     },
     {
       headerName: "Status",
@@ -104,6 +97,11 @@ export function MaterialsTable() {
     {
       headerName: "Vendor",
       field: "vendor",
+      filter: true,
+    },
+    {
+      headerName: "SKU",
+      field: "sku",
       filter: true,
     },
     {
