@@ -8,6 +8,7 @@ import { formErrorTheme } from "./components/formError";
 import { inputTheme } from "./components/input";
 import { linkTheme } from "./components/link";
 import { modalTheme } from "./components/modal";
+import { popoverTheme } from "./components/popover";
 
 const poppins = Poppins({
   weight: ["400", "600", "800"],
@@ -51,6 +52,7 @@ const themeOverride: ThemeOverride = {
     Input: inputTheme,
     Link: linkTheme,
     Modal: modalTheme,
+    Popover: popoverTheme,
   },
 };
 
