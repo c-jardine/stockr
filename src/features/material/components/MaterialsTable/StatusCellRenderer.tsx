@@ -5,6 +5,7 @@ import {
   Tag,
   TagLabel,
   TagLeftIcon,
+  useColorModeValue,
   type TagProps,
 } from "@chakra-ui/react";
 import { type CustomCellRendererProps } from "ag-grid-react";
@@ -21,25 +22,25 @@ export function StatusCellRenderer({
       case "Available": {
         return {
           border: "1px",
-          borderColor: "green.300",
-          bg: "green.100",
-          color: "green.800",
+          borderColor: useColorModeValue("green.300", "green.900"),
+          bg: useColorModeValue("green.100", "green.950"),
+          color: useColorModeValue("green.800", "green.500"),
         };
       }
       case "Low stock": {
         return {
           border: "1px",
-          borderColor: "yellow.300",
-          bg: "yellow.100",
-          color: "yellow.800",
+          borderColor: useColorModeValue("yellow.300", "yellow.900"),
+          bg: useColorModeValue("yellow.100", "yellow.950"),
+          color: useColorModeValue("yellow.800", "yellow.500"),
         };
       }
       case "Out of stock": {
         return {
           border: "1px",
-          borderColor: "red.300",
-          bg: "red.100",
-          color: "red.800",
+          borderColor: useColorModeValue("red.300", "red.900"),
+          bg: useColorModeValue("red.100", "red.950"),
+          color: useColorModeValue("red.800", "red.500"),
         };
       }
       default: {
