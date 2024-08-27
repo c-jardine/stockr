@@ -13,6 +13,7 @@ import { StatusCellRenderer } from "./StatusCellRenderer";
 import "ag-grid-community/styles/ag-grid.css"; // Mandatory CSS required by the Data Grid
 import "ag-grid-community/styles/ag-theme-quartz.css"; // Optional Theme applied to the Data Grid
 import { type ColDef } from "node_modules/ag-grid-community/dist/types/core/main";
+import { StockCellRenderer } from "./StockCellRenderer";
 
 // Table column type definition
 export type MaterialsTableColumns = {
@@ -93,6 +94,7 @@ export function MaterialsTable() {
     {
       headerName: "Stock",
       field: "stock",
+      cellRenderer: StockCellRenderer,
     },
     {
       headerName: "Vendor",
