@@ -43,11 +43,24 @@ const menuButton = defineStyle({
   },
 });
 
+const stockUpdate = defineStyle((props) => ({
+  fontSize: "sm",
+  outline: "1px solid transparent",
+  _hover: {
+    bg: props.colorMode === "light" ? "blue.200" : "blue.950",
+    outlineColor: props.colorMode === "light" ? "white" : "blue.800",
+  },
+  _active: {
+    bg: props.colorMode === "light" ? "blue.300" : "blue.800",
+  },
+}));
+
 export const buttonTheme = defineStyleConfig({
   baseStyle,
   variants: {
     solid,
     primary,
     menuButton,
+    stockUpdate,
   },
 });
