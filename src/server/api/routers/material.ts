@@ -5,11 +5,10 @@ import { createMaterialFormSchema } from "~/types/material";
 export const materialRouter = createTRPCRouter({
   create: protectedProcedure
     .input(createMaterialFormSchema)
-    .mutation(async ({ ctx, input: { name, cost, vendor, categories } }) => {
+    .mutation(async ({ ctx, input: { vendor, categories, ...rest } }) => {
       return ctx.db.material.create({
         data: {
-          name,
-          cost,
+          ...rest,
           ...(vendor && {
             vendor: {
               connectOrCreate: {
