@@ -1,3 +1,5 @@
+import { FaCircle } from "react-icons/fa6";
+
 import {
   Flex,
   Tag,
@@ -6,13 +8,14 @@ import {
   type TagProps,
 } from "@chakra-ui/react";
 import { type CustomCellRendererProps } from "ag-grid-react";
-import { FaCircle } from "react-icons/fa6";
+
 import { type StockStatus } from "~/types/status";
-import { type MaterialTableColumnsDef } from ".";
+
+import { type MaterialsTableColumns } from "./MaterialsTable";
 
 export function StatusCellRenderer({
   node,
-}: CustomCellRendererProps<MaterialTableColumnsDef>) {
+}: CustomCellRendererProps<MaterialsTableColumns>) {
   function getStyles(status: StockStatus): TagProps {
     switch (status) {
       case "Available": {
