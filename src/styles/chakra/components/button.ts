@@ -44,14 +44,15 @@ const menuButton = defineStyle({
 });
 
 const stockUpdate = defineStyle((props) => ({
-  fontSize: "sm",
+  fontSize: "xs",
   outline: "1px solid transparent",
   _hover: {
-    bg: props.colorMode === "light" ? "blue.200" : "blue.950",
-    outlineColor: props.colorMode === "light" ? "white" : "blue.800",
+    color: props.colorMode === "light" ? "blue.800" : "blue.300",
+    bg: props.colorMode === "light" ? "blue.100" : "blue.950",
+    outlineColor: props.colorMode === "light" ? "blue.300" : "blue.800",
   },
   _active: {
-    bg: props.colorMode === "light" ? "blue.300" : "blue.800",
+    bg: props.colorMode === "light" ? "blue.200" : "blue.900",
   },
 }));
 
