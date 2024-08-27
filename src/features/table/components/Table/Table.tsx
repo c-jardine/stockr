@@ -78,7 +78,8 @@ export function Table<ColType>({
     columnDefs: React.useMemo(() => columnDefs, [columnDefs]),
     suppressCellFocus: true,
     rowSelection: "multiple",
-    rowMultiSelectWithClick: true,
+    rowMultiSelectWithClick: false,
+    suppressRowClickSelection: true,
     autoSizeStrategy: React.useMemo(() => autoSizeStrategy, [autoSizeStrategy]),
     onSelectionChanged,
   };
