@@ -25,3 +25,15 @@ export const createMaterialFormSchema = z.object({
 });
 
 export type CreateMaterialFormType = z.infer<typeof createMaterialFormSchema>;
+
+export const updateMaterialStockFormSchema = z.object({
+  materialId: z.string(),
+  type: z.string(),
+  previousStockLevel: z.string(),
+  newStockLevel: z.string(),
+  notes: z.string().optional(),
+});
+
+export type UpdateMaterialStockFormType = z.infer<
+  typeof updateMaterialStockFormSchema
+>;

@@ -1,6 +1,9 @@
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
-import { createMaterialFormSchema } from "~/types/material";
+import {
+  createMaterialFormSchema,
+  updateMaterialStockFormSchema,
+} from "~/types/material";
 
 export const materialRouter = createTRPCRouter({
   create: protectedProcedure
@@ -46,6 +49,85 @@ export const materialRouter = createTRPCRouter({
 
     return materials ?? null;
   }),
+
+  updateStock: protectedProcedure
+    .input(updateMaterialStockFormSchema)
+    .mutation(
+      async ({
+        ctx,
+        input: { materialId, type, newStockLevel, previousStockLevel, notes },
+      }) => {
+        const stockLog = await ctx.db.$transaction([
+          ctx.db.material.update({
+            where: {
+              id: materialId,
+            },
+            data: {
+              stockLevel: newStockLevel,
+              updatedBy: {
+                connect: {
+                  id: ctx.session.user.id,
+                },
+              },
+            },
+          }),
+          ctx.db.materialStockUpdateLog.create({
+            data: {
+              previousStockLevel,
+              newStockLevel,
+              type: {
+                connect: {
+                  type,
+                },
+              },
+              notes,
+              createdBy: {
+                connect: {
+                  id: ctx.session.user.id,
+                },
+              },
+              material: {
+                connect: {
+                  id: materialId,
+                },
+              },
+            },
+          }),
+        ]);
+        // const stockLog = await ctx.db.material.update({
+        //   where: {
+        //     id: materialId,
+        //   },
+        //   data: {
+        //     stockLevel: newStockLevel,
+        //     stockLogs: {
+        //       create: {
+        //         previousStockLevel: new Prisma.Decimal(previousStockLevel),
+        //         newStockLevel: new Prisma.Decimal(newStockLevel),
+        //         notes,
+        //         type: {
+        //           connect: {
+        //             type,
+        //           },
+        //         },
+        //         createdBy: {
+        //           connect: {
+        //             id: ctx.session.user.id,
+        //           },
+        //         },
+        //       },
+        //     },
+        //     updatedBy: {
+        //       connect: {
+        //         id: ctx.session.user.id,
+        //       },
+        //     },
+        //   },
+        // });
+
+        return stockLog ?? null;
+      }
+    ),
 
   deleteAll: protectedProcedure
     .input(z.string().array())

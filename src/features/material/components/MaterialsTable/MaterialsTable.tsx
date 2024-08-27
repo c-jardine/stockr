@@ -6,7 +6,6 @@ import PuffLoader from "react-spinners/PuffLoader";
 import { Table } from "~/features/table/components/Table";
 import { type StockStatus } from "~/types/status";
 import { api } from "~/utils/api";
-import { getStockAsText } from "~/utils/stock";
 import { getStockStatus } from "~/utils/stockStatus";
 import { StatusCellRenderer } from "./StatusCellRenderer";
 
@@ -17,6 +16,7 @@ import { StockCellRenderer } from "./StockCellRenderer";
 
 // Table column type definition
 export type MaterialsTableColumns = {
+  id: string;
   sku: string | null;
   name: string;
   status: StockStatus;
@@ -67,7 +67,8 @@ export function MaterialsTable() {
           sku: material.sku,
           name: material.name,
           status: getStockStatus(material.stockLevel, material.minStockLevel),
-          stock: getStockAsText(material.stockLevel, material.stockUnitType),
+          // stock: getStockAsText(material.stockLevel, material.stockUnitType),
+          stock: material.stockLevel ? material.stockLevel.toString() : null,
           vendor: material.vendor?.name ?? null,
           categories: material.categories?.map((category) => category.name),
           notes: material.notes,
