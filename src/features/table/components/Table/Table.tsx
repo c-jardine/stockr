@@ -76,6 +76,7 @@ export function Table<ColType>({
   const gridOptions: GridOptions<ColType> = {
     rowData: React.useMemo(() => rowData, [rowData]),
     columnDefs: React.useMemo(() => columnDefs, [columnDefs]),
+    suppressCellFocus: true,
     rowSelection: "multiple",
     rowMultiSelectWithClick: true,
     autoSizeStrategy: React.useMemo(() => autoSizeStrategy, [autoSizeStrategy]),
