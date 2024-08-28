@@ -54,10 +54,17 @@ model MaterialStockUpdateLog {
 }
 
 model MaterialStockUpdateType {
-    id        String                   @id @default(uuid())
-    type      String                   @unique
+    id        String                    @id @default(uuid())
+    type      String                    @unique
+    action    MaterialStockUpdateAction
     color     String
     materials MaterialStockUpdateLog[]
+}
+
+enum MaterialStockUpdateAction {
+    INCREASE
+    SET
+    DECREASE
 }
 
 model Product {
