@@ -24,9 +24,9 @@ import { useForm } from "react-hook-form";
 import { FaChevronRight } from "react-icons/fa6";
 
 import {
-  ControlledSelect,
+  CreatableSelect,
   type MultiSelectInput,
-} from "~/components/ControlledSelect";
+} from "~/components/CreatableSelect";
 import { TextInput } from "~/components/TextInput";
 import {
   updateMaterialStockFormSchema,
@@ -107,7 +107,7 @@ export function StockCellRenderer({
                 onSubmit={handleSubmit(onSubmit)}
                 spacing={4}
               >
-                <ControlledSelect<
+                <CreatableSelect<
                   UpdateMaterialStockFormType,
                   MultiSelectInput,
                   true
