@@ -6,30 +6,24 @@ import { type MaterialLogsTableColumns } from "./MaterialLogsTable";
 export function UpdateTypeRenderer({
   node,
 }: CustomCellRendererProps<MaterialLogsTableColumns>) {
-  const auditColor = useColorModeValue("indigo.600", "indigo.800");
+  const color = useColorModeValue(
+    node.data ? `${node.data.type.color}.600` : "unset",
+    node.data ? `${node.data.type.color}.800` : "unset"
+  );
 
   if (!node.data) {
     return null;
   }
 
   function getUpdateTypeIcon() {
-    if (node.data?.type === "Audit") {
+    if (node.data?.type.name === "Audit") {
       return FaClipboardList;
     }
 
     return null;
   }
 
-  function getColor() {
-    if (node.data?.type === "Audit") {
-      return auditColor;
-    }
-
-    return "unset";
-  }
-
   const icon = getUpdateTypeIcon();
-  const color = getColor();
 
   if (!icon) {
     return null;
@@ -38,7 +32,7 @@ export function UpdateTypeRenderer({
   return (
     <HStack h="full" alignItems="center" color={color}>
       <Icon as={icon} boxSize={4} />
-      <Text>{node.data.type}</Text>
+      <Text>{node.data.type.name}</Text>
     </HStack>
   );
 }

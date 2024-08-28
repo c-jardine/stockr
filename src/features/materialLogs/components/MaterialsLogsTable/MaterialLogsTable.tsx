@@ -18,7 +18,7 @@ import { UpdateTypeRenderer } from "./UpdateTypeRenderer";
 export type MaterialLogsTableColumns = {
   id: string;
   name: string;
-  type: string;
+  type: { name: string; color: string };
   previousStockLevel: number;
   newStockLevel: number;
   stock?: number;
@@ -48,7 +48,7 @@ export function MaterialLogsTable() {
         updates.map((update) => ({
           id: update.id,
           name: update.material.name,
-          type: update.type.type,
+          type: { name: update.type.type, color: update.type.color },
           previousStockLevel: update.previousStockLevel as unknown as number,
           newStockLevel: update.newStockLevel as unknown as number,
           createdBy: {
