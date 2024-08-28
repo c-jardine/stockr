@@ -57,7 +57,7 @@ export function CreatableSelect<
 
   return (
     <FormControl id={name} isInvalid={!!error}>
-      {label && <FormLabel>{label}</FormLabel>}
+      {label && <FormLabel w="full">{label}</FormLabel>}
       <ChakraCreatableSelect<Option, IsMulti, Group>
         options={options}
         chakraStyles={{
