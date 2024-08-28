@@ -50,6 +50,36 @@ export const materialRouter = createTRPCRouter({
     return materials ?? null;
   }),
 
+  deleteAll: protectedProcedure
+    .input(z.string().array())
+    .mutation(async ({ ctx, input }) => {
+      return ctx.db.material.deleteMany({
+        where: {
+          id: {
+            in: input,
+          },
+        },
+      });
+    }),
+
+  getVendors: protectedProcedure.query(async ({ ctx }) => {
+    const vendors = await ctx.db.vendor.findMany({
+      orderBy: { name: "asc" },
+    });
+
+    return vendors ?? null;
+  }),
+
+  getCategories: protectedProcedure.query(async ({ ctx }) => {
+    const categories = await ctx.db.materialCategory.findMany({
+      orderBy: {
+        name: "asc",
+      },
+    });
+
+    return categories ?? null;
+  }),
+
   updateStock: protectedProcedure
     .input(updateMaterialStockFormSchema)
     .mutation(
@@ -98,36 +128,6 @@ export const materialRouter = createTRPCRouter({
         return stockLog ?? null;
       }
     ),
-
-  deleteAll: protectedProcedure
-    .input(z.string().array())
-    .mutation(async ({ ctx, input }) => {
-      return ctx.db.material.deleteMany({
-        where: {
-          id: {
-            in: input,
-          },
-        },
-      });
-    }),
-
-  getVendors: protectedProcedure.query(async ({ ctx }) => {
-    const vendors = await ctx.db.vendor.findMany({
-      orderBy: { name: "asc" },
-    });
-
-    return vendors ?? null;
-  }),
-
-  getCategories: protectedProcedure.query(async ({ ctx }) => {
-    const categories = await ctx.db.materialCategory.findMany({
-      orderBy: {
-        name: "asc",
-      },
-    });
-
-    return categories ?? null;
-  }),
 
   getStockUpdateTypes: protectedProcedure.query(async ({ ctx }) => {
     const updateTypes = await ctx.db.materialStockUpdateType.findMany({
