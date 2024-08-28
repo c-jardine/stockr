@@ -7,8 +7,8 @@ import { type MaterialLogsTableColumns } from "./MaterialLogsTable";
 export function StockCellRenderer({
   node,
 }: CustomCellRendererProps<MaterialLogsTableColumns>) {
-  const negativeColor = useColorModeValue("red.600", "red.800");
-  const positiveColor = useColorModeValue("green.600", "green.800");
+  const negativeColor = useColorModeValue("red.600", "red.500");
+  const positiveColor = useColorModeValue("green.600", "green.500");
 
   if (!node.data) {
     return null;

@@ -8,7 +8,7 @@ export function UpdateTypeRenderer({
 }: CustomCellRendererProps<MaterialLogsTableColumns>) {
   const color = useColorModeValue(
     node.data ? `${node.data.type.color}.600` : "unset",
-    node.data ? `${node.data.type.color}.800` : "unset"
+    node.data ? `${node.data.type.color}.500` : "unset"
   );
 
   if (!node.data) {
