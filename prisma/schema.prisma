@@ -47,6 +47,7 @@ model MaterialStockUpdateLog {
     notes              String?
     material           Material                @relation(fields: [materialId], references: [id], onDelete: Cascade, onUpdate: Cascade)
     materialId         String
+    createdAt          DateTime                @default(now())
 
     createdBy   User   @relation("createdBy", fields: [createdById], references: [id], onDelete: Cascade, onUpdate: Cascade)
     createdById String

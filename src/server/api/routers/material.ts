@@ -129,6 +129,21 @@ export const materialRouter = createTRPCRouter({
       }
     ),
 
+  getStockUpdates: protectedProcedure.query(async ({ ctx }) => {
+    const updates = await ctx.db.materialStockUpdateLog.findMany({
+      orderBy: {
+        createdAt: "desc",
+      },
+      include: {
+        material: true,
+        type: true,
+        createdBy: true,
+      },
+    });
+
+    return updates ?? null;
+  }),
+
   getStockUpdateTypes: protectedProcedure.query(async ({ ctx }) => {
     const updateTypes = await ctx.db.materialStockUpdateType.findMany({
       orderBy: {

@@ -36,7 +36,7 @@ interface TableProps<ColType> extends AgGridReactProps {
     | SizeColumnsToFitProvidedWidthStrategy
     | SizeColumnsToContentStrategy;
   containerProps?: ContainerProps;
-  onDelete: (data: string[]) => void;
+  onDelete?: (data: string[]) => void;
 }
 
 export function Table<ColType>({
@@ -65,7 +65,9 @@ export function Table<ColType>({
   }
 
   function handleDelete() {
-    onDelete(selectedRows);
+    if (onDelete) {
+      onDelete(selectedRows);
+    }
   }
 
   const className = useColorModeValue(

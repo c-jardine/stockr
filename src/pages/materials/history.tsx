@@ -4,15 +4,14 @@ import { FaHistory } from "react-icons/fa";
 import { FaFileImport, FaPlus } from "react-icons/fa6";
 
 import { PageHeader } from "~/components/PageHeader";
-import { CreateMaterialForm } from "~/features/material/components/CreateMaterialForm";
-import { MaterialsTable } from "~/features/material/components/MaterialsTable";
+import { MaterialLogsTable } from "~/features/materialLogs/components/MaterialsLogsTable";
 
-export default function Materials() {
+export default function MaterialHistory() {
   return (
     <Stack spacing={4} h="full">
       <PageHeader>
         <PageHeader.Content>
-          <PageHeader.Title>Materials</PageHeader.Title>
+          <PageHeader.Title>Materials History</PageHeader.Title>
           <IconButton
             as={NextLink}
             icon={<Icon as={FaHistory} />}
@@ -37,10 +36,10 @@ export default function Materials() {
             aria-label="Create a new material"
           />
 
-          <CreateMaterialForm />
+          {/* <CreateMaterialForm /> */}
         </PageHeader.Content>
       </PageHeader>
-      <MaterialsTable />
+      <MaterialLogsTable />
     </Stack>
   );
 }
