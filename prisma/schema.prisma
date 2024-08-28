@@ -43,7 +43,7 @@ model MaterialStockUpdateLog {
     type               MaterialStockUpdateType @relation(fields: [typeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
     typeId             String
     previousStockLevel Decimal
-    newStockLevel      Decimal
+    adjustmentQuantity Decimal
     notes              String?
     material           Material                @relation(fields: [materialId], references: [id], onDelete: Cascade, onUpdate: Cascade)
     materialId         String

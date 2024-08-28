@@ -20,7 +20,7 @@ export type MaterialLogsTableColumns = {
   name: string;
   type: { name: string; color: string };
   previousStockLevel: number;
-  newStockLevel: number;
+  adjustmentQuantity: number;
   stock?: number;
   notes: string | null;
   createdBy: { name: string; img: string };
@@ -50,7 +50,7 @@ export function MaterialLogsTable() {
           name: update.material.name,
           type: { name: update.type.type, color: update.type.color },
           previousStockLevel: update.previousStockLevel as unknown as number,
-          newStockLevel: update.newStockLevel as unknown as number,
+          adjustmentQuantity: update.adjustmentQuantity as unknown as number,
           createdBy: {
             name: update.createdBy?.name ?? "Unknown user",
             img: update.createdBy?.image ?? "",
@@ -86,7 +86,7 @@ export function MaterialLogsTable() {
     },
     {
       headerName: "New",
-      field: "newStockLevel",
+      field: "adjustmentQuantity",
     },
     {
       headerName: "User",
@@ -124,7 +124,7 @@ export function MaterialLogsTable() {
           // "type",
           "stock",
           "previousStockLevel",
-          "newStockLevel",
+          "adjustmentQuantity",
           "createdBy",
           "notes",
         ],

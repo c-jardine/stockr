@@ -85,7 +85,13 @@ export const materialRouter = createTRPCRouter({
     .mutation(
       async ({
         ctx,
-        input: { materialId, type, newStockLevel, previousStockLevel, notes },
+        input: {
+          materialId,
+          type,
+          adjustmentQuantity,
+          previousStockLevel,
+          notes,
+        },
       }) => {
         const stockLog = await ctx.db.$transaction([
           ctx.db.material.update({
@@ -93,7 +99,7 @@ export const materialRouter = createTRPCRouter({
               id: materialId,
             },
             data: {
-              stockLevel: newStockLevel,
+              stockLevel: adjustmentQuantity,
               updatedBy: {
                 connect: {
                   id: ctx.session.user.id,
@@ -104,7 +110,7 @@ export const materialRouter = createTRPCRouter({
           ctx.db.materialStockUpdateLog.create({
             data: {
               previousStockLevel,
-              newStockLevel,
+              adjustmentQuantity,
               type: {
                 connect: {
                   id: type.value,

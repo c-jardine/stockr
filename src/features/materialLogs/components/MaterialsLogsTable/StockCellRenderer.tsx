@@ -15,7 +15,7 @@ export function StockCellRenderer({
   }
 
   const stockDifference =
-    node.data.newStockLevel - node.data.previousStockLevel;
+    node.data.adjustmentQuantity - node.data.previousStockLevel;
 
   function getIcon() {
     if (stockDifference < 0) {

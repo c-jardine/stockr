@@ -33,7 +33,7 @@ export const updateMaterialStockFormSchema = z.object({
     value: z.string(),
   }),
   previousStockLevel: z.string(),
-  newStockLevel: z.string(),
+  adjustmentQuantity: z.string(),
   notes: z.string().optional(),
 });
 

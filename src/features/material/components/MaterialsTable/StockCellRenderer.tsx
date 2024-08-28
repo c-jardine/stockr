@@ -120,14 +120,14 @@ export function StockCellRenderer({
                 />
                 <TextInput
                   control={control}
-                  name="newStockLevel"
+                  name="adjustmentQuantity"
                   label="Stock level"
                 />
                 <HStack>
                   <Text fontSize="xs">{node.data?.stock}</Text>{" "}
                   <Icon as={FaChevronRight} boxSize={3} />{" "}
                   <Text fontSize="xs" fontWeight="semibold">
-                    {watch("newStockLevel") ?? node.data?.stock}
+                    {watch("adjustmentQuantity") ?? node.data?.stock}
                   </Text>
                 </HStack>
                 <TextInput control={control} name="notes" label="Notes" />
