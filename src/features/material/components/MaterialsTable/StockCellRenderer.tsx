@@ -12,33 +12,38 @@ import {
   PopoverHeader,
   PopoverTrigger,
   Portal,
+  ScaleFade,
   Stack,
   Text,
   useToast,
 } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { CustomCellRendererProps } from "ag-grid-react";
+import { type CustomCellRendererProps } from "ag-grid-react";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { FaChevronRight } from "react-icons/fa6";
+
+import {
+  ControlledSelect,
+  type MultiSelectInput,
+} from "~/components/ControlledSelect";
 import { TextInput } from "~/components/TextInput";
 import {
   updateMaterialStockFormSchema,
-  UpdateMaterialStockFormType,
+  type UpdateMaterialStockFormType,
 } from "~/types/material";
 import { api } from "~/utils/api";
-import { MaterialsTableColumns } from "./MaterialsTable";
+import { type MaterialsTableColumns } from "./MaterialsTable";
 
 export function StockCellRenderer({
   node,
 }: CustomCellRendererProps<MaterialsTableColumns>) {
   const {
     control,
-    register,
     handleSubmit,
     reset,
     watch,
-    formState: { errors, isSubmitting },
+    formState: { isSubmitting },
   } = useForm<UpdateMaterialStockFormType>({
     defaultValues: {
       materialId: node.data?.id ?? undefined,
@@ -47,6 +52,12 @@ export function StockCellRenderer({
     resolver: zodResolver(updateMaterialStockFormSchema),
   });
 
+  const { data: updateTypeQuery } = api.material.getStockUpdateTypes.useQuery();
+  const updateTypeOptions = updateTypeQuery?.map(({ id, type }) => ({
+    label: type,
+    value: id,
+  }));
+
   React.useEffect(() => {
     if (node.data) {
       reset({
@@ -54,7 +65,7 @@ export function StockCellRenderer({
         previousStockLevel: node.data.stock ?? undefined,
       });
     }
-  }, []);
+  }, [node.data, reset]);
 
   const toast = useToast();
 
@@ -63,18 +74,16 @@ export function StockCellRenderer({
     onSuccess: async (data) => {
       toast({
         title: "Stock updated",
-        description: "Successfully updated stock.",
+        description: `Successfully updated stock for ${data[0].name}.`,
         status: "success",
       });
       await utils.material.getAll.invalidate();
     },
   });
 
-  function onSubmit(data: UpdateMaterialStockFormType) {
+  async function onSubmit(data: UpdateMaterialStockFormType) {
     if (node.data) {
-      mutation.mutate({
-        ...data,
-      });
+      await mutation.mutateAsync(data);
     }
   }
 
@@ -95,20 +104,24 @@ export function StockCellRenderer({
               <Stack
                 as="form"
                 id="update-material-stock-form"
-                onSubmit={handleSubmit(onSubmit, (error) => console.log(error))}
+                onSubmit={handleSubmit(onSubmit)}
                 spacing={4}
               >
-                <TextInput
+                <ControlledSelect<
+                  UpdateMaterialStockFormType,
+                  MultiSelectInput,
+                  true
+                >
+                  options={updateTypeOptions}
                   control={control}
                   name="type"
                   label="Stock update type"
-                  isRequired
+                  useBasicStyles
                 />
                 <TextInput
                   control={control}
                   name="newStockLevel"
                   label="Stock level"
-                  isRequired
                 />
                 <HStack>
                   <Text fontSize="xs">{node.data?.stock}</Text>{" "}
@@ -121,12 +134,16 @@ export function StockCellRenderer({
               </Stack>
             </PopoverBody>
             <PopoverFooter display="flex" justifyContent="flex-end" gap={4}>
-              <Button size="sm">Cancel</Button>
+              <ScaleFade in={!isSubmitting} initialScale={0.9}>
+                <Button size="sm">Cancel</Button>
+              </ScaleFade>
               <Button
                 type="submit"
                 form="update-material-stock-form"
                 variant="primary"
                 size="sm"
+                isDisabled={isSubmitting}
+                isLoading={isSubmitting}
               >
                 Save
               </Button>

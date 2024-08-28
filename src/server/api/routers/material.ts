@@ -77,7 +77,7 @@ export const materialRouter = createTRPCRouter({
               newStockLevel,
               type: {
                 connect: {
-                  type,
+                  id: type.value,
                 },
               },
               notes,
@@ -157,6 +157,16 @@ export const materialRouter = createTRPCRouter({
     });
 
     return categories ?? null;
+  }),
+
+  getStockUpdateTypes: protectedProcedure.query(async ({ ctx }) => {
+    const updateTypes = await ctx.db.materialStockUpdateType.findMany({
+      orderBy: {
+        type: "asc",
+      },
+    });
+
+    return updateTypes ?? null;
   }),
 
   getLatest: protectedProcedure.query(async ({ ctx }) => {
