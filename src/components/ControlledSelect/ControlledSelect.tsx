@@ -10,6 +10,11 @@ import {
   type UseControllerProps,
 } from "react-hook-form";
 
+export type MultiSelectInput = {
+  label: string;
+  value: string;
+};
+
 interface ControlledSelectProps<
   FormValues extends FieldValues = FieldValues,
   Option = unknown,

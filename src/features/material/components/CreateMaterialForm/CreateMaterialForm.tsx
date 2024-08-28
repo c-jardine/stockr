@@ -23,18 +23,16 @@ import { Controller, useForm } from "react-hook-form";
 import { FaDollarSign, FaPlus } from "react-icons/fa6";
 import { NumericFormat } from "react-number-format";
 
-import { ControlledSelect } from "~/components/ControlledSelect";
+import {
+  ControlledSelect,
+  MultiSelectInput,
+} from "~/components/ControlledSelect";
 import { TextInput } from "~/components/TextInput";
 import {
   type CreateMaterialFormType,
   createMaterialFormSchema,
 } from "~/types/material";
 import { api } from "~/utils/api";
-
-type MultiSelectInput = {
-  label: string;
-  value: string;
-};
 
 export function CreateMaterialForm() {
   const toast = useToast();
