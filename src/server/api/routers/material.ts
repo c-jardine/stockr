@@ -94,36 +94,6 @@ export const materialRouter = createTRPCRouter({
             },
           }),
         ]);
-        // const stockLog = await ctx.db.material.update({
-        //   where: {
-        //     id: materialId,
-        //   },
-        //   data: {
-        //     stockLevel: newStockLevel,
-        //     stockLogs: {
-        //       create: {
-        //         previousStockLevel: new Prisma.Decimal(previousStockLevel),
-        //         newStockLevel: new Prisma.Decimal(newStockLevel),
-        //         notes,
-        //         type: {
-        //           connect: {
-        //             type,
-        //           },
-        //         },
-        //         createdBy: {
-        //           connect: {
-        //             id: ctx.session.user.id,
-        //           },
-        //         },
-        //       },
-        //     },
-        //     updatedBy: {
-        //       connect: {
-        //         id: ctx.session.user.id,
-        //       },
-        //     },
-        //   },
-        // });
 
         return stockLog ?? null;
       }
