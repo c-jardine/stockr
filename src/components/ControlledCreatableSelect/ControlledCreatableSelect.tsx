@@ -1,6 +1,6 @@
 import { FormControl, FormErrorMessage, FormLabel } from "@chakra-ui/react";
 import {
-  CreatableSelect as ChakraCreatableSelect,
+  CreatableSelect,
   type GroupBase,
   type CreatableProps as SelectProps,
 } from "chakra-react-select";
@@ -31,7 +31,7 @@ interface ControlledSelectProps<
  *
  * @param props - The combined props of the chakra-react-select component and the useController hook
  */
-export function CreatableSelect<
+export function ControlledCreatableSelect<
   FormValues extends FieldValues = FieldValues,
   Option = unknown,
   IsMulti extends boolean = boolean,
@@ -58,7 +58,7 @@ export function CreatableSelect<
   return (
     <FormControl id={name} isInvalid={!!error}>
       {label && <FormLabel w="full">{label}</FormLabel>}
-      <ChakraCreatableSelect<Option, IsMulti, Group>
+      <CreatableSelect<Option, IsMulti, Group>
         options={options}
         chakraStyles={{
           option: (provided) => ({

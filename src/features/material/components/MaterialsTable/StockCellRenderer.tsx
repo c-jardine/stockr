@@ -24,9 +24,9 @@ import { useForm } from "react-hook-form";
 import { FaChevronRight } from "react-icons/fa6";
 
 import {
-  CreatableSelect,
+  ControlledCreatableSelect,
   type MultiSelectInput,
-} from "~/components/CreatableSelect";
+} from "~/components/ControlledCreatableSelect";
 import { TextInput } from "~/components/TextInput";
 import {
   updateMaterialStockFormSchema,
@@ -34,6 +34,7 @@ import {
 } from "~/types/material";
 import { api } from "~/utils/api";
 import { type MaterialsTableColumns } from "./MaterialsTable";
+import { NewStockUpdateTypeForm } from "./NewStockUpdateTypeForm";
 
 export function StockCellRenderer({
   node,
@@ -107,7 +108,7 @@ export function StockCellRenderer({
                 onSubmit={handleSubmit(onSubmit)}
                 spacing={4}
               >
-                <CreatableSelect<
+                <ControlledCreatableSelect<
                   UpdateMaterialStockFormType,
                   MultiSelectInput,
                   true
@@ -115,7 +116,12 @@ export function StockCellRenderer({
                   options={updateTypeOptions}
                   control={control}
                   name="type"
-                  label="Stock update type"
+                  label={
+                    <Flex justifyContent="space-between" alignItems="center">
+                      <Text>Stock update type</Text>
+                      <NewStockUpdateTypeForm />
+                    </Flex>
+                  }
                   useBasicStyles
                 />
                 <TextInput

@@ -24,9 +24,9 @@ import { FaDollarSign, FaPlus } from "react-icons/fa6";
 import { NumericFormat } from "react-number-format";
 
 import {
-  CreatableSelect,
+  ControlledCreatableSelect,
   type MultiSelectInput,
-} from "~/components/CreatableSelect";
+} from "~/components/ControlledCreatableSelect";
 import { TextInput } from "~/components/TextInput";
 import {
   type CreateMaterialFormType,
@@ -165,7 +165,11 @@ export function CreateMaterialForm() {
                 label="Min. stock level"
               />
 
-              <CreatableSelect<CreateMaterialFormType, MultiSelectInput, true>
+              <ControlledCreatableSelect<
+                CreateMaterialFormType,
+                MultiSelectInput,
+                true
+              >
                 options={vendorOptions}
                 control={control}
                 name="vendor"
@@ -173,7 +177,11 @@ export function CreateMaterialForm() {
                 useBasicStyles
               />
 
-              <CreatableSelect<CreateMaterialFormType, MultiSelectInput, true>
+              <ControlledCreatableSelect<
+                CreateMaterialFormType,
+                MultiSelectInput,
+                true
+              >
                 options={categoryOptions}
                 isMulti
                 control={control}
