@@ -89,7 +89,7 @@ export function MaterialLogsTable() {
       field: "newStockLevel",
     },
     {
-      headerName: "Created by",
+      headerName: "User",
       field: "createdBy",
       cellRenderer: CreatedByRenderer,
     },
