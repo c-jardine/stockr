@@ -135,7 +135,6 @@ export function CreateMaterialForm() {
                         decimalScale={2}
                         thousandSeparator=","
                         value={value}
-                        // onChange={onChange}
                         onValueChange={({ floatValue }) => onChange(floatValue)}
                         onBlur={onBlur}
                       />
