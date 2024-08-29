@@ -3,18 +3,16 @@ import {
   Flex,
   HStack,
   Icon,
-  Popover,
-  PopoverArrow,
-  PopoverBody,
-  PopoverCloseButton,
-  PopoverContent,
-  PopoverFooter,
-  PopoverHeader,
-  PopoverTrigger,
-  Portal,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
   ScaleFade,
   Stack,
   Text,
+  useDisclosure,
   useToast,
 } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -80,76 +78,71 @@ export function StockCellRenderer({
   });
 
   async function onSubmit(data: UpdateMaterialStockFormType) {
-    if (node.data) {
-      await mutation.mutateAsync(data);
-    }
+    await mutation.mutateAsync(data);
   }
+
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
     <Flex alignItems="center" h="full">
-      <Popover>
-        <PopoverTrigger>
-          <Button variant="stockUpdate" size="sm">
-            {node.data?.stock}
-          </Button>
-        </PopoverTrigger>
-        <Portal>
-          <PopoverContent>
-            <PopoverArrow />
-            <PopoverCloseButton />
-            <PopoverHeader>{node.data?.name}</PopoverHeader>
-            <PopoverBody>
-              <Stack
-                as="form"
-                id="update-material-stock-form"
-                onSubmit={handleSubmit(onSubmit)}
-                spacing={4}
-              >
-                <ControlledCreatableSelect
-                  options={updateTypeOptions}
-                  control={control}
-                  name="type"
-                  label={
-                    <Flex justifyContent="space-between" alignItems="center">
-                      <Text>Stock update type</Text>
-                      <NewStockUpdateTypeForm />
-                    </Flex>
-                  }
-                  useBasicStyles
-                />
-                <TextInput
-                  control={control}
-                  name="adjustmentQuantity"
-                  label="Stock level"
-                />
-                <HStack>
-                  <Text fontSize="xs">{node.data?.stock}</Text>{" "}
-                  <Icon as={FaChevronRight} boxSize={3} />{" "}
-                  <Text fontSize="xs" fontWeight="semibold">
-                    {watch("adjustmentQuantity") ?? node.data?.stock}
-                  </Text>
-                </HStack>
-                <TextInput control={control} name="notes" label="Notes" />
-              </Stack>
-            </PopoverBody>
-            <PopoverFooter display="flex" justifyContent="flex-end" gap={4}>
-              <ScaleFade in={!isSubmitting} initialScale={0.9}>
-                <Button size="sm">Cancel</Button>
-              </ScaleFade>
-              <Button
-                type="submit"
-                form="update-material-stock-form"
-                variant="primary"
-                size="sm"
-                isDisabled={isSubmitting}
-                isLoading={isSubmitting}
-              >
-                Save
-              </Button>
-            </PopoverFooter>
-          </PopoverContent>
-        </Portal>
-      </Popover>
+      <Button variant="stockUpdate" size="sm" onClick={onOpen}>
+        {node.data?.stock}
+      </Button>
+      <Modal {...{ isOpen, onClose }}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>{node.data?.name}</ModalHeader>
+          <ModalBody>
+            <Stack
+              as="form"
+              id="update-material-stock-form"
+              onSubmit={handleSubmit(onSubmit)}
+              spacing={4}
+            >
+              <ControlledCreatableSelect
+                options={updateTypeOptions}
+                control={control}
+                name="type"
+                label={
+                  <Flex justifyContent="space-between" alignItems="center">
+                    <Text>Stock update type</Text>
+                    <NewStockUpdateTypeForm />
+                  </Flex>
+                }
+                useBasicStyles
+              />
+              <TextInput
+                control={control}
+                name="adjustmentQuantity"
+                label="Stock level"
+              />
+              <HStack>
+                <Text fontSize="xs">{node.data?.stock}</Text>{" "}
+                <Icon as={FaChevronRight} boxSize={3} />{" "}
+                <Text fontSize="xs" fontWeight="semibold">
+                  {watch("adjustmentQuantity") ?? node.data?.stock}
+                </Text>
+              </HStack>
+              <TextInput control={control} name="notes" label="Notes" />
+            </Stack>
+          </ModalBody>
+          <ModalFooter>
+            <ScaleFade in={!isSubmitting} initialScale={0.9}>
+              <Button size="sm">Cancel</Button>
+            </ScaleFade>
+            <Button
+              type="submit"
+              form="update-material-stock-form"
+              variant="primary"
+              size="sm"
+              isDisabled={isSubmitting}
+              isLoading={isSubmitting}
+            >
+              Save
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </Flex>
   );
 }
