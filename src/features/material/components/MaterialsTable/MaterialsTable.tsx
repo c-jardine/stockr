@@ -131,7 +131,7 @@ export function MaterialsTable() {
       columnDefs={colDefs}
       autoSizeStrategy={{
         type: "fitCellContents",
-        colIds: ["sku", "status", "stock", "vendor", "categories"],
+        colIds: ["sku", "status", "quantity", "vendor", "categories"],
       }}
       onDelete={onDelete}
     />
