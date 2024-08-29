@@ -4,6 +4,7 @@ import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 import {
   createMaterialFormSchema,
   newQuantityAdjustmentActionSchema,
+  updateMaterialFormSchema,
   updateMaterialQuantityFormSchema,
 } from "~/types/material";
 
@@ -51,6 +52,41 @@ export const materialRouter = createTRPCRouter({
 
     return materials ?? null;
   }),
+
+  update: protectedProcedure
+    .input(updateMaterialFormSchema)
+    .mutation(async ({ ctx, input: { id, vendor, categories, ...rest } }) => {
+      return ctx.db.material.update({
+        where: {
+          id,
+        },
+        data: {
+          ...rest,
+          ...(vendor && {
+            vendor: {
+              connectOrCreate: {
+                where: {
+                  id: vendor.value,
+                },
+                create: {
+                  name: vendor.label,
+                },
+              },
+            },
+          }),
+          ...(categories && {
+            categories: {
+              set: [], // Remove all
+              connectOrCreate: categories.map((category) => ({
+                where: { id: category.value },
+                create: { name: category.label },
+              })),
+            },
+          }),
+          updatedBy: { connect: { id: ctx.session.user.id } },
+        },
+      });
+    }),
 
   deleteAll: protectedProcedure
     .input(z.string().array())

@@ -29,6 +29,7 @@ export const createMaterialFormSchema = z.object({
 export type CreateMaterialFormType = z.infer<typeof createMaterialFormSchema>;
 
 export const updateMaterialFormSchema = z.object({
+  id: z.string(),
   name: z.string().min(1, "Required"),
   url: CustomZod.OPTIONAL_URL,
   sku: z.string().optional(),

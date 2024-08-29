@@ -15,11 +15,13 @@ import {
   Input,
   InputGroup,
   InputLeftElement,
+  ScaleFade,
   SimpleGrid,
   Stack,
   Tag,
   Text,
   useDisclosure,
+  useToast,
 } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
@@ -55,7 +57,7 @@ export function NameCellRenderer({
     register,
     handleSubmit,
     reset,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<UpdateMaterialFormType>({
     resolver: zodResolver(updateMaterialFormSchema),
   });
@@ -67,9 +69,9 @@ export function NameCellRenderer({
   }));
 
   const { data: vendorsQuery } = api.material.getVendors.useQuery();
-  const vendorOptions = vendorsQuery?.map(({ name }) => ({
+  const vendorOptions = vendorsQuery?.map(({ id, name }) => ({
     label: name,
-    value: name,
+    value: id,
   }));
 
   React.useEffect(() => {
@@ -79,7 +81,8 @@ export function NameCellRenderer({
         console.log(extraData.cost);
       }
       reset({
-        name: name,
+        id: extraData.id,
+        name,
         url: extraData.url ?? undefined,
         sku: extraData.sku ?? undefined,
         cost: cost ? new Prisma.Decimal(cost).toNumber() : undefined,
@@ -91,18 +94,34 @@ export function NameCellRenderer({
           ? new Prisma.Decimal(minQuantity).toNumber()
           : undefined,
         vendor: extraData.vendor
-          ? { label: extraData.vendor.name, value: extraData.vendor.name }
+          ? { label: extraData.vendor.name, value: extraData.vendor.id }
           : undefined,
         categories: extraData.categories
           ? extraData.categories.map((category) => ({
               label: category.name,
-              value: category.name,
+              value: category.id,
             }))
           : undefined,
         notes: extraData.notes ?? undefined,
       });
     }
   }, [node.data, reset]);
+
+  const toast = useToast();
+
+  const utils = api.useUtils();
+  const mutation = api.material.update.useMutation({
+    onSuccess: async ({ name }) => {
+      toast({
+        title: `Material updated`,
+        description: `Successfully updated ${name}`,
+        status: "success",
+      });
+
+      await utils.material.getAll.invalidate();
+      onClose();
+    },
+  });
 
   if (!node.data) {
     return null;
@@ -111,7 +130,7 @@ export function NameCellRenderer({
   const { name, extraData } = node.data;
 
   async function onSubmit(data: UpdateMaterialFormType) {
-    console.log(data);
+    await mutation.mutateAsync(data);
   }
 
   return (
@@ -269,8 +288,18 @@ export function NameCellRenderer({
               </Stack>
             </DrawerBody>
             <DrawerFooter gap={4}>
-              <Button>Cancel</Button>
-              <Button variant="primary">Save</Button>
+              <ScaleFade in={!isSubmitting} initialScale={0.9}>
+                <Button onClick={onClose}>Cancel</Button>
+              </ScaleFade>
+              <Button
+                type="submit"
+                form="edit-material-form"
+                variant="primary"
+                isLoading={isSubmitting}
+                isDisabled={isSubmitting}
+              >
+                Save
+              </Button>
             </DrawerFooter>
           </DrawerContent>
         </Drawer>
