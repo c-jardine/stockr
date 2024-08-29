@@ -1,3 +1,4 @@
+import { MaterialStockUpdateAction } from "@prisma/client";
 import { z } from "zod";
 import { CustomZod } from "~/utils";
 
@@ -39,4 +40,14 @@ export const updateMaterialStockFormSchema = z.object({
 
 export type UpdateMaterialStockFormType = z.infer<
   typeof updateMaterialStockFormSchema
+>;
+
+export const newStockAdjustmentActionSchema = z.object({
+  name: z.string(),
+  color: z.string(),
+  adjustmentAction: z.nativeEnum(MaterialStockUpdateAction),
+});
+
+export type NewStockAdjustmentActionFormType = z.infer<
+  typeof newStockAdjustmentActionSchema
 >;
