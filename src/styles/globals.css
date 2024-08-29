@@ -5,6 +5,12 @@
   border: none !important;
 }
 
+/* Cell */
+.ag-row .ag-cell {
+  display: flex;
+  align-items: center;
+}
+
 /* For light theme */
 .ag-theme-quartz {
   --ag-border-color: var(--chakra-colors-zinc-200) !important;
