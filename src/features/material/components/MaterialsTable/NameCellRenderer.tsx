@@ -34,6 +34,7 @@ import { FaExclamationTriangle } from "react-icons/fa";
 import { FaDollarSign } from "react-icons/fa6";
 import { NumericFormat } from "react-number-format";
 import { ControlledCreatableSelect } from "~/components/ControlledCreatableSelect";
+import { ExternalLink } from "~/components/ExternalLink";
 import { TextInput } from "~/components/TextInput";
 import {
   updateMaterialFormSchema,
@@ -141,21 +142,23 @@ export function NameCellRenderer({
       wrap="wrap"
     >
       <Stack spacing={2}>
-        <Button
-          variant="text"
-          justifyContent="flex-start"
-          alignItems="center"
-          size="sm"
-          fontSize="xs"
-          fontWeight="semibold"
-          w="fit-content"
-          px={2}
-          h="fit-content"
-          py={"0 !important"}
-          onClick={onOpen}
-        >
-          {name}
-        </Button>
+        <HStack spacing={0}>
+          <Button
+            variant="text"
+            justifyContent="flex-start"
+            alignItems="center"
+            size="sm"
+            fontSize="xs"
+            fontWeight="semibold"
+            w="fit-content"
+            px={2}
+            h="fit-content"
+            py={"0 !important"}
+            onClick={onOpen}
+          >
+            {name}
+          </Button>
+        </HStack>
         <Drawer {...{ isOpen, onClose }} size="sm">
           <DrawerOverlay />
           <DrawerContent>
@@ -320,17 +323,21 @@ export function NameCellRenderer({
           </HStack>
         )}
       </Stack>
-      {extraData.sku && (
-        <Text
-          px={1}
-          color="zinc.600"
-          fontStyle="italic"
-          alignSelf="center"
-          lineHeight="normal"
-        >
-          SKU: {extraData.sku}
-        </Text>
-      )}
+      <Stack alignItems="flex-end" alignSelf="center" spacing={0}>
+        {extraData.url && (
+          <ExternalLink href={extraData.url}>
+            View
+            {extraData.vendor?.name
+              ? ` on ${extraData.vendor.name}`
+              : " website"}
+          </ExternalLink>
+        )}
+        {extraData.sku && (
+          <Text px={1} color="zinc.600" fontStyle="italic" lineHeight="normal">
+            SKU: {extraData.sku}
+          </Text>
+        )}
+      </Stack>
     </HStack>
   );
 }
