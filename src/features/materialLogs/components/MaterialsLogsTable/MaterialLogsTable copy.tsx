@@ -13,7 +13,6 @@ import { api, RouterOutputs } from "~/utils/api";
 import { AdjustedQuantityCellRenderer } from "./AdjustedQuantityCellRenderer";
 import { CreatedAtRenderer } from "./CreatedAtRenderer";
 import { CreatedByRenderer } from "./CreatedByRenderer";
-import { NewStockCellRenderer } from "./NewStockCellRenderer";
 import { UpdateTypeRenderer } from "./UpdateTypeRenderer";
 
 // Table row type definition
@@ -76,7 +75,7 @@ export function MaterialLogsTable() {
     {
       headerName: "New stock",
       field: "newStock",
-      cellRenderer: NewStockCellRenderer,
+      // cellRenderer: StockCellRenderer,
     },
     {
       headerName: "Previous",
@@ -120,7 +119,7 @@ export function MaterialLogsTable() {
         type: "fitCellContents",
         colIds: [
           "type",
-          "newStock",
+          "stockChange",
           "previousStockLevel",
           "adjustedQuantity",
           "createdBy",

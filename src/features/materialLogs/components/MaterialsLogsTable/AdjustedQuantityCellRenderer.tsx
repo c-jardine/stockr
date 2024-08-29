@@ -6,7 +6,7 @@ import { type CustomCellRendererProps } from "ag-grid-react";
 
 import { type MaterialLogsTableRows } from "./MaterialLogsTable";
 
-export function StockCellRenderer({
+export function AdjustedQuantityCellRenderer({
   node,
 }: CustomCellRendererProps<MaterialLogsTableRows>) {
   const negativeColor = useColorModeValue("red.600", "red.500");
