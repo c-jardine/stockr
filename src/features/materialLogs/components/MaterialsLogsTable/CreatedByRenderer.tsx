@@ -1,24 +1,27 @@
 import { Avatar, Flex, HStack, Text } from "@chakra-ui/react";
+
 import { type CustomCellRendererProps } from "ag-grid-react";
 
-import { type MaterialLogsTableColumns } from "./MaterialLogsTable";
+import { type MaterialLogsTableRows } from "./MaterialLogsTable";
 
 export function CreatedByRenderer({
   node,
-}: CustomCellRendererProps<MaterialLogsTableColumns>) {
+}: CustomCellRendererProps<MaterialLogsTableRows>) {
   if (!node.data) {
     return null;
   }
 
+  const {
+    extraData: {
+      createdBy: { name, image },
+    },
+  } = node.data;
+
   return (
     <Flex alignItems="center" h="full">
       <HStack>
-        <Avatar
-          name={node.data.createdBy.name}
-          src={node.data.createdBy.img}
-          size="xs"
-        />
-        <Text>{node.data.createdBy.name}</Text>
+        <Avatar name={name ?? "Unknown"} src={image ?? undefined} size="xs" />
+        <Text>{name}</Text>
       </HStack>
     </Flex>
   );

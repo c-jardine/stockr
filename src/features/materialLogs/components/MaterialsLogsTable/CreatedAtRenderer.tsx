@@ -1,14 +1,16 @@
 import { Text } from "@chakra-ui/react";
-import { type CustomCellRendererProps } from "ag-grid-react";
 import { format } from "date-fns/format";
+import { isThisYear } from "date-fns/isThisYear";
 import { isToday } from "date-fns/isToday";
 import { isYesterday } from "date-fns/isYesterday";
-import { isThisYear } from "date-fns/isThisYear";
-import { type MaterialLogsTableColumns } from "./MaterialLogsTable";
+
+import { type CustomCellRendererProps } from "ag-grid-react";
+
+import { type MaterialLogsTableRows } from "./MaterialLogsTable";
 
 export function CreatedAtRenderer({
   node,
-}: CustomCellRendererProps<MaterialLogsTableColumns>) {
+}: CustomCellRendererProps<MaterialLogsTableRows>) {
   if (!node.data) {
     return null;
   }

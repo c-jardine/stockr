@@ -1,30 +1,30 @@
 import { Flex } from "@chakra-ui/react";
+import { MaterialStockUpdateAction } from "@prisma/client";
 import { useSession } from "next-auth/react";
 import React from "react";
 import PuffLoader from "react-spinners/PuffLoader";
 
-import { Table } from "~/features/table/components/Table";
-import { api } from "~/utils/api";
-
 import "ag-grid-community/styles/ag-grid.css"; // Mandatory CSS required by the Data Grid
 import "ag-grid-community/styles/ag-theme-quartz.css"; // Optional Theme applied to the Data Grid
 import { type ColDef } from "node_modules/ag-grid-community/dist/types/core/main";
+
+import { Table } from "~/features/table/components/Table";
+import { api, RouterOutputs } from "~/utils/api";
 import { CreatedAtRenderer } from "./CreatedAtRenderer";
 import { CreatedByRenderer } from "./CreatedByRenderer";
 import { StockCellRenderer } from "./StockCellRenderer";
 import { UpdateTypeRenderer } from "./UpdateTypeRenderer";
 
-// Table column type definition
-export type MaterialLogsTableColumns = {
-  id: string;
+// Table row type definition
+export type MaterialLogsTableRows = {
   name: string;
-  type: { name: string; color: string };
+  type: MaterialStockUpdateAction;
+  stockChange: number;
   previousStockLevel: number;
-  adjustmentQuantity: number;
-  stock?: number;
-  notes: string | null;
-  createdBy: { name: string; img: string };
+  adjustedQuantity: number;
+  createdBy: string;
   createdAt: Date;
+  extraData: RouterOutputs["material"]["getStockUpdates"][0];
 };
 
 export function MaterialLogsTable() {
@@ -39,30 +39,27 @@ export function MaterialLogsTable() {
   );
 
   // Materials data as state
-  const [rowData, setRowData] = React.useState<MaterialLogsTableColumns[]>([]);
+  const [rowData, setRowData] = React.useState<MaterialLogsTableRows[]>([]);
 
   // Update table data when the data is available
   React.useEffect(() => {
     if (updates) {
       setRowData(
         updates.map((update) => ({
-          id: update.id,
           name: update.material.name,
-          type: { name: update.type.type, color: update.type.color },
+          type: update.type.action,
+          stockChange: update.adjustmentQuantity as unknown as number,
           previousStockLevel: update.previousStockLevel as unknown as number,
-          adjustmentQuantity: update.adjustmentQuantity as unknown as number,
-          createdBy: {
-            name: update.createdBy?.name ?? "Unknown user",
-            img: update.createdBy?.image ?? "",
-          },
+          adjustedQuantity: update.adjustmentQuantity as unknown as number,
+          createdBy: update.createdBy.name ?? "Unknown",
           createdAt: update.createdAt,
-          notes: update.notes,
+          extraData: update, // Pass all data so cell renderers can use it
         }))
       );
     }
   }, [updates]);
 
-  const colDefs: ColDef<MaterialLogsTableColumns>[] = [
+  const colDefs: ColDef[] = [
     {
       headerName: "Name",
       field: "name",
@@ -77,7 +74,7 @@ export function MaterialLogsTable() {
     },
     {
       headerName: "Stock change",
-      field: "stock",
+      field: "stockChange",
       cellRenderer: StockCellRenderer,
     },
     {
@@ -85,8 +82,8 @@ export function MaterialLogsTable() {
       field: "previousStockLevel",
     },
     {
-      headerName: "New",
-      field: "adjustmentQuantity",
+      headerName: "Adjusted",
+      field: "adjustedQuantity",
     },
     {
       headerName: "User",
@@ -114,19 +111,18 @@ export function MaterialLogsTable() {
   }
 
   return (
-    <Table<MaterialLogsTableColumns>
+    <Table<MaterialLogsTableRows>
       rowData={rowData}
       columnDefs={colDefs}
       autoSizeStrategy={{
         type: "fitCellContents",
         colIds: [
-          "createdAt",
-          // "type",
-          "stock",
+          "type",
+          "stockChange",
           "previousStockLevel",
-          "adjustmentQuantity",
+          "adjustedQuantity",
           "createdBy",
-          "notes",
+          "createdAt",
         ],
       }}
     />
