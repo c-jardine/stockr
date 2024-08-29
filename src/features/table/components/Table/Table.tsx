@@ -30,7 +30,7 @@ import { Section } from "~/components/Section";
 import { useGridApi } from "../../hooks";
 
 const poppins = Poppins({
-  weight: ["400"],
+  weight: ["400", "500", "600"],
   subsets: ["latin"],
   display: "swap",
 });
