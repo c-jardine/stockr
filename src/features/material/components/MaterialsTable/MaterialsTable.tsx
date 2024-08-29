@@ -8,22 +8,19 @@ import "ag-grid-community/styles/ag-theme-quartz.css"; // Optional Theme applied
 import { type ColDef } from "node_modules/ag-grid-community/dist/types/core/main";
 
 import { Table } from "~/features/table/components/Table";
-import { type QuantityStatus } from "~/types/status";
-import { api } from "~/utils/api";
-import { getStockStatus } from "~/utils/stockStatus";
+import { api, type RouterOutputs } from "~/utils/api";
 import { QuantityCellRenderer } from "./QuantityCellRenderer";
 import { StatusCellRenderer } from "./StatusCellRenderer";
 
 // Table column type definition
 export type MaterialsTableRows = {
-  id: string;
-  sku: string | null;
   name: string;
-  status: QuantityStatus;
-  quantity: string | null;
-  vendor: string | null;
-  categories: string[] | null;
-  notes: string | null;
+  status: string;
+  quantity: number;
+  vendor: string;
+  sku: string;
+  categories: string[];
+  extraData: RouterOutputs["material"]["getAll"][0];
 };
 
 export function MaterialsTable() {
@@ -63,14 +60,13 @@ export function MaterialsTable() {
     if (materials) {
       setRowData(
         materials.map((material) => ({
-          id: material.id,
-          sku: material.sku,
           name: material.name,
-          status: getStockStatus(material.quantity, material.minQuantity),
-          quantity: material.quantity ? material.quantity.toString() : null,
-          vendor: material.vendor?.name ?? null,
-          categories: material.categories?.map((category) => category.name),
-          notes: material.notes,
+          status: "Format status",
+          quantity: material.quantity as unknown as number,
+          vendor: material.vendor?.name ?? "",
+          sku: material.sku ?? "",
+          categories: material.categories.map((category) => category.name),
+          extraData: material,
         }))
       );
     }
@@ -131,7 +127,7 @@ export function MaterialsTable() {
       columnDefs={colDefs}
       autoSizeStrategy={{
         type: "fitCellContents",
-        colIds: ["sku", "status", "quantity", "vendor", "categories"],
+        colIds: ["status", "quantity", "vendor", "sku", "categories"],
       }}
       onDelete={onDelete}
     />

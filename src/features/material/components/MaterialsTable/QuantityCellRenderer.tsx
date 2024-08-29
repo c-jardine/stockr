@@ -43,8 +43,8 @@ export function QuantityCellRenderer({
     formState: { isSubmitting },
   } = useForm<UpdateMaterialQuantityFormType>({
     defaultValues: {
-      materialId: node.data?.id ?? undefined,
-      originalQuantity: node.data?.quantity ?? "0",
+      materialId: node.data?.extraData.id ?? undefined,
+      originalQuantity: node.data?.quantity.toString() ?? "0",
     },
     resolver: zodResolver(updateMaterialQuantityFormSchema),
   });
@@ -59,8 +59,8 @@ export function QuantityCellRenderer({
   React.useEffect(() => {
     if (node.data) {
       reset({
-        materialId: node.data.id,
-        originalQuantity: node.data.quantity ?? "0",
+        materialId: node.data.extraData.id,
+        originalQuantity: node.data.quantity.toString() ?? "0",
       });
     }
   }, [node.data, reset]);
