@@ -72,7 +72,7 @@ export function QuantityCellRenderer({
     onSuccess: async (data) => {
       toast({
         title: "Quantity updated",
-        description: `Successfully updated stock for ${data[0].name}.`,
+        description: `Successfully updated quantity for ${data[0].name}.`,
         status: "success",
       });
       await utils.material.getAll.invalidate();
@@ -97,7 +97,7 @@ export function QuantityCellRenderer({
           <ModalBody>
             <Stack
               as="form"
-              id="update-material-stock-form"
+              id="update-material-quantity-form"
               onSubmit={handleSubmit(onSubmit, (error) => console.log(error))}
               spacing={4}
             >
@@ -107,7 +107,7 @@ export function QuantityCellRenderer({
                 name="type"
                 label={
                   <Flex justifyContent="space-between" alignItems="center">
-                    <Text>Stock update type</Text>
+                    <Text>Quantity update type</Text>
                     <NewQuantityUpdateTypeForm />
                   </Flex>
                 }
@@ -116,7 +116,7 @@ export function QuantityCellRenderer({
               <TextInput
                 control={control}
                 name="adjustedQuantity"
-                label="Stock level"
+                label="Quantity"
               />
               <HStack>
                 <Text fontSize="xs">{node.data?.quantity}</Text>{" "}
@@ -134,7 +134,7 @@ export function QuantityCellRenderer({
             </ScaleFade>
             <Button
               type="submit"
-              form="update-material-stock-form"
+              form="update-material-quantity-form"
               variant="primary"
               size="sm"
               isDisabled={isSubmitting}

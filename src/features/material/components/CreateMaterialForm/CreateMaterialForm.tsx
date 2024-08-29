@@ -160,7 +160,7 @@ export function CreateMaterialForm() {
               <TextInput
                 control={control}
                 name="minQuantity"
-                label="Min. stock level"
+                label="Min. quantity level"
               />
 
               <ControlledCreatableSelect<
