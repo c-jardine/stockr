@@ -16,18 +16,18 @@ export function AdjustedQuantityCellRenderer({
     return null;
   }
 
-  const { previousStockLevel, adjustedQuantity, type } = node.data;
+  const { originalQuantity, adjustedQuantity, type } = node.data;
 
-  const prev = new Prisma.Decimal(previousStockLevel);
+  const prev = new Prisma.Decimal(originalQuantity);
   const adj = new Prisma.Decimal(adjustedQuantity);
 
-  const stockDifference = adj.sub(prev);
+  const quantityDifference = adj.sub(prev);
 
   function getIcon() {
-    if (stockDifference.lessThan(0)) {
+    if (quantityDifference.lessThan(0)) {
       return FaArrowDown;
     }
-    if (stockDifference.greaterThanOrEqualTo(0)) {
+    if (quantityDifference.greaterThanOrEqualTo(0)) {
       return FaArrowUp;
     }
 
@@ -35,10 +35,10 @@ export function AdjustedQuantityCellRenderer({
   }
 
   function getColor() {
-    if (stockDifference.lessThan(0)) {
+    if (quantityDifference.lessThan(0)) {
       return negativeColor;
     }
-    if (stockDifference.greaterThanOrEqualTo(0)) {
+    if (quantityDifference.greaterThanOrEqualTo(0)) {
       return positiveColor;
     }
   }

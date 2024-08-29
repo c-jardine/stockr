@@ -26,34 +26,34 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { type MaterialStockUpdateAction } from "@prisma/client";
+import { type MaterialQuantityUpdateAction } from "@prisma/client";
 import { useForm } from "react-hook-form";
 import { FaPlus, FaQuestion } from "react-icons/fa6";
-import { ControlledColorPicker } from "~/components/ControlledColorPicker";
 
+import { ControlledColorPicker } from "~/components/ControlledColorPicker";
 import { ControlledRadioButtonGroup } from "~/components/ControlledRadioButtonGroup";
 import { TextInput } from "~/components/TextInput";
 import { colors } from "~/styles/chakra/colors";
 import {
-  newStockAdjustmentActionSchema,
-  type NewStockAdjustmentActionFormType,
+  newQuantityAdjustmentActionSchema,
+  type NewQuantityAdjustmentActionFormType,
 } from "~/types/material";
 import { api } from "~/utils/api";
 
-export function NewStockUpdateTypeForm() {
+export function NewQuantityUpdateTypeForm() {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const {
     control,
     handleSubmit,
     formState: { isSubmitting },
-  } = useForm<NewStockAdjustmentActionFormType>({
-    resolver: zodResolver(newStockAdjustmentActionSchema),
+  } = useForm<NewQuantityAdjustmentActionFormType>({
+    resolver: zodResolver(newQuantityAdjustmentActionSchema),
   });
 
   const adjustmentActionOptions: {
     label: string;
-    value: MaterialStockUpdateAction;
+    value: MaterialQuantityUpdateAction;
   }[] = [
     { label: "Decrease", value: "DECREASE" },
     { label: "Set", value: "SET" },
@@ -83,7 +83,7 @@ export function NewStockUpdateTypeForm() {
   const toast = useToast();
 
   const utils = api.useUtils();
-  const mutation = api.material.createStockAdjustmentType.useMutation({
+  const mutation = api.material.createQuantityAdjustmentType.useMutation({
     onSuccess: async (data) => {
       toast({
         title: "New adjustment type",
@@ -91,13 +91,13 @@ export function NewStockUpdateTypeForm() {
         status: "success",
       });
 
-      await utils.material.getStockUpdateTypes.invalidate();
+      await utils.material.getQuantityUpdateTypes.invalidate();
 
       onClose();
     },
   });
 
-  async function onSubmit(data: NewStockAdjustmentActionFormType) {
+  async function onSubmit(data: NewQuantityAdjustmentActionFormType) {
     await mutation.mutateAsync(data);
   }
 
@@ -115,11 +115,11 @@ export function NewStockUpdateTypeForm() {
       <Modal {...{ isOpen, onClose }}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>New stock update type</ModalHeader>
+          <ModalHeader>New quantity update type</ModalHeader>
           <ModalBody>
             <Stack
               as="form"
-              id="new-material-stock-update-type"
+              id="new-material-quantity-update-type"
               onSubmit={handleSubmit(onSubmit, (error) => console.log(error))}
               spacing={4}
             >
@@ -162,7 +162,7 @@ export function NewStockUpdateTypeForm() {
             </ScaleFade>
             <Button
               type="submit"
-              form="new-material-stock-update-type"
+              form="new-material-quantity-update-type"
               variant="primary"
               isLoading={isSubmitting}
               isDisabled={isSubmitting}
@@ -191,12 +191,12 @@ function AdjustmentActionHelperPopover() {
       <PopoverContent>
         <PopoverArrow />
         <PopoverCloseButton />
-        <PopoverHeader>Stock adjustment actions</PopoverHeader>
+        <PopoverHeader>Quantity adjustment actions</PopoverHeader>
         <PopoverBody pb={4}>
           <Stack>
             <Text>
-              Stock adjustment actions determine whether your action will
-              increase, decrease, or set the stock.
+              Quantity adjustment actions determine whether your action will
+              increase, decrease, or set the quantity.
             </Text>
             <Box position="relative" py={4}>
               <Divider />
@@ -209,19 +209,19 @@ function AdjustmentActionHelperPopover() {
               <Text as="span" fontWeight="semibold">
                 Decrease:
               </Text>{" "}
-              Reduce current stock by 5 units
+              Reduce current quantity by 5 units
             </Text>
             <Text>
               <Text as="span" fontWeight="semibold">
                 Set:
               </Text>{" "}
-              Set current stock to 5 units
+              Set current quantity to 5 units
             </Text>
             <Text>
               <Text as="span" fontWeight="semibold">
                 Increase:
               </Text>{" "}
-              Increase current stock by 5 units
+              Increase current quantity by 5 units
             </Text>
           </Stack>
         </PopoverBody>

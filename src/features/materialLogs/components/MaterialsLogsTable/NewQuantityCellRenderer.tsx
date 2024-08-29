@@ -5,16 +5,16 @@ import { type CustomCellRendererProps } from "ag-grid-react";
 
 import { type MaterialLogsTableRows } from "./MaterialLogsTable";
 
-export function NewStockCellRenderer({
+export function NewQuantityCellRenderer({
   node,
 }: CustomCellRendererProps<MaterialLogsTableRows>) {
   if (!node.data) {
     return null;
   }
 
-  const { previousStockLevel, adjustedQuantity, type } = node.data;
+  const { originalQuantity, adjustedQuantity, type } = node.data;
 
-  const prev = new Prisma.Decimal(previousStockLevel);
+  const prev = new Prisma.Decimal(originalQuantity);
   const adj = new Prisma.Decimal(adjustedQuantity);
 
   function getAdjustedBy() {

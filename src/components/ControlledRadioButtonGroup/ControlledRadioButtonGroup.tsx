@@ -3,12 +3,12 @@ import {
   FormErrorMessage,
   FormLabel,
   HStack,
-  useRadioGroup
+  useRadioGroup,
 } from "@chakra-ui/react";
 import {
-  FieldValues,
+  type FieldValues,
   useController,
-  UseControllerProps,
+  type UseControllerProps,
 } from "react-hook-form";
 
 import { RadioButton } from "./RadioButton";
@@ -46,7 +46,7 @@ export function ControlledRadioButtonGroup<
       <HStack {...group} spacing={0}>
         {options.map((option, index) => {
           const radio = getRadioProps({
-            value: option.value as string,
+            value: option.value,
           });
           return (
             <RadioButton

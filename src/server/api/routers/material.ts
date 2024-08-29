@@ -3,8 +3,8 @@ import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 import {
   createMaterialFormSchema,
-  newStockAdjustmentActionSchema,
-  updateMaterialStockFormSchema,
+  newQuantityAdjustmentActionSchema,
+  updateMaterialQuantityFormSchema,
 } from "~/types/material";
 
 export const materialRouter = createTRPCRouter({
@@ -82,10 +82,10 @@ export const materialRouter = createTRPCRouter({
     return categories ?? null;
   }),
 
-  createStockAdjustmentType: protectedProcedure
-    .input(newStockAdjustmentActionSchema)
+  createQuantityAdjustmentType: protectedProcedure
+    .input(newQuantityAdjustmentActionSchema)
     .mutation(async ({ ctx, input: { name, color, adjustmentAction } }) => {
-      const updateType = await ctx.db.materialStockUpdateType.create({
+      const updateType = await ctx.db.materialQuantityUpdateType.create({
         data: {
           type: name,
           color,
@@ -96,42 +96,36 @@ export const materialRouter = createTRPCRouter({
       return updateType ?? null;
     }),
 
-  updateStock: protectedProcedure
-    .input(updateMaterialStockFormSchema)
+  updateQuantity: protectedProcedure
+    .input(updateMaterialQuantityFormSchema)
     .mutation(
       async ({
         ctx,
-        input: {
-          materialId,
-          type,
-          adjustmentQuantity,
-          previousStockLevel,
-          notes,
-        },
+        input: { materialId, type, originalQuantity, adjustedQuantity, notes },
       }) => {
-        const prevQuantity = new Prisma.Decimal(previousStockLevel);
-        const adjustQuantity = new Prisma.Decimal(adjustmentQuantity);
+        const prevQuantity = new Prisma.Decimal(originalQuantity);
+        const adjustQuantity = new Prisma.Decimal(adjustedQuantity);
 
-        function getNewStockLevel() {
+        function getNewQuantity() {
           switch (type.value.action) {
             case "DECREASE":
               return prevQuantity.sub(adjustQuantity);
             case "SET":
-              return adjustmentQuantity;
+              return adjustQuantity;
             case "INCREASE":
               return prevQuantity.add(adjustQuantity);
           }
         }
 
-        const newStockLevel = getNewStockLevel();
+        const newQuantity = getNewQuantity();
 
-        const stockLog = await ctx.db.$transaction([
+        const updateLog = await ctx.db.$transaction([
           ctx.db.material.update({
             where: {
               id: materialId,
             },
             data: {
-              stockLevel: newStockLevel,
+              quantity: newQuantity,
               updatedBy: {
                 connect: {
                   id: ctx.session.user.id,
@@ -139,10 +133,10 @@ export const materialRouter = createTRPCRouter({
               },
             },
           }),
-          ctx.db.materialStockUpdateLog.create({
+          ctx.db.materialQuantityUpdateLog.create({
             data: {
-              previousStockLevel,
-              adjustmentQuantity,
+              originalQuantity,
+              adjustedQuantity,
               type: {
                 connect: {
                   id: type.value.id,
@@ -163,12 +157,12 @@ export const materialRouter = createTRPCRouter({
           }),
         ]);
 
-        return stockLog ?? null;
+        return updateLog ?? null;
       }
     ),
 
-  getStockUpdates: protectedProcedure.query(async ({ ctx }) => {
-    const updates = await ctx.db.materialStockUpdateLog.findMany({
+  getQuantityUpdates: protectedProcedure.query(async ({ ctx }) => {
+    const updates = await ctx.db.materialQuantityUpdateLog.findMany({
       orderBy: {
         createdAt: "desc",
       },
@@ -182,8 +176,8 @@ export const materialRouter = createTRPCRouter({
     return updates ?? null;
   }),
 
-  getStockUpdateTypes: protectedProcedure.query(async ({ ctx }) => {
-    const updateTypes = await ctx.db.materialStockUpdateType.findMany({
+  getQuantityUpdateTypes: protectedProcedure.query(async ({ ctx }) => {
+    const updateTypes = await ctx.db.materialQuantityUpdateType.findMany({
       orderBy: {
         type: "asc",
       },

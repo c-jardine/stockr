@@ -148,22 +148,18 @@ export function CreateMaterialForm() {
               </FormControl>
 
               <SimpleGrid columns={2} gap={4}>
-                <TextInput
-                  control={control}
-                  name="stockLevel"
-                  label="Stock level"
-                />
+                <TextInput control={control} name="quantity" label="Quantity" />
 
                 <TextInput
                   control={control}
-                  name="stockUnitType"
-                  label="Stock unit"
+                  name="quantityUnit"
+                  label="Quantity unit"
                 />
               </SimpleGrid>
 
               <TextInput
                 control={control}
-                name="minStockLevel"
+                name="minQuantity"
                 label="Min. stock level"
               />
 

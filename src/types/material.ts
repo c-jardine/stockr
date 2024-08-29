@@ -1,5 +1,6 @@
-import { MaterialStockUpdateAction } from "@prisma/client";
+import { MaterialQuantityUpdateAction } from "@prisma/client";
 import { z } from "zod";
+
 import { CustomZod } from "~/utils";
 
 export const createMaterialFormSchema = z.object({
@@ -7,9 +8,9 @@ export const createMaterialFormSchema = z.object({
   url: CustomZod.OPTIONAL_URL,
   sku: z.string().optional(),
   cost: z.number().min(0).optional(),
-  stockLevel: z.string().optional(),
-  stockUnitType: z.string().optional(),
-  minStockLevel: z.string().optional(),
+  quantity: z.string().optional(),
+  quantityUnit: z.string().optional(),
+  minQuantity: z.string().optional(),
   notes: z.string().optional(),
   vendor: z
     .object({
@@ -27,31 +28,31 @@ export const createMaterialFormSchema = z.object({
 
 export type CreateMaterialFormType = z.infer<typeof createMaterialFormSchema>;
 
-export const updateMaterialStockFormSchema = z.object({
+export const updateMaterialQuantityFormSchema = z.object({
   materialId: z.string(),
   type: z.object({
     label: z.string(),
     value: z.object({
       id: z.string(),
       type: z.string(),
-      action: z.nativeEnum(MaterialStockUpdateAction),
+      action: z.nativeEnum(MaterialQuantityUpdateAction),
     }),
   }),
-  previousStockLevel: z.string(),
-  adjustmentQuantity: z.string(),
+  originalQuantity: z.string(),
+  adjustedQuantity: z.string(),
   notes: z.string().optional(),
 });
 
-export type UpdateMaterialStockFormType = z.infer<
-  typeof updateMaterialStockFormSchema
+export type UpdateMaterialQuantityFormType = z.infer<
+  typeof updateMaterialQuantityFormSchema
 >;
 
-export const newStockAdjustmentActionSchema = z.object({
+export const newQuantityAdjustmentActionSchema = z.object({
   name: z.string(),
   color: z.string(),
-  adjustmentAction: z.nativeEnum(MaterialStockUpdateAction),
+  adjustmentAction: z.nativeEnum(MaterialQuantityUpdateAction),
 });
 
-export type NewStockAdjustmentActionFormType = z.infer<
-  typeof newStockAdjustmentActionSchema
+export type NewQuantityAdjustmentActionFormType = z.infer<
+  typeof newQuantityAdjustmentActionSchema
 >;

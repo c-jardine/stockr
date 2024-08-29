@@ -1,10 +1,10 @@
 import { HStack, Stack, Tag, Text } from "@chakra-ui/react";
 import { type CustomCellRendererProps } from "ag-grid-react";
-import { type MaterialTableColumnsDef } from "./MaterialsTable";
+import { type MaterialsTableRows } from "./MaterialsTable";
 
 export function NameCellRenderer({
   node,
-}: CustomCellRendererProps<MaterialTableColumnsDef>) {
+}: CustomCellRendererProps<MaterialsTableRows>) {
   if (!node.data) {
     return null;
   }

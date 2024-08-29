@@ -1,5 +1,3 @@
-import { FaCircle } from "react-icons/fa6";
-
 import {
   Flex,
   Tag,
@@ -8,18 +6,20 @@ import {
   useColorModeValue,
   type TagProps,
 } from "@chakra-ui/react";
+import { FaCircle } from "react-icons/fa6";
+
 import { type CustomCellRendererProps } from "ag-grid-react";
 
-import { type StockStatus } from "~/types/status";
-
-import { type MaterialsTableColumns } from "./MaterialsTable";
+import { type QuantityStatus } from "~/types/status";
+import { type MaterialsTableRows } from "./MaterialsTable";
 
 export function StatusCellRenderer({
   node,
-}: CustomCellRendererProps<MaterialsTableColumns>) {
-  function getStyles(status: StockStatus): TagProps {
+}: CustomCellRendererProps<MaterialsTableRows>) {
+  function getStyles(status: QuantityStatus): TagProps {
     switch (status) {
       case "Available": {
+        // TODO: Fix this
         return {
           border: "1px",
           borderColor: useColorModeValue("green.300", "green.900"),

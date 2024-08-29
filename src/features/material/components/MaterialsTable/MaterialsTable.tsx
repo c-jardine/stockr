@@ -3,24 +3,24 @@ import { useSession } from "next-auth/react";
 import React from "react";
 import PuffLoader from "react-spinners/PuffLoader";
 
-import { Table } from "~/features/table/components/Table";
-import { type StockStatus } from "~/types/status";
-import { api } from "~/utils/api";
-import { getStockStatus } from "~/utils/stockStatus";
-import { StatusCellRenderer } from "./StatusCellRenderer";
-
 import "ag-grid-community/styles/ag-grid.css"; // Mandatory CSS required by the Data Grid
 import "ag-grid-community/styles/ag-theme-quartz.css"; // Optional Theme applied to the Data Grid
 import { type ColDef } from "node_modules/ag-grid-community/dist/types/core/main";
-import { StockCellRenderer } from "./StockCellRenderer";
+
+import { Table } from "~/features/table/components/Table";
+import { type QuantityStatus } from "~/types/status";
+import { api } from "~/utils/api";
+import { getStockStatus } from "~/utils/stockStatus";
+import { QuantityCellRenderer } from "./QuantityCellRenderer";
+import { StatusCellRenderer } from "./StatusCellRenderer";
 
 // Table column type definition
-export type MaterialsTableColumns = {
+export type MaterialsTableRows = {
   id: string;
   sku: string | null;
   name: string;
-  status: StockStatus;
-  stock: string | null;
+  status: QuantityStatus;
+  quantity: string | null;
   vendor: string | null;
   categories: string[] | null;
   notes: string | null;
@@ -56,7 +56,7 @@ export function MaterialsTable() {
   }
 
   // Materials data as state
-  const [rowData, setRowData] = React.useState<MaterialsTableColumns[]>([]);
+  const [rowData, setRowData] = React.useState<MaterialsTableRows[]>([]);
 
   // Update table data when the data is available
   React.useEffect(() => {
@@ -66,9 +66,8 @@ export function MaterialsTable() {
           id: material.id,
           sku: material.sku,
           name: material.name,
-          status: getStockStatus(material.stockLevel, material.minStockLevel),
-          // stock: getStockAsText(material.stockLevel, material.stockUnitType),
-          stock: material.stockLevel ? material.stockLevel.toString() : null,
+          status: getStockStatus(material.quantity, material.minQuantity),
+          quantity: material.quantity ? material.quantity.toString() : null,
           vendor: material.vendor?.name ?? null,
           categories: material.categories?.map((category) => category.name),
           notes: material.notes,
@@ -77,7 +76,7 @@ export function MaterialsTable() {
     }
   }, [materials]);
 
-  const colDefs: ColDef<MaterialsTableColumns>[] = [
+  const colDefs: ColDef<MaterialsTableRows>[] = [
     {
       headerName: "Name",
       field: "name",
@@ -93,9 +92,9 @@ export function MaterialsTable() {
       cellRenderer: StatusCellRenderer,
     },
     {
-      headerName: "Stock",
-      field: "stock",
-      cellRenderer: StockCellRenderer,
+      headerName: "Quantity",
+      field: "quantity",
+      cellRenderer: QuantityCellRenderer,
     },
     {
       headerName: "Vendor",
@@ -127,7 +126,7 @@ export function MaterialsTable() {
   }
 
   return (
-    <Table<MaterialsTableColumns>
+    <Table<MaterialsTableRows>
       rowData={rowData}
       columnDefs={colDefs}
       autoSizeStrategy={{

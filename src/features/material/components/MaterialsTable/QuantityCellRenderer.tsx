@@ -16,39 +16,41 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { type CustomCellRendererProps } from "ag-grid-react";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { FaChevronRight } from "react-icons/fa6";
 
+import { type CustomCellRendererProps } from "ag-grid-react";
+
 import { ControlledCreatableSelect } from "~/components/ControlledCreatableSelect";
 import { TextInput } from "~/components/TextInput";
 import {
-  updateMaterialStockFormSchema,
-  type UpdateMaterialStockFormType,
+  updateMaterialQuantityFormSchema,
+  type UpdateMaterialQuantityFormType,
 } from "~/types/material";
 import { api } from "~/utils/api";
-import { type MaterialsTableColumns } from "./MaterialsTable";
-import { NewStockUpdateTypeForm } from "./NewStockUpdateTypeForm";
+import { type MaterialsTableRows } from "./MaterialsTable";
+import { NewQuantityUpdateTypeForm } from "./NewQuantityUpdateTypeForm";
 
-export function StockCellRenderer({
+export function QuantityCellRenderer({
   node,
-}: CustomCellRendererProps<MaterialsTableColumns>) {
+}: CustomCellRendererProps<MaterialsTableRows>) {
   const {
     control,
     handleSubmit,
     reset,
     watch,
     formState: { isSubmitting },
-  } = useForm<UpdateMaterialStockFormType>({
+  } = useForm<UpdateMaterialQuantityFormType>({
     defaultValues: {
       materialId: node.data?.id ?? undefined,
-      previousStockLevel: node.data?.stock ?? undefined,
+      originalQuantity: node.data?.quantity ?? "0",
     },
-    resolver: zodResolver(updateMaterialStockFormSchema),
+    resolver: zodResolver(updateMaterialQuantityFormSchema),
   });
 
-  const { data: updateTypeQuery } = api.material.getStockUpdateTypes.useQuery();
+  const { data: updateTypeQuery } =
+    api.material.getQuantityUpdateTypes.useQuery();
   const updateTypeOptions = updateTypeQuery?.map(({ id, type, action }) => ({
     label: type,
     value: { id, type, action },
@@ -58,7 +60,7 @@ export function StockCellRenderer({
     if (node.data) {
       reset({
         materialId: node.data.id,
-        previousStockLevel: node.data.stock ?? undefined,
+        originalQuantity: node.data.quantity ?? "0",
       });
     }
   }, [node.data, reset]);
@@ -66,10 +68,10 @@ export function StockCellRenderer({
   const toast = useToast();
 
   const utils = api.useUtils();
-  const mutation = api.material.updateStock.useMutation({
+  const mutation = api.material.updateQuantity.useMutation({
     onSuccess: async (data) => {
       toast({
-        title: "Stock updated",
+        title: "Quantity updated",
         description: `Successfully updated stock for ${data[0].name}.`,
         status: "success",
       });
@@ -77,7 +79,7 @@ export function StockCellRenderer({
     },
   });
 
-  async function onSubmit(data: UpdateMaterialStockFormType) {
+  async function onSubmit(data: UpdateMaterialQuantityFormType) {
     await mutation.mutateAsync(data);
   }
 
@@ -86,7 +88,7 @@ export function StockCellRenderer({
   return (
     <Flex alignItems="center" h="full">
       <Button variant="stockUpdate" size="sm" onClick={onOpen}>
-        {node.data?.stock ?? "—"}
+        {node.data?.quantity ?? "—"}
       </Button>
       <Modal {...{ isOpen, onClose }}>
         <ModalOverlay />
@@ -96,7 +98,7 @@ export function StockCellRenderer({
             <Stack
               as="form"
               id="update-material-stock-form"
-              onSubmit={handleSubmit(onSubmit)}
+              onSubmit={handleSubmit(onSubmit, (error) => console.log(error))}
               spacing={4}
             >
               <ControlledCreatableSelect
@@ -106,21 +108,21 @@ export function StockCellRenderer({
                 label={
                   <Flex justifyContent="space-between" alignItems="center">
                     <Text>Stock update type</Text>
-                    <NewStockUpdateTypeForm />
+                    <NewQuantityUpdateTypeForm />
                   </Flex>
                 }
                 useBasicStyles
               />
               <TextInput
                 control={control}
-                name="adjustmentQuantity"
+                name="adjustedQuantity"
                 label="Stock level"
               />
               <HStack>
-                <Text fontSize="xs">{node.data?.stock}</Text>{" "}
+                <Text fontSize="xs">{node.data?.quantity}</Text>{" "}
                 <Icon as={FaChevronRight} boxSize={3} />{" "}
                 <Text fontSize="xs" fontWeight="semibold">
-                  {watch("adjustmentQuantity") ?? node.data?.stock}
+                  {watch("adjustedQuantity") ?? node.data?.quantity}
                 </Text>
               </HStack>
               <TextInput control={control} name="notes" label="Notes" />

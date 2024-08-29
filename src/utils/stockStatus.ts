@@ -1,19 +1,19 @@
 import { Prisma } from "@prisma/client";
-import { type StockStatus } from "~/types/status";
+import { type QuantityStatus } from "~/types/status";
 
 function calculateStockStatus(
-  stock: Prisma.Decimal | null,
-  minStock: Prisma.Decimal | null
-): StockStatus {
-  if (!stock || !minStock) {
+  quantity: Prisma.Decimal | null,
+  minQuantity: Prisma.Decimal | null
+): QuantityStatus {
+  if (!quantity || !minQuantity) {
     return null;
   }
 
-  if (stock.equals(0)) {
+  if (quantity.equals(0)) {
     return "Out of stock";
   }
 
-  const ratio = stock.div(minStock);
+  const ratio = quantity.div(minQuantity);
   if (ratio.lessThanOrEqualTo(0.5)) {
     return "Low stock";
   }
@@ -23,16 +23,16 @@ function calculateStockStatus(
 
 /**
  * Get the stock status.
- * @param stock The current stock.
- * @param minStock The minimum stock.
+ * @param quantity The current stock.
+ * @param minQuantity The minimum stock.
  * @returns The stock status.
  */
 export function getStockStatus(
-  stock: Prisma.Decimal | null,
-  minStock: Prisma.Decimal | null
+  quantity: Prisma.Decimal | null,
+  minQuantity: Prisma.Decimal | null
 ) {
   return calculateStockStatus(
-    stock && new Prisma.Decimal(stock),
-    minStock && new Prisma.Decimal(minStock)
+    quantity && new Prisma.Decimal(quantity),
+    minQuantity && new Prisma.Decimal(minQuantity)
   );
 }

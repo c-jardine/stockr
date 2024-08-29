@@ -1,5 +1,5 @@
 import { Flex } from "@chakra-ui/react";
-import { MaterialStockUpdateAction } from "@prisma/client";
+import { type MaterialQuantityUpdateAction } from "@prisma/client";
 import { useSession } from "next-auth/react";
 import React from "react";
 import PuffLoader from "react-spinners/PuffLoader";
@@ -9,30 +9,30 @@ import "ag-grid-community/styles/ag-theme-quartz.css"; // Optional Theme applied
 import { type ColDef } from "node_modules/ag-grid-community/dist/types/core/main";
 
 import { Table } from "~/features/table/components/Table";
-import { api, RouterOutputs } from "~/utils/api";
+import { api, type RouterOutputs } from "~/utils/api";
 import { AdjustedQuantityCellRenderer } from "./AdjustedQuantityCellRenderer";
 import { CreatedAtRenderer } from "./CreatedAtRenderer";
 import { CreatedByRenderer } from "./CreatedByRenderer";
-import { NewStockCellRenderer } from "./NewStockCellRenderer";
+import { NewQuantityCellRenderer } from "./NewQuantityCellRenderer";
 import { UpdateTypeRenderer } from "./UpdateTypeRenderer";
 
 // Table row type definition
 export type MaterialLogsTableRows = {
   name: string;
-  type: MaterialStockUpdateAction;
-  newStock: number;
-  previousStockLevel: number;
+  type: MaterialQuantityUpdateAction;
+  newQuantity: number;
+  originalQuantity: number;
   adjustedQuantity: number;
   createdBy: string;
   createdAt: Date;
-  extraData: RouterOutputs["material"]["getStockUpdates"][0];
+  extraData: RouterOutputs["material"]["getQuantityUpdates"][0];
 };
 
 export function MaterialLogsTable() {
   const { data: session } = useSession();
 
   // Fetch materials updates query
-  const { data: updates, isLoading } = api.material.getStockUpdates.useQuery(
+  const { data: updates, isLoading } = api.material.getQuantityUpdates.useQuery(
     undefined,
     {
       enabled: session?.user !== undefined,
@@ -49,9 +49,9 @@ export function MaterialLogsTable() {
         updates.map((update) => ({
           name: update.material.name,
           type: update.type.action,
-          newStock: update.adjustmentQuantity as unknown as number,
-          previousStockLevel: update.previousStockLevel as unknown as number,
-          adjustedQuantity: update.adjustmentQuantity as unknown as number,
+          newQuantity: update.adjustedQuantity as unknown as number,
+          originalQuantity: update.originalQuantity as unknown as number,
+          adjustedQuantity: update.adjustedQuantity as unknown as number,
           createdBy: update.createdBy.name ?? "Unknown",
           createdAt: update.createdAt,
           extraData: update, // Pass all data so cell renderers can use it
@@ -74,13 +74,13 @@ export function MaterialLogsTable() {
       cellRenderer: UpdateTypeRenderer,
     },
     {
-      headerName: "New stock",
-      field: "newStock",
-      cellRenderer: NewStockCellRenderer,
+      headerName: "New quantity",
+      field: "newQuantity",
+      cellRenderer: NewQuantityCellRenderer,
     },
     {
       headerName: "Previous",
-      field: "previousStockLevel",
+      field: "originalQuantity",
     },
     {
       headerName: "Adjusted",
@@ -120,8 +120,8 @@ export function MaterialLogsTable() {
         type: "fitCellContents",
         colIds: [
           "type",
-          "newStock",
-          "previousStockLevel",
+          "newQuantity",
+          "originalQuantity",
           "adjustedQuantity",
           "createdBy",
           "createdAt",

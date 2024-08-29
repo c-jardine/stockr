@@ -1,11 +1,11 @@
 import { type Prisma } from "@prisma/client";
 
 export function getStockAsText(
-  stock: Prisma.Decimal | null,
-  stockUnit: string | null
+  quantity: Prisma.Decimal | null,
+  quantityUnit: string | null
 ) {
-  if (!stock) {
+  if (!quantity) {
     return "—";
   }
-  return `${stock.toString()} ${stockUnit}`;
+  return `${quantity.toString()} ${quantityUnit}`;
 }

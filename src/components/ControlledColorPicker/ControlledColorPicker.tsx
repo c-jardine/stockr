@@ -5,10 +5,11 @@ import {
   HStack,
   useRadioGroup,
 } from "@chakra-ui/react";
+
 import {
-  FieldValues,
+  type FieldValues,
   useController,
-  UseControllerProps,
+  type UseControllerProps,
 } from "react-hook-form";
 import { ColorChip } from "./ColorChip";
 
@@ -40,7 +41,7 @@ export function ControlledColorPicker<
       <HStack {...group} justifyContent="center" spacing={1}>
         {options.map((option) => {
           const radio = getRadioProps({
-            value: option.value as string,
+            value: option.value,
           });
           return (
             <ColorChip key={option.label} color={option.value} {...radio}>
