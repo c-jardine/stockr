@@ -28,6 +28,31 @@ export const createMaterialFormSchema = z.object({
 
 export type CreateMaterialFormType = z.infer<typeof createMaterialFormSchema>;
 
+export const updateMaterialFormSchema = z.object({
+  name: z.string().min(1, "Required"),
+  url: CustomZod.OPTIONAL_URL,
+  sku: z.string().optional(),
+  cost: z.string().optional(),
+  quantity: z.string().optional(),
+  quantityUnit: z.string().optional(),
+  minQuantity: z.string().optional(),
+  notes: z.string().optional(),
+  vendor: z
+    .object({
+      label: z.string(),
+      value: z.string(),
+    })
+    .optional(),
+  categories: z
+    .object({
+      label: z.string(),
+      value: z.string(),
+    })
+    .array(),
+});
+
+export type UpdateMaterialFormType = z.infer<typeof updateMaterialFormSchema>;
+
 export const updateMaterialQuantityFormSchema = z.object({
   materialId: z.string(),
   type: z.object({

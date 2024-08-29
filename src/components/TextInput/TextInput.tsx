@@ -4,6 +4,8 @@ import {
   FormLabel,
   Icon,
   Input,
+  type FormControlProps,
+  type InputProps,
 } from "@chakra-ui/react";
 import React from "react";
 import {
@@ -17,6 +19,8 @@ interface TextInputProps<FormValues extends FieldValues = FieldValues>
   extends UseControllerProps<FormValues> {
   label?: string;
   isRequired?: boolean;
+  formControlProps?: FormControlProps;
+  inputProps?: InputProps;
   children?: React.ReactNode;
 }
 
@@ -27,6 +31,8 @@ export function TextInput<FormValues extends FieldValues = FieldValues>({
   rules,
   isRequired = false,
   shouldUnregister,
+  formControlProps,
+  inputProps,
   children,
 }: TextInputProps<FormValues>) {
   const {
@@ -40,7 +46,12 @@ export function TextInput<FormValues extends FieldValues = FieldValues>({
   });
 
   return (
-    <FormControl id={name} isInvalid={!!error} isRequired={isRequired}>
+    <FormControl
+      id={name}
+      isInvalid={!!error}
+      isRequired={isRequired}
+      {...formControlProps}
+    >
       {label && (
         <FormLabel
           display="flex"
@@ -51,7 +62,7 @@ export function TextInput<FormValues extends FieldValues = FieldValues>({
           {label}
         </FormLabel>
       )}
-      {children ? children : <Input {...field} />}
+      {children ? children : <Input {...field} {...inputProps} />}
       {error && <FormErrorMessage>{error.message}</FormErrorMessage>}
     </FormControl>
   );

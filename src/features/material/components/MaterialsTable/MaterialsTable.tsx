@@ -9,6 +9,7 @@ import { type ColDef } from "node_modules/ag-grid-community/dist/types/core/main
 
 import { Table } from "~/features/table/components/Table";
 import { api, type RouterOutputs } from "~/utils/api";
+import { NameCellRenderer } from "./NameCellRenderer";
 import { QuantityCellRenderer } from "./QuantityCellRenderer";
 import { StatusCellRenderer } from "./StatusCellRenderer";
 
@@ -81,6 +82,7 @@ export function MaterialsTable() {
       flex: 1,
       headerCheckboxSelection: true,
       checkboxSelection: true,
+      cellRenderer: NameCellRenderer,
     },
     {
       headerName: "Status",

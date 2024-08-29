@@ -9,6 +9,14 @@ const solid = defineStyle({
   fontSize: "sm",
 });
 
+const text = defineStyle({
+  textDecorationThickness: "8px !important",
+  textUnderlineOffset: 4,
+  _hover: {
+    textDecoration: "underline",
+  },
+});
+
 const primary = defineStyle((props) => ({
   bg: "blue.600",
   color: "blue.50",
@@ -61,6 +69,7 @@ export const buttonTheme = defineStyleConfig({
   variants: {
     solid,
     primary,
+    text,
     menuButton,
     stockUpdate,
   },
