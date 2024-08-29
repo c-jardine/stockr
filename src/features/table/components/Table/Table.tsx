@@ -3,9 +3,16 @@ import {
   Button,
   type ContainerProps,
   HStack,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
   ScaleFade,
   Text,
   useColorModeValue,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { Poppins } from "next/font/google"; // Override table theme font
 
@@ -64,9 +71,12 @@ export function Table<ColType>({
     gridApi?.deselectAll();
   }
 
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
   function handleDelete() {
     if (onDelete) {
       onDelete(selectedRows);
+      onClose();
     }
   }
 
@@ -112,9 +122,27 @@ export function Table<ColType>({
             <HStack justifyContent="flex-end" gap={4}>
               <Text>{selectedRows.length} selected</Text>
               <Button onClick={handleClearSelection}>Clear</Button>
-              <Button colorScheme="red" onClick={handleDelete}>
-                Delete
-              </Button>
+              <>
+                <Button colorScheme="red" onClick={onOpen}>
+                  Delete
+                </Button>
+                <Modal {...{ isOpen, onClose }}>
+                  <ModalOverlay />
+                  <ModalContent>
+                    <ModalHeader>Confirm delete</ModalHeader>
+                    <ModalBody>
+                      Are you sure you want to delete {selectedRows.length}{" "}
+                      {selectedRows.length === 1 ? "row" : "rows"}?
+                    </ModalBody>
+                    <ModalFooter gap={4}>
+                      <Button colorScheme="red" onClick={handleDelete}>
+                        Delete
+                      </Button>
+                      <Button onClick={onClose}>Cancel</Button>
+                    </ModalFooter>
+                  </ModalContent>
+                </Modal>
+              </>
             </HStack>
           </Section>
         </Box>
