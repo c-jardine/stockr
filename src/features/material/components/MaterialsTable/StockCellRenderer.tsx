@@ -86,7 +86,7 @@ export function StockCellRenderer({
   return (
     <Flex alignItems="center" h="full">
       <Button variant="stockUpdate" size="sm" onClick={onOpen}>
-        {node.data?.stock}
+        {node.data?.stock ?? "—"}
       </Button>
       <Modal {...{ isOpen, onClose }}>
         <ModalOverlay />
