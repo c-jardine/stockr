@@ -18,7 +18,7 @@ model Material {
     id                 String                      @id @default(uuid())
     name               String
     url                String?
-    sku                String?
+    sku                String?                     @unique
     cost               Decimal?
     quantity           Decimal?
     quantityUnit       String?
