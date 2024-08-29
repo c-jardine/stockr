@@ -1,5 +1,6 @@
 import {
   Box,
+  useColorModeValue,
   useRadio,
   type BoxProps,
   type UseRadioProps,
@@ -23,6 +24,9 @@ export function RadioButton({
   const input = getInputProps();
   const checkbox = getRadioProps();
 
+  const borderColor = useColorModeValue("zinc.200", "zinc.700");
+  const hoverBgColor = useColorModeValue("zinc.200", "zinc.700");
+
   return (
     <Box as="label" {...containerProps}>
       <input {...input} />
@@ -30,7 +34,7 @@ export function RadioButton({
         {...checkbox}
         cursor="pointer"
         borderWidth="1px"
-        borderColor="zinc.200"
+        borderColor={borderColor}
         transitionDuration="200ms"
         _checked={{
           bg: "blue.600",
@@ -42,7 +46,7 @@ export function RadioButton({
           },
         }}
         _hover={{
-          bg: "zinc.200",
+          bg: hoverBgColor,
         }}
         _focus={{
           boxShadow: "outline",

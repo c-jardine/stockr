@@ -23,7 +23,8 @@ export function ColorChip({
   children,
   ...props
 }: RadioButtonProps) {
-  const c = useColorModeValue(`${color}.600`, `${color}.500`);
+  const chipColor = useColorModeValue(`${color}.600`, `${color}.500`);
+  const borderColor = useColorModeValue("zinc.200", "zinc.700");
 
   const { getInputProps, getRadioProps } = useRadio(props);
 
@@ -35,6 +36,7 @@ export function ColorChip({
       <input {...input} />
       <Box
         {...checkbox}
+        overflow="hidden"
         cursor="pointer"
         role="group"
         p={1}
@@ -42,10 +44,10 @@ export function ColorChip({
         border="1px solid transparent"
         transitionDuration="200ms"
         _hover={{
-          borderColor: "zinc.300",
+          borderColor: borderColor,
         }}
         _checked={{
-          borderColor: "zinc.300",
+          borderColor: borderColor,
         }}
       >
         <Flex
@@ -53,7 +55,7 @@ export function ColorChip({
           alignItems="center"
           boxSize={6}
           rounded="full"
-          bg={c}
+          bg={chipColor}
         >
           <Icon
             display="none"
