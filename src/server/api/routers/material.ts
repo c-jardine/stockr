@@ -1,3 +1,4 @@
+import { Prisma } from "@prisma/client";
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 import {
@@ -108,13 +109,29 @@ export const materialRouter = createTRPCRouter({
           notes,
         },
       }) => {
+        const prevQuantity = new Prisma.Decimal(previousStockLevel);
+        const adjustQuantity = new Prisma.Decimal(adjustmentQuantity);
+
+        function getNewStockLevel() {
+          switch (type.value.action) {
+            case "DECREASE":
+              return prevQuantity.sub(adjustQuantity);
+            case "SET":
+              return adjustmentQuantity;
+            case "INCREASE":
+              return prevQuantity.add(adjustQuantity);
+          }
+        }
+
+        const newStockLevel = getNewStockLevel();
+
         const stockLog = await ctx.db.$transaction([
           ctx.db.material.update({
             where: {
               id: materialId,
             },
             data: {
-              stockLevel: adjustmentQuantity,
+              stockLevel: newStockLevel,
               updatedBy: {
                 connect: {
                   id: ctx.session.user.id,
@@ -128,7 +145,7 @@ export const materialRouter = createTRPCRouter({
               adjustmentQuantity,
               type: {
                 connect: {
-                  id: type.value,
+                  id: type.value.id,
                 },
               },
               notes,

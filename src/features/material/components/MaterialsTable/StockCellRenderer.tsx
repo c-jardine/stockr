@@ -23,10 +23,7 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { FaChevronRight } from "react-icons/fa6";
 
-import {
-  ControlledCreatableSelect,
-  type MultiSelectInput,
-} from "~/components/ControlledCreatableSelect";
+import { ControlledCreatableSelect } from "~/components/ControlledCreatableSelect";
 import { TextInput } from "~/components/TextInput";
 import {
   updateMaterialStockFormSchema,
@@ -54,9 +51,9 @@ export function StockCellRenderer({
   });
 
   const { data: updateTypeQuery } = api.material.getStockUpdateTypes.useQuery();
-  const updateTypeOptions = updateTypeQuery?.map(({ id, type }) => ({
+  const updateTypeOptions = updateTypeQuery?.map(({ id, type, action }) => ({
     label: type,
-    value: id,
+    value: { id, type, action },
   }));
 
   React.useEffect(() => {
@@ -108,11 +105,7 @@ export function StockCellRenderer({
                 onSubmit={handleSubmit(onSubmit)}
                 spacing={4}
               >
-                <ControlledCreatableSelect<
-                  UpdateMaterialStockFormType,
-                  MultiSelectInput,
-                  true
-                >
+                <ControlledCreatableSelect
                   options={updateTypeOptions}
                   control={control}
                   name="type"

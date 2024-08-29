@@ -31,7 +31,11 @@ export const updateMaterialStockFormSchema = z.object({
   materialId: z.string(),
   type: z.object({
     label: z.string(),
-    value: z.string(),
+    value: z.object({
+      id: z.string(),
+      type: z.string(),
+      action: z.nativeEnum(MaterialStockUpdateAction),
+    }),
   }),
   previousStockLevel: z.string(),
   adjustmentQuantity: z.string(),
