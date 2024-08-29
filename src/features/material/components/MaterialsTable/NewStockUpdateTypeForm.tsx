@@ -3,10 +3,6 @@ import {
   Box,
   Button,
   Divider,
-  Flex,
-  FormControl,
-  FormErrorMessage,
-  FormLabel,
   HStack,
   Icon,
   IconButton,
@@ -23,9 +19,11 @@ import {
   PopoverContent,
   PopoverHeader,
   PopoverTrigger,
+  ScaleFade,
   Stack,
   Text,
   useDisclosure,
+  useToast,
 } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { type MaterialStockUpdateAction } from "@prisma/client";
@@ -40,6 +38,7 @@ import {
   newStockAdjustmentActionSchema,
   type NewStockAdjustmentActionFormType,
 } from "~/types/material";
+import { api } from "~/utils/api";
 
 export function NewStockUpdateTypeForm() {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -47,7 +46,7 @@ export function NewStockUpdateTypeForm() {
   const {
     control,
     handleSubmit,
-    formState: { errors },
+    formState: { isSubmitting },
   } = useForm<NewStockAdjustmentActionFormType>({
     resolver: zodResolver(newStockAdjustmentActionSchema),
   });
@@ -81,8 +80,25 @@ export function NewStockUpdateTypeForm() {
     .filter(([colorName]) => !skippedColors.includes(colorName))
     .map(([colorName]) => ({ label: colorName, value: colorName }));
 
-  function onSubmit(data: NewStockAdjustmentActionFormType) {
-    console.log(data);
+  const toast = useToast();
+
+  const utils = api.useUtils();
+  const mutation = api.material.createStockAdjustmentType.useMutation({
+    onSuccess: async (data) => {
+      toast({
+        title: "New adjustment type",
+        description: `Created adjustment type: ${data.type}`,
+        status: "success",
+      });
+
+      await utils.material.getStockUpdateTypes.invalidate();
+
+      onClose();
+    },
+  });
+
+  async function onSubmit(data: NewStockAdjustmentActionFormType) {
+    await mutation.mutateAsync(data);
   }
 
   return (
@@ -141,11 +157,15 @@ export function NewStockUpdateTypeForm() {
             </Stack>
           </ModalBody>
           <ModalFooter gap={4}>
-            <Button onClick={onClose}>Cancel</Button>
+            <ScaleFade in={!isSubmitting} initialScale={0.9}>
+              <Button onClick={onClose}>Cancel</Button>
+            </ScaleFade>
             <Button
               type="submit"
               form="new-material-stock-update-type"
               variant="primary"
+              isLoading={isSubmitting}
+              isDisabled={isSubmitting}
             >
               Save
             </Button>

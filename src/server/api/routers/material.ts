@@ -2,6 +2,7 @@ import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 import {
   createMaterialFormSchema,
+  newStockAdjustmentActionSchema,
   updateMaterialStockFormSchema,
 } from "~/types/material";
 
@@ -79,6 +80,20 @@ export const materialRouter = createTRPCRouter({
 
     return categories ?? null;
   }),
+
+  createStockAdjustmentType: protectedProcedure
+    .input(newStockAdjustmentActionSchema)
+    .mutation(async ({ ctx, input: { name, color, adjustmentAction } }) => {
+      const updateType = await ctx.db.materialStockUpdateType.create({
+        data: {
+          type: name,
+          color,
+          action: adjustmentAction,
+        },
+      });
+
+      return updateType ?? null;
+    }),
 
   updateStock: protectedProcedure
     .input(updateMaterialStockFormSchema)
