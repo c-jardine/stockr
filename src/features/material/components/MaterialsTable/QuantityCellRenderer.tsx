@@ -22,6 +22,8 @@ import { FaChevronRight } from "react-icons/fa6";
 
 import { type CustomCellRendererProps } from "ag-grid-react";
 
+import { Prisma } from "@prisma/client";
+import { FaEdit } from "react-icons/fa";
 import { ControlledCreatableSelect } from "~/components/ControlledCreatableSelect";
 import { TextInput } from "~/components/TextInput";
 import {
@@ -44,7 +46,7 @@ export function QuantityCellRenderer({
   } = useForm<UpdateMaterialQuantityFormType>({
     defaultValues: {
       materialId: node.data?.extraData.id ?? undefined,
-      originalQuantity: node.data?.quantity.toString() ?? "0",
+      originalQuantity: node.data?.quantity?.toString() ?? "0",
     },
     resolver: zodResolver(updateMaterialQuantityFormSchema),
   });
@@ -60,7 +62,7 @@ export function QuantityCellRenderer({
     if (node.data) {
       reset({
         materialId: node.data.extraData.id,
-        originalQuantity: node.data.quantity.toString() ?? "0",
+        originalQuantity: node.data.quantity?.toString() ?? "0",
       });
     }
   }, [node.data, reset]);
@@ -87,8 +89,21 @@ export function QuantityCellRenderer({
 
   return (
     <Flex alignItems="center" h="full">
-      <Button variant="stockUpdate" size="sm" onClick={onOpen}>
-        {node.data?.quantity ?? "—"}
+      <Button
+        rightIcon={<Icon as={FaEdit} color="zinc.600" />}
+        variant="stockUpdate"
+        size="sm"
+        w="full"
+        justifyContent="space-between"
+        onClick={onOpen}
+      >
+        {node.data?.quantity
+          ? `${new Prisma.Decimal(node.data.quantity).toString()}${
+              node.data.extraData.quantityUnit
+                ? ` ${node.data.extraData.quantityUnit}`
+                : ""
+            }`
+          : "—"}
       </Button>
       <Modal {...{ isOpen, onClose }}>
         <ModalOverlay />
@@ -119,7 +134,11 @@ export function QuantityCellRenderer({
                 label="Quantity"
               />
               <HStack>
-                <Text fontSize="xs">{node.data?.quantity}</Text>{" "}
+                <Text fontSize="xs">
+                  {node.data?.quantity
+                    ? new Prisma.Decimal(node.data?.quantity).toString()
+                    : "0"}
+                </Text>{" "}
                 <Icon as={FaChevronRight} boxSize={3} />{" "}
                 <Text fontSize="xs" fontWeight="semibold">
                   {watch("adjustedQuantity") ?? node.data?.quantity}

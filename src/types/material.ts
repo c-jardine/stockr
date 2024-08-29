@@ -32,10 +32,10 @@ export const updateMaterialFormSchema = z.object({
   name: z.string().min(1, "Required"),
   url: CustomZod.OPTIONAL_URL,
   sku: z.string().optional(),
-  cost: z.string().optional(),
-  quantity: z.string().optional(),
+  cost: z.number().optional(),
+  quantity: z.number().optional(),
   quantityUnit: z.string().optional(),
-  minQuantity: z.string().optional(),
+  minQuantity: z.number().optional(),
   notes: z.string().optional(),
   vendor: z
     .object({

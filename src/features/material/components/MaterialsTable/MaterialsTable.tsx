@@ -1,11 +1,15 @@
 import { Flex, useToast } from "@chakra-ui/react";
+import { Prisma } from "@prisma/client";
 import { useSession } from "next-auth/react";
 import React from "react";
 import PuffLoader from "react-spinners/PuffLoader";
 
 import "ag-grid-community/styles/ag-grid.css"; // Mandatory CSS required by the Data Grid
 import "ag-grid-community/styles/ag-theme-quartz.css"; // Optional Theme applied to the Data Grid
-import { type ColDef } from "node_modules/ag-grid-community/dist/types/core/main";
+import {
+  type ColDef,
+  type ValueFormatterParams,
+} from "node_modules/ag-grid-community/dist/types/core/main";
 
 import { Table } from "~/features/table/components/Table";
 import { api, type RouterOutputs } from "~/utils/api";
@@ -17,10 +21,10 @@ import { StatusCellRenderer } from "./StatusCellRenderer";
 export type MaterialsTableRows = {
   name: string;
   status: string;
-  quantity: number;
+  quantity: Prisma.Decimal | null;
+  minQuantity: Prisma.Decimal | null;
+  cost: Prisma.Decimal | null;
   vendor: string;
-  sku: string;
-  categories: string[];
   extraData: RouterOutputs["material"]["getAll"][0];
 };
 
@@ -63,9 +67,10 @@ export function MaterialsTable() {
         materials.map((material) => ({
           name: material.name,
           status: "Format status",
-          quantity: material.quantity as unknown as number,
+          quantity: material.quantity,
+          minQuantity: material.minQuantity,
+          cost: material.cost,
           vendor: material.vendor?.name ?? "",
-          sku: material.sku ?? "",
           categories: material.categories.map((category) => category.name),
           extraData: material,
         }))
@@ -95,18 +100,50 @@ export function MaterialsTable() {
       cellRenderer: QuantityCellRenderer,
     },
     {
+      headerName: "Min. quantity",
+      field: "minQuantity",
+      filter: true,
+      valueFormatter: (
+        params: ValueFormatterParams<MaterialsTableRows, Prisma.Decimal>
+      ) => {
+        if (params.value) {
+          const minQuantity = new Prisma.Decimal(params.value).toString();
+          const unit = params.data?.extraData.quantityUnit ?? undefined;
+          return `${minQuantity}${unit ? ` ${unit}` : ""}`;
+        }
+        return "—";
+      },
+      cellStyle: {
+        display: "flex",
+        alignItems: "center",
+      },
+    },
+    {
+      headerName: "Cost",
+      field: "cost",
+      valueFormatter: (
+        params: ValueFormatterParams<MaterialsTableRows, Prisma.Decimal>
+      ) => {
+        if (params.value) {
+          return `$${new Prisma.Decimal(params.value).toString()} /${
+            params.data?.extraData.quantityUnit
+          }`;
+        }
+        return "—";
+      },
+      cellStyle: {
+        display: "flex",
+        alignItems: "center",
+      },
+    },
+    {
       headerName: "Vendor",
       field: "vendor",
       filter: true,
-    },
-    {
-      headerName: "SKU",
-      field: "sku",
-      filter: true,
-    },
-    {
-      headerName: "Categories",
-      field: "categories",
+      cellStyle: {
+        display: "flex",
+        alignItems: "center",
+      },
     },
   ];
 
@@ -129,7 +166,7 @@ export function MaterialsTable() {
       columnDefs={colDefs}
       autoSizeStrategy={{
         type: "fitCellContents",
-        colIds: ["status", "quantity", "vendor", "sku", "categories"],
+        colIds: ["status", "quantity", "minQuantity", "cost", "vendor"],
       }}
       onDelete={onDelete}
     />
