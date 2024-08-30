@@ -9,6 +9,7 @@ import { inputTheme } from "./components/input";
 import { linkTheme } from "./components/link";
 import { modalTheme } from "./components/modal";
 import { popoverTheme } from "./components/popover";
+import { tagTheme } from "./components/tag";
 
 const poppins = Poppins({
   weight: ["400", "500", "600", "800"],
@@ -53,6 +54,7 @@ const themeOverride: ThemeOverride = {
     Link: linkTheme,
     Modal: modalTheme,
     Popover: popoverTheme,
+    Tag: tagTheme,
   },
 };
 

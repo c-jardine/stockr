@@ -40,8 +40,8 @@ import {
   updateMaterialFormSchema,
   type UpdateMaterialFormType,
 } from "~/types/material";
-import { isTRPCClientError } from "~/utils/trpc";
 import { api } from "~/utils/api";
+import { isTRPCClientError } from "~/utils/trpc";
 import { type MaterialsTableRows } from "./MaterialsTable";
 
 type SelectInput = {
@@ -322,16 +322,7 @@ export function NameCellRenderer({
         {extraData.categories?.length && (
           <HStack wrap="wrap">
             {extraData.categories?.map((category) => (
-              <Tag
-                key={category.id}
-                fontSize="xs"
-                fontWeight="normal"
-                bg="zinc.100"
-                color="zinc.600"
-                border="1px solid var(--chakra-colors-zinc-300)"
-              >
-                {category.name}
-              </Tag>
+              <Tag key={category.id}>{category.name}</Tag>
             ))}
           </HStack>
         )}
