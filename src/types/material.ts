@@ -84,7 +84,9 @@ export type NewQuantityAdjustmentActionFormType = z.infer<
 >;
 
 export const updateCategoriesFormSchema = z.object({
-  categories: z.object({ id: z.string(), name: z.string() }).array(),
+  categories: z
+    .object({ id: z.string(), name: z.string().min(1, "Required") })
+    .array(),
 });
 
 export type UpdateCategoriesFormType = z.infer<

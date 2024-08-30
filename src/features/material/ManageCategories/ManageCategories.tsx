@@ -99,7 +99,7 @@ export function ManageCategories() {
               <Stack
                 as="form"
                 id="update-categories-form"
-                onSubmit={handleSubmit(onSubmit, (error) => console.log(error))}
+                onSubmit={handleSubmit(onSubmit)}
               >
                 {fields.map((field, index) => (
                   <HStack key={field.id} justifyContent="space-between">
