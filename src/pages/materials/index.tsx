@@ -12,12 +12,12 @@ import { useSession } from "next-auth/react";
 import NextLink from "next/link";
 import { FaHistory } from "react-icons/fa";
 import { FaEllipsis, FaFileImport } from "react-icons/fa6";
-import { MdCategory } from "react-icons/md";
 
 import { PageHeader } from "~/components/PageHeader";
 import { PageLoader } from "~/components/PageLoader";
 import { CreateMaterialForm } from "~/features/material/components/CreateMaterialForm";
 import { MaterialsTable } from "~/features/material/components/MaterialsTable/MaterialsTable";
+import { ManageCategories } from "~/features/material/ManageCategories";
 
 export default function Materials() {
   const { status } = useSession();
@@ -50,12 +50,7 @@ export default function Materials() {
                 Import materials
               </MenuItem>
               <MenuDivider />
-              <MenuItem
-                icon={<Icon as={MdCategory} boxSize={4} />}
-                fontSize="sm"
-              >
-                Manage categories
-              </MenuItem>
+              <ManageCategories />
             </MenuList>
           </Menu>
 
