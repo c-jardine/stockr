@@ -144,7 +144,7 @@ export function QuantityCellRenderer({
               <TextInput control={control} name="notes" label="Notes" />
             </Stack>
           </ModalBody>
-          <ModalFooter>
+          <ModalFooter gap={4}>
             <ScaleFade in={!isSubmitting} initialScale={0.9}>
               <Button size="sm">Cancel</Button>
             </ScaleFade>
