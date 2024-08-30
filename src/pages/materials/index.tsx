@@ -1,13 +1,21 @@
 import { Button, Icon, IconButton, Stack } from "@chakra-ui/react";
+import { useSession } from "next-auth/react";
 import NextLink from "next/link";
 import { FaHistory } from "react-icons/fa";
 import { FaFileImport, FaPlus } from "react-icons/fa6";
 
 import { PageHeader } from "~/components/PageHeader";
+import { PageLoader } from "~/components/PageLoader";
 import { CreateMaterialForm } from "~/features/material/components/CreateMaterialForm";
 import { MaterialsTable } from "~/features/material/components/MaterialsTable/MaterialsTable";
 
 export default function Materials() {
+  const { status } = useSession();
+
+  if (status === "loading") {
+    return <PageLoader />;
+  }
+
   return (
     <Stack spacing={4} h="full">
       <PageHeader>
