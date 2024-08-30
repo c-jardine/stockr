@@ -10,15 +10,18 @@ const baseStyle = helper.definePartsStyle((props) => ({
     border: "1px",
     borderColor: mode("zinc.200", "zinc.800")(props),
     rounded: "2xl",
+    p: 8,
   },
   header: {
-    p: 4,
+    mb: 8,
+    p: 0,
   },
   body: {
-    p: 4,
+    p: 0,
   },
   footer: {
-    p: 4,
+    mt: 8,
+    p: 0,
   },
 }));
 
