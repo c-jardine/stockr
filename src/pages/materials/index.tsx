@@ -5,7 +5,7 @@ import { FaFileImport, FaPlus } from "react-icons/fa6";
 
 import { PageHeader } from "~/components/PageHeader";
 import { CreateMaterialForm } from "~/features/material/components/CreateMaterialForm";
-import { MaterialsTable } from "~/features/material/components/MaterialsTable";
+import { MaterialsTable } from "~/features/material/components/MaterialsTable/MaterialsTable";
 
 export default function Materials() {
   return (
