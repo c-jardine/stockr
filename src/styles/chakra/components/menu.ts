@@ -15,6 +15,9 @@ const baseStyle = helper.definePartsStyle((props) => ({
     _hover: {
       bg: mode("zinc.100", "zinc.800")(props),
     },
+    _focus: {
+      bg: mode("zinc.100", "zinc.800")(props),
+    },
     divider: {
       borderColor: mode("zinc.200", "zinc.800")(props),
     },
