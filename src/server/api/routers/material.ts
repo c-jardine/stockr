@@ -10,6 +10,7 @@ import {
   updateCategoriesFormSchema,
   updateMaterialFormSchema,
   updateMaterialQuantityFormSchema,
+  updateVendorsFormSchema,
 } from "~/types/material";
 
 export const materialRouter = createTRPCRouter({
@@ -127,6 +128,37 @@ export const materialRouter = createTRPCRouter({
 
     return vendors ?? null;
   }),
+
+  updateVendors: protectedProcedure
+    .input(updateVendorsFormSchema)
+    .mutation(async ({ ctx, input: { vendors } }) => {
+      return await ctx.db.$transaction(async () => {
+        // Delete vendors not in input
+        await ctx.db.vendor.deleteMany({
+          where: {
+            id: {
+              notIn: vendors.map(({ id }) => id),
+            },
+          },
+        });
+
+        // Update and create vendors
+        vendors.map(
+          async ({ id, name }) =>
+            await ctx.db.vendor.upsert({
+              where: {
+                id,
+              },
+              update: {
+                name,
+              },
+              create: {
+                name,
+              },
+            })
+        );
+      });
+    }),
 
   getCategories: protectedProcedure.query(async ({ ctx }) => {
     const categories = await ctx.db.materialCategory.findMany({

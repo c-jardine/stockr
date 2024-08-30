@@ -17,7 +17,10 @@ import { PageHeader } from "~/components/PageHeader";
 import { PageLoader } from "~/components/PageLoader";
 import { CreateMaterialForm } from "~/features/material/components/CreateMaterialForm";
 import { MaterialsTable } from "~/features/material/components/MaterialsTable/MaterialsTable";
-import { ManageCategories } from "~/features/material/ManageCategories";
+import {
+  ManageCategories,
+  ManageVendors,
+} from "~/features/material/ManageCategories";
 
 export default function Materials() {
   const { status } = useSession();
@@ -50,6 +53,7 @@ export default function Materials() {
                 Import materials
               </MenuItem>
               <MenuDivider />
+              <ManageVendors />
               <ManageCategories />
             </MenuList>
           </Menu>

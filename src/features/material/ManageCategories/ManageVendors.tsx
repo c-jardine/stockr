@@ -18,46 +18,46 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import React from "react";
 import { useFieldArray, useForm } from "react-hook-form";
-import { FaPlus, FaTag, FaTrash } from "react-icons/fa6";
+import { FaBuildingUser, FaPlus, FaTrash } from "react-icons/fa6";
 
 import { PageLoader } from "~/components/PageLoader";
 import { TextInput } from "~/components/TextInput";
 import {
-  updateCategoriesFormSchema,
-  UpdateCategoriesFormType,
+  updateVendorsFormSchema,
+  UpdateVendorsFormType,
 } from "~/types/material";
 import { api } from "~/utils/api";
 
-export function ManageCategories() {
+export function ManageVendors() {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const methods = useForm<UpdateCategoriesFormType>({
+  const methods = useForm<UpdateVendorsFormType>({
     defaultValues: {
-      categories: [{ id: "", name: "" }],
+      vendors: [{ id: "", name: "" }],
     },
-    resolver: zodResolver(updateCategoriesFormSchema),
+    resolver: zodResolver(updateVendorsFormSchema),
   });
   const { fields, append, prepend, remove, swap, move, insert } = useFieldArray(
     {
       control: methods.control,
-      name: "categories",
+      name: "vendors",
     }
   );
 
   const toast = useToast();
 
-  const { data, isLoading } = api.material.getCategories.useQuery();
+  const { data, isLoading } = api.material.getVendors.useQuery();
   const utils = api.useUtils();
-  const mutation = api.material.updateCategories.useMutation({
+  const mutation = api.material.updateVendors.useMutation({
     onSuccess: async () => {
       toast({
-        title: "Updated categories",
-        description: "Successfully updated categories.",
+        title: "Updated vendors",
+        description: "Successfully updated vendors.",
         status: "success",
       });
 
       await utils.material.getAll.invalidate();
-      await utils.material.getCategories.invalidate();
+      await utils.material.getVendors.invalidate();
       onClose();
     },
   });
@@ -72,44 +72,44 @@ export function ManageCategories() {
 
   React.useEffect(() => {
     if (data) {
-      reset({ categories: data });
+      reset({ vendors: data });
     }
   }, [data, reset]);
 
-  async function onSubmit(data: UpdateCategoriesFormType) {
+  async function onSubmit(data: UpdateVendorsFormType) {
     return await mutation.mutateAsync(data);
   }
 
   return (
     <>
       <MenuItem
-        icon={<Icon as={FaTag} boxSize={4} />}
+        icon={<Icon as={FaBuildingUser} boxSize={4} />}
         fontSize="sm"
         onClick={onOpen}
       >
-        Manage categories
+        Manage vendors
       </MenuItem>
       <Modal {...{ isOpen, onClose }}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Manage categories</ModalHeader>
+          <ModalHeader>Manage vendors</ModalHeader>
           <ModalBody maxH={96} overflowY="scroll">
             {isLoading && <PageLoader pt={0} />}
             {!isLoading && (
               <Stack
                 as="form"
-                id="update-categories-form"
+                id="update-vendors-form"
                 onSubmit={handleSubmit(onSubmit)}
               >
                 {fields.map((field, index) => (
                   <HStack key={field.id} justifyContent="space-between">
                     <TextInput
                       control={control}
-                      name={`categories.${index}.name`}
+                      name={`vendors.${index}.name`}
                     />
                     <IconButton
                       icon={<Icon as={FaTrash} color="red.600" boxSize={3} />}
-                      aria-label={`Edit ${name} category`}
+                      aria-label={`Edit ${name} vendor`}
                       variant="outline"
                       size="xs"
                       rounded="md"
@@ -128,17 +128,17 @@ export function ManageCategories() {
                 w="full"
                 onClick={() => append({ id: "", name: "" })}
                 isDisabled={(() => {
-                  const length = watch("categories").length;
-                  const lastCategory = watch("categories")[length - 1];
+                  const length = watch("vendors").length;
+                  const lastVendor = watch("vendors")[length - 1];
 
-                  if (!lastCategory?.name) {
+                  if (!lastVendor?.name) {
                     return true;
                   }
 
                   return false;
                 })()}
               >
-                Create new category
+                Create new vendor
               </Button>
 
               <HStack mt={8} spacing={4} justifyContent="flex-end">
@@ -149,7 +149,7 @@ export function ManageCategories() {
                 </ScaleFade>
                 <Button
                   type="submit"
-                  form="update-categories-form"
+                  form="update-vendors-form"
                   variant="primary"
                   size="sm"
                   isDisabled={isSubmitting}

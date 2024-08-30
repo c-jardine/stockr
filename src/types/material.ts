@@ -83,6 +83,14 @@ export type NewQuantityAdjustmentActionFormType = z.infer<
   typeof newQuantityAdjustmentActionSchema
 >;
 
+export const updateVendorsFormSchema = z.object({
+  vendors: z
+    .object({ id: z.string(), name: z.string().min(1, "Required") })
+    .array(),
+});
+
+export type UpdateVendorsFormType = z.infer<typeof updateVendorsFormSchema>;
+
 export const updateCategoriesFormSchema = z.object({
   categories: z
     .object({ id: z.string(), name: z.string().min(1, "Required") })
