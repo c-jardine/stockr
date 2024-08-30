@@ -26,8 +26,7 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
-import { FaExclamationTriangle } from "react-icons/fa";
-import { FaDollarSign } from "react-icons/fa6";
+import { FaDollarSign, FaLock } from "react-icons/fa6";
 import { NumericFormat } from "react-number-format";
 
 import { type CustomCellRendererProps } from "ag-grid-react";
@@ -50,8 +49,8 @@ export function UpdateMaterialForm(
   const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
 
-  const bgColor = useColorModeValue("red.200", "red.950");
-  const borderColor = useColorModeValue("red.300", "red.900");
+  const bgColor = useColorModeValue("zinc.200", "zinc.900");
+  const borderColor = useColorModeValue("zinc.300", "zinc.800");
 
   // Initialize the form
   const {
@@ -186,22 +185,18 @@ export function UpdateMaterialForm(
                 border="1px solid"
                 borderColor={borderColor}
               >
-                <HStack>
-                  <Icon
-                    as={FaExclamationTriangle}
-                    mt={0.5}
-                    alignSelf="flex-start"
-                  />
-                  <Stack fontSize="xs">
-                    <Text>
-                      Cost will automatically be updated when adding a purchase
-                      order.
-                    </Text>
-                    <Text>Stock must be updated directly in the table.</Text>
-                  </Stack>
-                </HStack>
-
                 <Stack spacing={4}>
+                  <HStack>
+                    <Icon
+                      as={FaLock}
+                      mt={0.5}
+                      alignSelf="flex-start"
+                      color="zinc.400"
+                    />
+                    <Text fontSize="xs" color="zinc.500">
+                      Edit stock to update these fields.
+                    </Text>
+                  </HStack>
                   <FormControl isInvalid={!!errors.cost}>
                     <FormLabel>Cost</FormLabel>
                     <Controller
@@ -213,6 +208,7 @@ export function UpdateMaterialForm(
                             <FaDollarSign />
                           </InputLeftElement>
                           <Input
+                            variant="input"
                             as={NumericFormat}
                             allowNegative={false}
                             decimalScale={2}

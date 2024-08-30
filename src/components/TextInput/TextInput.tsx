@@ -62,7 +62,11 @@ export function TextInput<FormValues extends FieldValues = FieldValues>({
           {label}
         </FormLabel>
       )}
-      {children ? children : <Input {...field} {...inputProps} />}
+      {children ? (
+        children
+      ) : (
+        <Input variant="input" {...field} {...inputProps} />
+      )}
       {error && <FormErrorMessage>{error.message}</FormErrorMessage>}
     </FormControl>
   );

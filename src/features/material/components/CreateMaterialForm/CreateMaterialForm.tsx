@@ -130,6 +130,7 @@ export function CreateMaterialForm() {
                         <FaDollarSign />
                       </InputLeftElement>
                       <Input
+                        variant="input"
                         as={NumericFormat}
                         allowNegative={false}
                         decimalScale={2}
