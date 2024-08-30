@@ -57,6 +57,7 @@ export function ManageCategories() {
         status: "success",
       });
 
+      await utils.material.getAll.invalidate();
       await utils.material.getCategories.invalidate();
       onClose();
     },
