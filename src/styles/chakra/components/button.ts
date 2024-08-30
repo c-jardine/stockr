@@ -20,6 +20,7 @@ const text = defineStyle({
 const primary = defineStyle((props) => ({
   bg: "blue.600",
   color: "blue.50",
+  fontSize: "sm",
   _hover: {
     bg: "blue.500",
   },
