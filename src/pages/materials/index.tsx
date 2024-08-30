@@ -16,11 +16,9 @@ import { FaEllipsis, FaFileImport } from "react-icons/fa6";
 import { PageHeader } from "~/components/PageHeader";
 import { PageLoader } from "~/components/PageLoader";
 import { CreateMaterialForm } from "~/features/material/components/CreateMaterialForm";
+import { ManageCategories } from "~/features/material/components/ManageCategories";
+import { ManageVendors } from "~/features/material/components/ManageVendors";
 import { MaterialsTable } from "~/features/material/components/MaterialsTable/MaterialsTable";
-import {
-  ManageCategories,
-  ManageVendors,
-} from "~/features/material/ManageCategories";
 
 export default function Materials() {
   const { status } = useSession();
