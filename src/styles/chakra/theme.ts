@@ -7,6 +7,7 @@ import { drawerTheme } from "./components/drawer";
 import { formErrorTheme } from "./components/formError";
 import { inputTheme } from "./components/input";
 import { linkTheme } from "./components/link";
+import { menuTheme } from "./components/menu";
 import { modalTheme } from "./components/modal";
 import { popoverTheme } from "./components/popover";
 import { tagTheme } from "./components/tag";
@@ -52,6 +53,7 @@ const themeOverride: ThemeOverride = {
     FormError: formErrorTheme,
     Input: inputTheme,
     Link: linkTheme,
+    Menu: menuTheme,
     Modal: modalTheme,
     Popover: popoverTheme,
     Tag: tagTheme,
