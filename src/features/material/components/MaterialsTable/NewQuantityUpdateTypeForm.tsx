@@ -120,7 +120,7 @@ export function NewQuantityUpdateTypeForm() {
             <Stack
               as="form"
               id="new-material-quantity-update-type"
-              onSubmit={handleSubmit(onSubmit, (error) => console.log(error))}
+              onSubmit={handleSubmit(onSubmit)}
               spacing={4}
             >
               <TextInput control={control} name="name" label="Name" />

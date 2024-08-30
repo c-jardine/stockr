@@ -110,7 +110,7 @@ export function QuantityCellRenderer({
             <Stack
               as="form"
               id="update-material-quantity-form"
-              onSubmit={handleSubmit(onSubmit, (error) => console.log(error))}
+              onSubmit={handleSubmit(onSubmit)}
               spacing={4}
             >
               <ControlledCreatableSelect
