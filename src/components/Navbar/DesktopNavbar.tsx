@@ -17,10 +17,10 @@ import {
   Text,
   useDisclosure,
 } from "@chakra-ui/react";
-import { useSession } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
-import { FaEdit } from "react-icons/fa";
+import { FaEdit, FaSignInAlt } from "react-icons/fa";
 import { FaChevronDown } from "react-icons/fa6";
 
 import { ColorModeToggle } from "../ColorModeToggle";
@@ -90,20 +90,31 @@ export function DesktopNavbar() {
         </Link>
       </HStack>
       <HStack justifySelf="flex-end">
-        <Button
-          variant="unstyled"
-          display="flex"
-          alignItems="center"
-          gap={2}
-          onClick={onOpen}
-        >
-          <Avatar
-            size="sm"
-            name={session?.user.name ?? "Current user"}
-            src={session?.user.image ?? undefined}
-          />
-          <Icon as={FaChevronDown} boxSize={3} />
-        </Button>
+        {!session && (
+          <Button
+            leftIcon={<Icon as={FaSignInAlt} />}
+            variant="primary"
+            onClick={() => signIn()}
+          >
+            Sign in
+          </Button>
+        )}
+        {session && (
+          <Button
+            variant="unstyled"
+            display="flex"
+            alignItems="center"
+            gap={2}
+            onClick={onOpen}
+          >
+            <Avatar
+              size="sm"
+              name={session?.user.name ?? "Current user"}
+              src={session?.user.image ?? undefined}
+            />
+            <Icon as={FaChevronDown} boxSize={3} />
+          </Button>
+        )}
         <Drawer variant="userMenu" isOpen={isOpen} onClose={onClose}>
           <DrawerOverlay />
           <DrawerContent>
