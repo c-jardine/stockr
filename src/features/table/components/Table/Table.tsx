@@ -14,7 +14,7 @@ import {
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react";
-import { Poppins } from "next/font/google"; // Override table theme font
+import { Montserrat } from "next/font/google"; // Override table theme font
 
 import { AgGridReact, type AgGridReactProps } from "ag-grid-react";
 import {
@@ -29,7 +29,7 @@ import React from "react";
 import { Section } from "~/components/Section";
 import { useGridApi } from "../../hooks";
 
-const poppins = Poppins({
+const montserrat = Montserrat({
   weight: ["400", "500", "600"],
   subsets: ["latin"],
   display: "swap",
@@ -102,7 +102,7 @@ export function Table<ColType>({
       p={0}
       flexGrow={1}
       overflow="hidden"
-      fontFamily={poppins.style.fontFamily}
+      fontFamily={montserrat.style.fontFamily}
       fontSize="xs"
       {...containerProps}
     >

@@ -1,6 +1,6 @@
 import { extendTheme, type ThemeOverride } from "@chakra-ui/react";
 import { mode } from "@chakra-ui/theme-tools";
-import { Poppins } from "next/font/google";
+import { Montserrat, } from "next/font/google";
 import { colors } from "./colors";
 import { buttonTheme } from "./components/button";
 import { drawerTheme } from "./components/drawer";
@@ -12,7 +12,7 @@ import { modalTheme } from "./components/modal";
 import { popoverTheme } from "./components/popover";
 import { tagTheme } from "./components/tag";
 
-const poppins = Poppins({
+const montserrat = Montserrat({
   weight: ["400", "500", "600", "800"],
   subsets: ["latin"],
   display: "swap", // Fixes issue with not loading in Chrome
@@ -26,10 +26,10 @@ const styles: ThemeOverride["styles"] = {
   global: (props) => ({
     "html, body": {
       bg: mode("zinc.50", "zinc.950")(props),
-      fontFamily: poppins.style.fontFamily,
+      fontFamily: montserrat.style.fontFamily,
     },
     "h1, h2, h3, h4, h5, h6": {
-      fontFamily: `${poppins.style.fontFamily} !important`,
+      fontFamily: `${montserrat.style.fontFamily} !important`,
     },
     h1: {
       fontSize: "2xl !important",
