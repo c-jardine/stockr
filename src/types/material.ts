@@ -82,3 +82,17 @@ export const newQuantityAdjustmentActionSchema = z.object({
 export type NewQuantityAdjustmentActionFormType = z.infer<
   typeof newQuantityAdjustmentActionSchema
 >;
+
+export const updateCategoriesFormSchema = z.object({
+  categories: z.object({ id: z.string(), name: z.string() }).array(),
+});
+
+export type UpdateCategoriesFormType = z.infer<
+  typeof updateCategoriesFormSchema
+>;
+
+export const deleteCategoryByNameSchema = z.object({
+  name: z.string(),
+});
+
+export type DeleteCategoryByIdType = z.infer<typeof deleteCategoryByNameSchema>;

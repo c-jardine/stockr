@@ -5,7 +5,9 @@ import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 import {
   createMaterialFormSchema,
+  deleteCategoryByNameSchema,
   newQuantityAdjustmentActionSchema,
+  updateCategoriesFormSchema,
   updateMaterialFormSchema,
   updateMaterialQuantityFormSchema,
 } from "~/types/material";
@@ -135,6 +137,47 @@ export const materialRouter = createTRPCRouter({
 
     return categories ?? null;
   }),
+
+  updateCategories: protectedProcedure
+    .input(updateCategoriesFormSchema)
+    .mutation(async ({ ctx, input: { categories } }) => {
+      return await ctx.db.$transaction(async () => {
+        // Delete categories not in input
+        await ctx.db.materialCategory.deleteMany({
+          where: {
+            id: {
+              notIn: categories.map(({ id }) => id),
+            },
+          },
+        });
+
+        // Update and create categories
+        categories.map(
+          async ({ id, name }) =>
+            await ctx.db.materialCategory.upsert({
+              where: {
+                id,
+              },
+              update: {
+                name,
+              },
+              create: {
+                name,
+              },
+            })
+        );
+      });
+    }),
+
+  deleteCategoryByName: protectedProcedure
+    .input(deleteCategoryByNameSchema)
+    .mutation(async ({ ctx, input: { name } }) => {
+      return await ctx.db.materialCategory.delete({
+        where: {
+          name,
+        },
+      });
+    }),
 
   createQuantityAdjustmentType: protectedProcedure
     .input(newQuantityAdjustmentActionSchema)
