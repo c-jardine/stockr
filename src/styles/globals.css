@@ -31,7 +31,7 @@
 /* For dark theme */
 .ag-theme-quartz-dark {
   --ag-border-color: var(--chakra-colors-zinc-800) !important;
-  --ag-foreground-color: var(--chakra-colors-zinc-200) !important;
+  --ag-foreground-color: var(--chakra-colors-zinc-300) !important;
   --ag-background-color: var(--chakra-colors-zinc-900) !important;
 
   --ag-header-background-color: var(--chakra-colors-zinc-950) !important;
