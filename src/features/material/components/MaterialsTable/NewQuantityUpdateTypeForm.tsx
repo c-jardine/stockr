@@ -188,7 +188,7 @@ function AdjustmentActionHelperPopover() {
           variant="outline"
         />
       </PopoverTrigger>
-      <PopoverContent letterSpacing='normal'>
+      <PopoverContent>
         <PopoverArrow />
         <PopoverCloseButton />
         <PopoverHeader>Quantity adjustment actions</PopoverHeader>

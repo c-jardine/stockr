@@ -32,7 +32,7 @@ export function NameCellRenderer({
           </HStack>
         )}
       </Stack>
-      <Stack alignItems="flex-end" alignSelf="center" spacing={0}>
+      <Stack alignItems="flex-end" alignSelf="center" spacing={2}>
         {extraData.url && (
           <ExternalLink href={extraData.url}>
             View
@@ -42,7 +42,7 @@ export function NameCellRenderer({
           </ExternalLink>
         )}
         {extraData.sku && (
-          <Text px={1} color="zinc.600" fontStyle="italic" lineHeight="normal">
+          <Text px={1} color="zinc.500" fontStyle="italic" lineHeight="normal">
             SKU: {extraData.sku}
           </Text>
         )}

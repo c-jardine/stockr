@@ -15,6 +15,7 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { Manrope } from "next/font/google"; // Override table theme font
+import React from "react";
 
 import { AgGridReact, type AgGridReactProps } from "ag-grid-react";
 import {
@@ -25,7 +26,6 @@ import {
   type SizeColumnsToFitProvidedWidthStrategy,
 } from "node_modules/ag-grid-community/dist/types/core/main";
 
-import React from "react";
 import { Section } from "~/components/Section";
 import { useGridApi } from "../../hooks";
 

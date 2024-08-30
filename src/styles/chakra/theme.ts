@@ -37,9 +37,9 @@ const styles: ThemeOverride["styles"] = {
       fontWeight: "bold !important",
     },
     label: {
-      color: mode("zinc.600", "zinc.300")(props),
+      color: mode("zinc.500", "zinc.400")(props),
       fontSize: "xs !important",
-      letterSpacing: "wide",
+      fontWeight: "bold !important",
     },
   }),
 };

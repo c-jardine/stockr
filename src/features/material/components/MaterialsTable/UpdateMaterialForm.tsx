@@ -151,7 +151,7 @@ export function UpdateMaterialForm(
         justifyContent="flex-start"
         alignItems="center"
         size="sm"
-        fontSize="xs"
+        fontSize="sm"
         fontWeight="semibold"
         w="fit-content"
         px={2}
