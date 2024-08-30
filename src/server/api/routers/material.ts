@@ -1,5 +1,7 @@
 import { Prisma } from "@prisma/client";
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
+
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 import {
   createMaterialFormSchema,
@@ -56,36 +58,52 @@ export const materialRouter = createTRPCRouter({
   update: protectedProcedure
     .input(updateMaterialFormSchema)
     .mutation(async ({ ctx, input: { id, vendor, categories, ...rest } }) => {
-      return ctx.db.material.update({
-        where: {
-          id,
-        },
-        data: {
-          ...rest,
-          ...(vendor && {
-            vendor: {
-              connectOrCreate: {
-                where: {
-                  id: vendor.value,
-                },
-                create: {
-                  name: vendor.label,
+      try {
+        return await ctx.db.material.update({
+          where: {
+            id,
+          },
+          data: {
+            ...rest,
+            ...(vendor && {
+              vendor: {
+                connectOrCreate: {
+                  where: {
+                    id: vendor.value,
+                  },
+                  create: {
+                    name: vendor.label,
+                  },
                 },
               },
-            },
-          }),
-          ...(categories && {
-            categories: {
-              set: [], // Remove all
-              connectOrCreate: categories.map((category) => ({
-                where: { id: category.value },
-                create: { name: category.label },
-              })),
-            },
-          }),
-          updatedBy: { connect: { id: ctx.session.user.id } },
-        },
-      });
+            }),
+            ...(categories && {
+              categories: {
+                set: [], // Remove all
+                connectOrCreate: categories.map((category) => ({
+                  where: { id: category.value },
+                  create: { name: category.label },
+                })),
+              },
+            }),
+            updatedBy: { connect: { id: ctx.session.user.id } },
+          },
+        });
+      } catch (error) {
+        if (
+          error instanceof Prisma.PrismaClientKnownRequestError &&
+          error.code === "P2002"
+        ) {
+          throw new TRPCError({
+            code: "CONFLICT",
+            message: "A record with this SKU already exists.",
+          });
+        }
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "An unexpected error occurred.",
+        });
+      }
     }),
 
   deleteAll: protectedProcedure

@@ -24,15 +24,15 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Controller, useForm } from "react-hook-form";
-
-import { type CustomCellRendererProps } from "ag-grid-react";
-
 import { Prisma } from "@prisma/client";
 import React from "react";
+import { Controller, useForm } from "react-hook-form";
 import { FaExclamationTriangle } from "react-icons/fa";
 import { FaDollarSign } from "react-icons/fa6";
 import { NumericFormat } from "react-number-format";
+
+import { type CustomCellRendererProps } from "ag-grid-react";
+
 import { ControlledCreatableSelect } from "~/components/ControlledCreatableSelect";
 import { ExternalLink } from "~/components/ExternalLink";
 import { TextInput } from "~/components/TextInput";
@@ -40,6 +40,7 @@ import {
   updateMaterialFormSchema,
   type UpdateMaterialFormType,
 } from "~/types/material";
+import { isTRPCClientError } from "~/utils/trpc";
 import { api } from "~/utils/api";
 import { type MaterialsTableRows } from "./MaterialsTable";
 
@@ -57,6 +58,8 @@ export function NameCellRenderer({
     control,
     register,
     handleSubmit,
+    setFocus,
+    setError,
     reset,
     formState: { errors, isSubmitting },
   } = useForm<UpdateMaterialFormType>({
@@ -131,7 +134,17 @@ export function NameCellRenderer({
   const { name, extraData } = node.data;
 
   async function onSubmit(data: UpdateMaterialFormType) {
-    await mutation.mutateAsync(data);
+    try {
+      await mutation.mutateAsync(data);
+    } catch (error) {
+      if (isTRPCClientError(error) && error.data?.code === "CONFLICT") {
+        setError("sku", {
+          type: "manual",
+          message: error.message,
+        });
+        setFocus("sku");
+      }
+    }
   }
 
   return (
