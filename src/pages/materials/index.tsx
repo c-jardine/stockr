@@ -1,8 +1,18 @@
-import { Button, Icon, IconButton, Stack } from "@chakra-ui/react";
+import {
+  Icon,
+  IconButton,
+  Menu,
+  MenuButton,
+  MenuDivider,
+  MenuItem,
+  MenuList,
+  Stack,
+} from "@chakra-ui/react";
 import { useSession } from "next-auth/react";
 import NextLink from "next/link";
 import { FaHistory } from "react-icons/fa";
-import { FaFileImport, FaPlus } from "react-icons/fa6";
+import { FaEllipsis, FaFileImport } from "react-icons/fa6";
+import { MdCategory } from "react-icons/md";
 
 import { PageHeader } from "~/components/PageHeader";
 import { PageLoader } from "~/components/PageLoader";
@@ -21,29 +31,33 @@ export default function Materials() {
       <PageHeader>
         <PageHeader.Content>
           <PageHeader.Title>Materials</PageHeader.Title>
-          <IconButton
-            as={NextLink}
-            icon={<Icon as={FaHistory} />}
-            aria-label="View materials history"
-            href="/materials/history"
-          />
-          <IconButton
-            display={{ base: "flex", md: "none" }}
-            icon={<Icon as={FaFileImport} />}
-            aria-label="Import materials from .csv"
-          />
-          <Button
-            display={{ base: "none", md: "flex" }}
-            leftIcon={<Icon as={FaFileImport} />}
-            fontSize="sm"
-          >
-            Import
-          </Button>
-          <IconButton
-            display={{ base: "flex", md: "none" }}
-            icon={<Icon as={FaPlus} />}
-            aria-label="Create a new material"
-          />
+
+          <Menu>
+            <MenuButton as={IconButton} icon={<Icon as={FaEllipsis} />} />
+            <MenuList>
+              <MenuItem
+                as={NextLink}
+                href="/materials/history"
+                icon={<Icon as={FaHistory} boxSize={4} />}
+                fontSize="sm"
+              >
+                View history
+              </MenuItem>
+              <MenuItem
+                icon={<Icon as={FaFileImport} boxSize={4} />}
+                fontSize="sm"
+              >
+                Import materials
+              </MenuItem>
+              <MenuDivider />
+              <MenuItem
+                icon={<Icon as={MdCategory} boxSize={4} />}
+                fontSize="sm"
+              >
+                Manage categories
+              </MenuItem>
+            </MenuList>
+          </Menu>
 
           <CreateMaterialForm />
         </PageHeader.Content>
