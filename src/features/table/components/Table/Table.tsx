@@ -14,7 +14,7 @@ import {
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react";
-import { Montserrat } from "next/font/google"; // Override table theme font
+import { Manrope } from "next/font/google"; // Override table theme font
 
 import { AgGridReact, type AgGridReactProps } from "ag-grid-react";
 import {
@@ -29,7 +29,7 @@ import React from "react";
 import { Section } from "~/components/Section";
 import { useGridApi } from "../../hooks";
 
-const montserrat = Montserrat({
+const manrope = Manrope({
   weight: ["400", "500", "600"],
   subsets: ["latin"],
   display: "swap",
@@ -102,7 +102,7 @@ export function Table<ColType>({
       p={0}
       flexGrow={1}
       overflow="hidden"
-      fontFamily={montserrat.style.fontFamily}
+      fontFamily={manrope.style.fontFamily}
       fontSize="xs"
       {...containerProps}
     >

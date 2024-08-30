@@ -1,6 +1,7 @@
 import { extendTheme, type ThemeOverride } from "@chakra-ui/react";
 import { mode } from "@chakra-ui/theme-tools";
-import { Montserrat, } from "next/font/google";
+import { Manrope } from "next/font/google";
+
 import { colors } from "./colors";
 import { buttonTheme } from "./components/button";
 import { drawerTheme } from "./components/drawer";
@@ -12,7 +13,7 @@ import { modalTheme } from "./components/modal";
 import { popoverTheme } from "./components/popover";
 import { tagTheme } from "./components/tag";
 
-const montserrat = Montserrat({
+const manrope = Manrope({
   weight: ["400", "500", "600", "800"],
   subsets: ["latin"],
   display: "swap", // Fixes issue with not loading in Chrome
@@ -26,10 +27,10 @@ const styles: ThemeOverride["styles"] = {
   global: (props) => ({
     "html, body": {
       bg: mode("zinc.50", "zinc.950")(props),
-      fontFamily: montserrat.style.fontFamily,
+      fontFamily: manrope.style.fontFamily,
     },
     "h1, h2, h3, h4, h5, h6": {
-      fontFamily: `${montserrat.style.fontFamily} !important`,
+      fontFamily: `${manrope.style.fontFamily} !important`,
     },
     h1: {
       fontSize: "2xl !important",
