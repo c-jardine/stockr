@@ -54,7 +54,7 @@ export function ImportMaterialsOverview({ data }: { data: TableRows[] }) {
         status: "success",
       });
 
-      await utils.material.getAll.invalidate();
+      // await utils.material.getAll.invalidate();
       onClose();
     },
   });

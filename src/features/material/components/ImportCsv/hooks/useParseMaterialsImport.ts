@@ -1,5 +1,4 @@
-import { useToast } from "@chakra-ui/react";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, UseMutationOptions } from "@tanstack/react-query";
 
 async function parseMaterialsImport(data: { file: File | File[] }) {
   const { file } = data;
@@ -19,17 +18,24 @@ async function parseMaterialsImport(data: { file: File | File[] }) {
   return null;
 }
 
-export function useParseMaterialsImport() {
-  const toast = useToast();
+type ParseMaterialsImportData = Awaited<
+  ReturnType<typeof parseMaterialsImport>
+>;
+type ParseMaterialsImportVariables = Parameters<typeof parseMaterialsImport>[0];
 
+export function useParseMaterialsImport(
+  options?: Omit<
+    UseMutationOptions<
+      ParseMaterialsImportData,
+      unknown,
+      ParseMaterialsImportVariables,
+      unknown
+    >,
+    "mutationFn"
+  >
+) {
   return useMutation({
     mutationFn: parseMaterialsImport,
-    onSuccess: () => {
-      toast({
-        title: "Parsing complete",
-        description: "Your file has been parsed.",
-        status: "success",
-      });
-    },
+    ...options,
   });
 }

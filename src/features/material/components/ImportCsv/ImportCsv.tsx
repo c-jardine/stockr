@@ -15,6 +15,7 @@ import {
   Stack,
   Text,
   useDisclosure,
+  useToast,
 } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import React from "react";
@@ -53,11 +54,7 @@ export function ImportCsv() {
     resolver: zodResolver(schema),
   });
 
-  const { isOpen, onOpen, onClose } = useDisclosure({
-    // onClose: () => {
-    //   reset({ file: undefined });
-    // },
-  });
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   const fileTypes = ["CSV"];
 
@@ -66,7 +63,17 @@ export function ImportCsv() {
     onClose();
   }
 
-  const { mutateAsync, data: parsedData } = useParseMaterialsImport();
+  const toast = useToast();
+
+  const { mutateAsync, data: parsedData } = useParseMaterialsImport({
+    onSuccess: () => {
+      toast({
+        title: "Parsing complete",
+        description: "Your file has been parsed.",
+        status: "success",
+      });
+    },
+  });
 
   async function onSubmit(data: FormType) {
     await mutateAsync(data);
