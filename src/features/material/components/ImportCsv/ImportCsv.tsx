@@ -23,8 +23,9 @@ import type FileUploaderSrc from "react-drag-drop-files/dist/src/FileUploader";
 import { Controller, useForm } from "react-hook-form";
 import { FaFileImport } from "react-icons/fa6";
 import { z } from "zod";
-import { useParseMaterialsImport } from "./hooks";
+
 import { ImportMaterialsOverview } from "./ImportMaterialsOverview";
+import { useParseMaterialsImport } from "./hooks/useParseMaterialsImport";
 
 // Workaround to make sure the component is properly typed.
 const FileUploaderTyped: typeof FileUploaderSrc = FileUploader;
