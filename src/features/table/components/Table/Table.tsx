@@ -38,7 +38,7 @@ const manrope = Manrope({
 interface TableProps<ColType> extends AgGridReactProps {
   rowData: ColType[];
   columnDefs: ColDef<ColType>[];
-  autoSizeStrategy:
+  autoSizeStrategy?:
     | SizeColumnsToFitGridStrategy
     | SizeColumnsToFitProvidedWidthStrategy
     | SizeColumnsToContentStrategy;
@@ -71,7 +71,9 @@ export function Table<ColType>({
     gridApi?.deselectAll();
   }
 
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { isOpen, onOpen, onClose } = useDisclosure({
+    id: "confirmDeleteMaterials",
+  });
 
   function handleDelete() {
     if (onDelete) {
@@ -92,7 +94,9 @@ export function Table<ColType>({
     rowSelection: "multiple",
     rowMultiSelectWithClick: false,
     suppressRowClickSelection: true,
-    autoSizeStrategy: React.useMemo(() => autoSizeStrategy, [autoSizeStrategy]),
+    autoSizeStrategy: autoSizeStrategy
+      ? React.useMemo(() => autoSizeStrategy, [autoSizeStrategy])
+      : undefined,
     onSelectionChanged,
   };
 
@@ -110,7 +114,8 @@ export function Table<ColType>({
         initialScale={0.9}
         in={selectedRows?.length > 0}
         style={{
-          zIndex: 10,
+          display: selectedRows?.length > 0 ? "block" : "none",
+          zIndex: selectedRows?.length > 0 ? 10 : "unset",
           position: "fixed",
           bottom: 4,
           right: 0,
