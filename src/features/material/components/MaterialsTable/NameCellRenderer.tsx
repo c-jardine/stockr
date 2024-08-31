@@ -1,4 +1,4 @@
-import { HStack, Stack, Tag, Text } from "@chakra-ui/react";
+import { HStack, Stack, Tag, Text, useColorModeValue } from "@chakra-ui/react";
 
 import { type CustomCellRendererProps } from "ag-grid-react";
 
@@ -14,6 +14,8 @@ export function NameCellRenderer({
   }
 
   const { extraData } = node.data;
+
+  const skuColor = useColorModeValue("zinc.500", "zinc.500");
 
   return (
     <HStack
@@ -42,7 +44,7 @@ export function NameCellRenderer({
           </ExternalLink>
         )}
         {extraData.sku && (
-          <Text px={1} color="zinc.500" fontStyle="italic" lineHeight="normal">
+          <Text px={1} color={skuColor} fontStyle="italic" lineHeight="normal">
             SKU: {extraData.sku}
           </Text>
         )}

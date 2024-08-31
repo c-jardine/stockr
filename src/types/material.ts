@@ -106,3 +106,24 @@ export const deleteCategoryByNameSchema = z.object({
 });
 
 export type DeleteCategoryByIdType = z.infer<typeof deleteCategoryByNameSchema>;
+
+export const importMaterialsSchema = z
+  .object({
+    name: z.string().min(1, "Required"),
+    url: CustomZod.OPTIONAL_URL,
+    sku: z.string().optional(),
+    cost: z.string().optional(),
+    quantity: z.string().optional(),
+    quantityUnit: z.string().optional(),
+    minQuantity: z.string().optional(),
+    notes: z.string().optional(),
+    vendor: z.object({ name: z.string() }).optional(),
+    categories: z
+      .object({
+        name: z.string(),
+      })
+      .array(),
+  })
+  .array();
+
+export type ImportMaterialsSchema = z.infer<typeof importMaterialsSchema>;

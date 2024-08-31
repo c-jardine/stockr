@@ -23,6 +23,8 @@ import type FileUploaderSrc from "react-drag-drop-files/dist/src/FileUploader";
 import { Controller, useForm } from "react-hook-form";
 import { FaFileImport } from "react-icons/fa6";
 import { z } from "zod";
+import { useParseMaterialsImport } from "./hooks";
+import { ImportMaterialsOverview } from "./ImportMaterialsOverview";
 
 // Workaround to make sure the component is properly typed.
 const FileUploaderTyped: typeof FileUploaderSrc = FileUploader;
@@ -51,9 +53,9 @@ export function ImportCsv() {
   });
 
   const { isOpen, onOpen, onClose } = useDisclosure({
-    onClose: () => {
-      reset({ file: undefined });
-    },
+    // onClose: () => {
+    //   reset({ file: undefined });
+    // },
   });
 
   const fileTypes = ["CSV"];
@@ -63,20 +65,14 @@ export function ImportCsv() {
     onClose();
   }
 
+  const { mutateAsync, data: parsedData } = useParseMaterialsImport();
+
   async function onSubmit(data: FormType) {
-    const { file } = data;
-    if (file) {
-      const formData = new FormData();
-      formData.append("file", file as File);
+    await mutateAsync(data);
+  }
 
-      const response = await fetch("/api/materials/parseCsv", {
-        method: "POST",
-        body: formData,
-      });
-
-      // TODO: Do something with this!
-      const resData = await response.json();
-    }
+  if (parsedData) {
+    return <ImportMaterialsOverview {...parsedData} />;
   }
 
   return (

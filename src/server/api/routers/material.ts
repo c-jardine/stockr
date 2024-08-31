@@ -6,6 +6,7 @@ import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 import {
   createMaterialFormSchema,
   deleteCategoryByNameSchema,
+  importMaterialsSchema,
   newQuantityAdjustmentActionSchema,
   updateCategoriesFormSchema,
   updateMaterialFormSchema,
@@ -314,6 +315,41 @@ export const materialRouter = createTRPCRouter({
 
     return updateTypes ?? null;
   }),
+
+  importMaterials: protectedProcedure
+    .input(importMaterialsSchema)
+    .mutation(async ({ ctx, input }) => {
+      return input.map(async ({ vendor, categories, ...rest }) => {
+        return ctx.db.material.create({
+          include: { _count: true },
+          data: {
+            ...rest,
+            ...(vendor && {
+              vendor: {
+                connectOrCreate: {
+                  where: {
+                    name: vendor.name,
+                  },
+                  create: {
+                    name: vendor.name,
+                  },
+                },
+              },
+            }),
+            ...(categories && {
+              categories: {
+                connectOrCreate: categories.map((category) => ({
+                  where: { name: category.name },
+                  create: { name: category.name },
+                })),
+              },
+            }),
+            createdBy: { connect: { id: ctx.session.user.id } },
+            updatedBy: { connect: { id: ctx.session.user.id } },
+          },
+        });
+      });
+    }),
 
   getLatest: protectedProcedure.query(async ({ ctx }) => {
     const material = await ctx.db.material.findFirst({
