@@ -4,6 +4,7 @@ import {
   FormErrorMessage,
   Heading,
   Icon,
+  Link,
   MenuItem,
   Modal,
   ModalBody,
@@ -97,18 +98,17 @@ export function ImportCsv() {
         <ModalContent>
           <ModalHeader>
             <Heading as="h1">Upload CSV</Heading>
-            <Text
-              mt={2}
-              color="zinc.600"
-              fontSize="sm"
-              fontWeight="normal"
-              fontStyle="italic"
-            >
-              Only accepts{" "}
-              <Text as="span" px={1} fontFamily="monospace" bg="zinc.200">
-                .csv
-              </Text>{" "}
-              files.
+            <Text mt={2} fontSize="sm" color="zinc.600">
+              Download the template{" "}
+              <Link
+                href="/docs/stockr-materials-import-template.csv"
+                fontWeight="bold"
+                color="blue.500"
+                download
+              >
+                here
+              </Link>
+              .
             </Text>
           </ModalHeader>
 
