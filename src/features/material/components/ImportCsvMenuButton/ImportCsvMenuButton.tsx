@@ -38,7 +38,7 @@ const schema = z.object({
 
 type FormType = z.infer<typeof schema>;
 
-export function ImportCsv() {
+export function ImportCsvMenuButton() {
   // For focusing on submit button after upload
   const submitRef = React.useRef<HTMLButtonElement>(null);
 

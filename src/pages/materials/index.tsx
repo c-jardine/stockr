@@ -16,7 +16,7 @@ import { FaEllipsis } from "react-icons/fa6";
 import { PageHeader } from "~/components/PageHeader";
 import { PageLoader } from "~/components/PageLoader";
 import { CreateMaterialForm } from "~/features/material/components/CreateMaterialForm";
-import { ImportCsv } from "~/features/material/components/ImportCsv";
+import { ImportCsvMenuButton } from "~/features/material/components/ImportCsvMenuButton";
 import { ManageCategories } from "~/features/material/components/ManageCategories";
 import { ManageVendors } from "~/features/material/components/ManageVendors";
 import { MaterialsTable } from "~/features/material/components/MaterialsTable/MaterialsTable";
@@ -45,7 +45,7 @@ export default function Materials() {
               >
                 View history
               </MenuItem>
-              <ImportCsv />
+              <ImportCsvMenuButton />
               <MenuDivider />
               <ManageVendors />
               <ManageCategories />
