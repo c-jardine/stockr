@@ -87,7 +87,7 @@ export function QuantityCellRenderer({
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
-    <Flex alignItems="center" h="full">
+    <>
       <Button
         variant="stockUpdate"
         size="sm"
@@ -161,6 +161,6 @@ export function QuantityCellRenderer({
           </ModalFooter>
         </ModalContent>
       </Modal>
-    </Flex>
+    </>
   );
 }

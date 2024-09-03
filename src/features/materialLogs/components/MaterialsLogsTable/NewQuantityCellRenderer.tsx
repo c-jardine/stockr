@@ -12,7 +12,7 @@ export function NewQuantityCellRenderer({
     return null;
   }
 
-  const { originalQuantity, adjustedQuantity, type } = node.data;
+  const { originalQuantity, adjustedQuantity, type, extraData } = node.data;
 
   const prev = new Prisma.Decimal(originalQuantity);
   const adj = new Prisma.Decimal(adjustedQuantity);
@@ -36,5 +36,9 @@ export function NewQuantityCellRenderer({
 
   const adjustedBy = getAdjustedBy();
 
-  return <Text>{adjustedBy?.toNumber()}</Text>;
+  return (
+    <Text>
+      {adjustedBy?.toNumber()} {extraData.material.quantityUnit.abbrevPlural}
+    </Text>
+  );
 }

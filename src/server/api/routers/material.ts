@@ -313,7 +313,11 @@ export const materialRouter = createTRPCRouter({
         createdAt: "desc",
       },
       include: {
-        material: true,
+        material: {
+          include: {
+            quantityUnit: true,
+          },
+        },
         type: true,
         createdBy: true,
       },

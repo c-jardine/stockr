@@ -93,11 +93,19 @@ export function MaterialsTable() {
       headerName: "Status",
       field: "status",
       cellRenderer: StatusCellRenderer,
+      cellStyle: {
+        display: "flex",
+        alignItems: "center",
+      },
     },
     {
       headerName: "Quantity",
       field: "quantity",
       cellRenderer: QuantityCellRenderer,
+      cellStyle: {
+        display: "flex",
+        alignItems: "center",
+      },
     },
     {
       headerName: "Min. quantity",
