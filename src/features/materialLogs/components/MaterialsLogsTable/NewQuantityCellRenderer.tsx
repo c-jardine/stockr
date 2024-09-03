@@ -3,6 +3,7 @@ import { Prisma } from "@prisma/client";
 
 import { type CustomCellRendererProps } from "ag-grid-react";
 
+import { getQuantityUnitText } from "~/utils";
 import { type MaterialLogsTableRows } from "./MaterialLogsTable";
 
 export function NewQuantityCellRenderer({
@@ -38,7 +39,12 @@ export function NewQuantityCellRenderer({
 
   return (
     <Text>
-      {adjustedBy?.toNumber()} {extraData.material.quantityUnit.abbrevPlural}
+      {adjustedBy?.toNumber()}{" "}
+      {getQuantityUnitText({
+        quantity: adjustedBy,
+        quantityUnit: extraData.material.quantityUnit,
+        style: "abbreviation",
+      })}
     </Text>
   );
 }

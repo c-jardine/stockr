@@ -12,6 +12,7 @@ import {
 } from "node_modules/ag-grid-community/dist/types/core/main";
 
 import { Table } from "~/features/table/components/Table";
+import { getQuantityUnitText } from "~/utils";
 import { api, type RouterOutputs } from "~/utils/api";
 import { NameCellRenderer } from "./NameCellRenderer";
 import { QuantityCellRenderer } from "./QuantityCellRenderer";
@@ -114,9 +115,13 @@ export function MaterialsTable() {
       valueFormatter: (
         params: ValueFormatterParams<MaterialsTableRows, Prisma.Decimal>
       ) => {
-        if (params.value) {
+        if (params.value && params.data) {
           const minQuantity = new Prisma.Decimal(params.value).toString();
-          const unit = params.data?.extraData.quantityUnit.abbrevPlural;
+          const unit = getQuantityUnitText({
+            quantity: params.value,
+            quantityUnit: params.data.extraData.quantityUnit,
+            style: "abbreviation",
+          });
           return `${minQuantity}${unit ? ` ${unit}` : ""}`;
         }
         return "—";
@@ -132,10 +137,14 @@ export function MaterialsTable() {
       valueFormatter: (
         params: ValueFormatterParams<MaterialsTableRows, Prisma.Decimal>
       ) => {
-        if (params.value) {
-          return `$${new Prisma.Decimal(params.value).toString()} /${
-            params.data?.extraData.quantityUnit.abbrevPlural
-          }`;
+        if (params.value && params.data) {
+          return `$${new Prisma.Decimal(
+            params.value
+          ).toString()} /${getQuantityUnitText({
+            quantity: params.value,
+            quantityUnit: params.data.extraData.quantityUnit,
+            style: "abbreviation",
+          })}`;
         }
         return "—";
       },

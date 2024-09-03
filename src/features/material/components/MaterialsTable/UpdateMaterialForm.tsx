@@ -37,7 +37,7 @@ import {
   updateMaterialFormSchema,
   type UpdateMaterialFormType,
 } from "~/types/material";
-import { isTRPCClientError } from "~/utils";
+import { getQuantityUnitText, isTRPCClientError } from "~/utils";
 import { api } from "~/utils/api";
 import { toNumber } from "~/utils/prisma";
 import { mapToSelectInput, type SelectInput } from "~/utils/selectInput";
@@ -90,7 +90,12 @@ export function UpdateMaterialForm(
         sku: extraData.sku ?? undefined,
         cost: toNumber(cost),
         quantity: toNumber(quantity),
-        quantityUnit: extraData.quantityUnit.abbrevPlural,
+        quantityUnit:
+          getQuantityUnitText({
+            quantity: quantity,
+            quantityUnit: extraData.quantityUnit,
+            style: "abbreviation",
+          }) ?? "",
         minQuantity: toNumber(minQuantity),
         vendor: extraData.vendor
           ? mapToSelectInput(extraData.vendor)

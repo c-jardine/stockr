@@ -29,6 +29,7 @@ import {
   updateMaterialQuantityFormSchema,
   type UpdateMaterialQuantityFormType,
 } from "~/types/material";
+import { getQuantityUnitText } from "~/utils";
 import { api } from "~/utils/api";
 import { type MaterialsTableRows } from "./MaterialsTable";
 import { NewQuantityUpdateTypeForm } from "./NewQuantityUpdateTypeForm";
@@ -60,8 +61,8 @@ export function QuantityCellRenderer({
   React.useEffect(() => {
     if (node.data) {
       reset({
-        materialId: node.data.extraData.id,
-        originalQuantity: node.data.quantity?.toString() ?? "0",
+        materialId: extraData.id,
+        originalQuantity: quantity?.toString() ?? "0",
       });
     }
   }, [node.data, reset]);
@@ -86,6 +87,12 @@ export function QuantityCellRenderer({
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
+  if (!node.data) {
+    return null;
+  }
+
+  const { quantity, extraData } = node.data;
+
   return (
     <>
       <Button
@@ -95,11 +102,11 @@ export function QuantityCellRenderer({
         onClick={onOpen}
       >
         {node.data?.quantity
-          ? `${new Prisma.Decimal(node.data.quantity).toString()}${
-              node.data.extraData.quantityUnit.abbrevPlural
-                ? ` ${node.data.extraData.quantityUnit.abbrevPlural}`
-                : ""
-            }`
+          ? `${new Prisma.Decimal(quantity!).toString()} ${getQuantityUnitText({
+              quantity,
+              quantityUnit: extraData.quantityUnit,
+              style: "abbreviation",
+            })}`
           : "—"}
       </Button>
       <Modal {...{ isOpen, onClose }}>

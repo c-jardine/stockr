@@ -2,6 +2,7 @@ import { Flex, HStack, Icon, Text, useColorModeValue } from "@chakra-ui/react";
 import { Prisma } from "@prisma/client";
 import { type CustomCellRendererProps } from "ag-grid-react";
 import { FaArrowDown, FaArrowUp } from "react-icons/fa6";
+import { getQuantityUnitText } from "~/utils";
 import { type MaterialLogsTableRows } from "./MaterialLogsTable";
 
 export function AdjustedQuantityCellRenderer({
@@ -33,7 +34,11 @@ export function AdjustedQuantityCellRenderer({
           <Icon as={icon} />
           <Text>
             {adjustedBy.toNumber()}{" "}
-            {extraData.material.quantityUnit.abbrevPlural}
+            {getQuantityUnitText({
+              quantity: adjustedBy,
+              quantityUnit: extraData.material.quantityUnit,
+              style: "abbreviation",
+            })}
           </Text>
         </HStack>
       )}
