@@ -9,7 +9,10 @@ export const createMaterialFormSchema = z.object({
   sku: z.string().optional(),
   cost: z.number().min(0).optional(),
   quantity: z.string().optional(),
-  quantityUnitName: z.string().optional(),
+  quantityUnitName: z.object({
+    label: z.string(),
+    value: z.string(),
+  }),
   minQuantity: z.string().optional(),
   notes: z.string().optional(),
   vendor: z
@@ -35,7 +38,7 @@ export const updateMaterialFormSchema = z.object({
   sku: z.string().optional(),
   cost: z.number().optional(),
   quantity: z.number().optional(),
-  quantityUnitName: z.string().optional(),
+  quantityUnit: z.string(),
   minQuantity: z.number().optional(),
   notes: z.string().optional(),
   vendor: z
@@ -114,7 +117,10 @@ export const importMaterialsSchema = z
     sku: z.string().optional(),
     cost: z.string().optional(),
     quantity: z.string().optional(),
-    quantityUnitName: z.string().optional(),
+    quantityUnitName: z.object({
+      label: z.string(),
+      value: z.string(),
+    }),
     minQuantity: z.string().optional(),
     notes: z.string().optional(),
     vendor: z.object({ name: z.string() }).optional(),

@@ -15,6 +15,7 @@ import {
   InputLeftElement,
   SimpleGrid,
   Stack,
+  Text,
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
@@ -24,6 +25,7 @@ import { FaDollarSign, FaPlus } from "react-icons/fa6";
 import { NumericFormat } from "react-number-format";
 
 import { ControlledCreatableSelect } from "~/components/ControlledCreatableSelect";
+import { ControlledSelect } from "~/components/ControlledSelect";
 import { TextInput } from "~/components/TextInput";
 import {
   type CreateMaterialFormType,
@@ -69,6 +71,52 @@ export function CreateMaterialForm() {
       await utils.material.getVendors.invalidate();
     },
   });
+
+  interface SelectInput {
+    label: string;
+    value: string;
+  }
+
+  interface FormattedGroup {
+    label: string;
+    options: SelectInput[];
+  }
+
+  const { data: quantityUnits } = api.material.getQuantityUnits.useQuery();
+  const quantityUnitOptions =
+    quantityUnits?.reduce((groups, unit) => {
+      // Find the existing group or create a new one
+      const group = groups.find((g) => g.label === unit.group);
+
+      const option: SelectInput = {
+        label: unit.name,
+        value: unit.name,
+      };
+
+      if (group) {
+        group.options.push(option);
+      } else {
+        groups.push({
+          label: unit.group,
+          options: [option],
+        });
+      }
+
+      return groups;
+    }, [] as FormattedGroup[]) || [];
+
+  const groupOrder = [
+    "Count",
+    "Weight",
+    "Length",
+    "Area",
+    "Volume",
+    "Miscellaneous",
+  ];
+
+  quantityUnitOptions.sort(
+    (a, b) => groupOrder.indexOf(a.label) - groupOrder.indexOf(b.label)
+  );
 
   const { data: categoriesQuery } = api.material.getCategories.useQuery();
   const categoryOptions = categoriesQuery?.map(({ id, name }) => ({
@@ -147,14 +195,120 @@ export function CreateMaterialForm() {
                 )}
               </FormControl>
 
-              <SimpleGrid columns={2} gap={4}>
-                <TextInput control={control} name="quantity" label="Quantity" />
-
+              <SimpleGrid columns={5} gap={4}>
                 <TextInput
                   control={control}
-                  name="quantityUnit"
-                  label="Quantity unit"
+                  name="quantity"
+                  label="Quantity"
+                  formControlProps={{ gridColumn: "1 / span 3" }}
                 />
+
+                <FormControl gridColumn="4 / span 2">
+                  <FormLabel>Unit</FormLabel>
+                  <ControlledSelect
+                    control={control}
+                    name="quantityUnitName"
+                    // label="Unit"
+                    options={quantityUnitOptions}
+                    // options={[
+                    //   {
+                    //     label: "Count",
+                    //     options: [
+                    //       { label: "Pieces", value: "Pieces" },
+                    //       { label: "Pairs", value: "Pairs" },
+                    //       { label: "Sets", value: "Sets" },
+                    //       { label: "Dozens", value: "Dozens" },
+                    //       { label: "Reams", value: "Reams" },
+                    //     ],
+                    //   },
+                    //   {
+                    //     label: "Length",
+                    //     options: [
+                    //       { label: "Inches", value: "Inches" },
+                    //       { label: "Feet", value: "Feet" },
+                    //       { label: "Yards", value: "Yards" },
+                    //       { label: "Centimeters", value: "Centimeters" },
+                    //       { label: "Meters", value: "Meters" },
+                    //     ],
+                    //   },
+                    //   {
+                    //     label: "Weight",
+                    //     options: [
+                    //       { label: "Ounces", value: "Ounces" },
+                    //       { label: "Pounds", value: "Pounds" },
+                    //       { label: "Grams", value: "Grams" },
+                    //       { label: "Kilograms", value: "Kilograms" },
+                    //     ],
+                    //   },
+                    //   {
+                    //     label: "Volume",
+                    //     options: [
+                    //       { label: "Fluid ounces", value: "Fluid ounces" },
+                    //       { label: "Pints", value: "Pints" },
+                    //       { label: "Quarts", value: "Quarts" },
+                    //       { label: "Gallons", value: "Gallons" },
+                    //       { label: "Milliliters", value: "Milliliters" },
+                    //       { label: "Liters", value: "Liters" },
+                    //       { label: "Cubic inches", value: "Cubic inches" },
+                    //       { label: "Cubic feet", value: "Cubic feet" },
+                    //       { label: "Board feet", value: "Board feet" },
+                    //     ],
+                    //   },
+                    //   {
+                    //     label: "Area",
+                    //     options: [
+                    //       { label: "Square inches", value: "Square inches" },
+                    //       { label: "Square feet", value: "Square feet" },
+                    //       { label: "Square yards", value: "Square yards" },
+                    //       {
+                    //         label: "Square centimeters",
+                    //         value: "Square centimeters",
+                    //       },
+                    //       { label: "Square meters", value: "Square meters" },
+                    //     ],
+                    //   },
+                    //   {
+                    //     label: "Miscellaneous",
+                    //     options: [
+                    //       { label: "Sheets", value: "Sheets" },
+                    //       { label: "Rolls", value: "Rolls" },
+                    //       { label: "Spools", value: "Spools" },
+                    //       { label: "Skeins", value: "Skeins" },
+                    //       { label: "Carats", value: "Carats" },
+                    //       { label: "Drams", value: "Drams" },
+                    //       { label: "Tubs", value: "Tubs" },
+                    //     ],
+                    //   },
+                    // ]}
+                    chakraStyles={{
+                      singleValue: (provided) => ({
+                        ...provided,
+                        fontSize: "xs",
+                      }),
+                      dropdownIndicator: (provided) => ({
+                        ...provided,
+                        px: 2,
+                      }),
+                      groupHeading: (provided) => ({
+                        ...provided,
+                        pl: 2,
+                        fontSize: "xs",
+                        fontWeight: "bold",
+                      }),
+                      option: (provided) => ({
+                        ...provided,
+                        pl: 4,
+                        fontSize: "xs",
+                      }),
+                      noOptionsMessage: (provided) => ({
+                        ...provided,
+                        fontSize: "xs",
+                        fontStyle: "italic",
+                      }),
+                    }}
+                    noOptionsMessage={(props) => <Text>No units found.</Text>}
+                  />
+                </FormControl>
               </SimpleGrid>
 
               <TextInput

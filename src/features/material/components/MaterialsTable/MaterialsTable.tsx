@@ -108,7 +108,7 @@ export function MaterialsTable() {
       ) => {
         if (params.value) {
           const minQuantity = new Prisma.Decimal(params.value).toString();
-          const unit = params.data?.extraData.quantityUnit ?? undefined;
+          const unit = params.data?.extraData.quantityUnit.abbrevPlural;
           return `${minQuantity}${unit ? ` ${unit}` : ""}`;
         }
         return "—";
@@ -126,7 +126,7 @@ export function MaterialsTable() {
       ) => {
         if (params.value) {
           return `$${new Prisma.Decimal(params.value).toString()} /${
-            params.data?.extraData.quantityUnit
+            params.data?.extraData.quantityUnit.abbrevPlural
           }`;
         }
         return "—";

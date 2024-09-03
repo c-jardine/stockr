@@ -90,7 +90,7 @@ export function UpdateMaterialForm(
         sku: extraData.sku ?? undefined,
         cost: toNumber(cost),
         quantity: toNumber(quantity),
-        quantityUnit: extraData.quantityUnit ?? undefined,
+        quantityUnit: extraData.quantityUnit.abbrevPlural,
         minQuantity: toNumber(minQuantity),
         vendor: extraData.vendor
           ? mapToSelectInput(extraData.vendor)

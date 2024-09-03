@@ -27,7 +27,7 @@ export const materialRouter = createTRPCRouter({
             ...rest,
             quantityUnit: {
               connect: {
-                name: quantityUnitName,
+                name: quantityUnitName.value,
               },
             },
             ...(vendor && {
@@ -61,6 +61,7 @@ export const materialRouter = createTRPCRouter({
     const materials = await ctx.db.material.findMany({
       orderBy: { name: "asc" },
       include: {
+        quantityUnit: true,
         vendor: true,
         categories: true,
       },
@@ -74,7 +75,7 @@ export const materialRouter = createTRPCRouter({
     .mutation(
       async ({
         ctx,
-        input: { id, quantityUnitName, vendor, categories, ...rest },
+        input: { id, quantityUnit, vendor, categories, ...rest },
       }) => {
         try {
           return await ctx.db.material.update({
@@ -83,11 +84,6 @@ export const materialRouter = createTRPCRouter({
             },
             data: {
               ...rest,
-              quantityUnit: {
-                connect: {
-                  name: quantityUnitName,
-                },
-              },
               ...(vendor && {
                 vendor: {
                   connectOrCreate: {
@@ -347,7 +343,7 @@ export const materialRouter = createTRPCRouter({
               ...rest,
               quantityUnit: {
                 connect: {
-                  name: quantityUnitName,
+                  name: quantityUnitName.value,
                 },
               },
               ...(vendor && {
@@ -377,6 +373,14 @@ export const materialRouter = createTRPCRouter({
         }
       );
     }),
+
+  getQuantityUnits: protectedProcedure.query(async ({ ctx }) => {
+    return ctx.db.materialQuantityUnit.findMany({
+      orderBy: {
+        group: "asc",
+      },
+    });
+  }),
 
   getLatest: protectedProcedure.query(async ({ ctx }) => {
     const material = await ctx.db.material.findFirst({

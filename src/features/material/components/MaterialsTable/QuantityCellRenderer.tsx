@@ -96,8 +96,8 @@ export function QuantityCellRenderer({
       >
         {node.data?.quantity
           ? `${new Prisma.Decimal(node.data.quantity).toString()}${
-              node.data.extraData.quantityUnit
-                ? ` ${node.data.extraData.quantityUnit}`
+              node.data.extraData.quantityUnit.abbrevPlural
+                ? ` ${node.data.extraData.quantityUnit.abbrevPlural}`
                 : ""
             }`
           : "—"}
