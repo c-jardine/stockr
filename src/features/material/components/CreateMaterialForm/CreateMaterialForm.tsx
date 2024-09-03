@@ -1,4 +1,5 @@
 import {
+  Box,
   Button,
   Drawer,
   DrawerBody,
@@ -145,7 +146,7 @@ export function CreateMaterialForm() {
       >
         New material
       </Button>
-      <Drawer size="sm" {...{ isOpen, onClose }}>
+      <Drawer size="md" {...{ isOpen, onClose }}>
         <DrawerOverlay />
         <DrawerContent>
           <DrawerHeader>New material</DrawerHeader>
@@ -203,112 +204,15 @@ export function CreateMaterialForm() {
                   formControlProps={{ gridColumn: "1 / span 3" }}
                 />
 
-                <FormControl gridColumn="4 / span 2">
-                  <FormLabel>Unit</FormLabel>
+                <Box gridColumn="4 / span 2">
                   <ControlledSelect
                     control={control}
                     name="quantityUnitName"
-                    // label="Unit"
+                    label="Unit"
                     options={quantityUnitOptions}
-                    // options={[
-                    //   {
-                    //     label: "Count",
-                    //     options: [
-                    //       { label: "Pieces", value: "Pieces" },
-                    //       { label: "Pairs", value: "Pairs" },
-                    //       { label: "Sets", value: "Sets" },
-                    //       { label: "Dozens", value: "Dozens" },
-                    //       { label: "Reams", value: "Reams" },
-                    //     ],
-                    //   },
-                    //   {
-                    //     label: "Length",
-                    //     options: [
-                    //       { label: "Inches", value: "Inches" },
-                    //       { label: "Feet", value: "Feet" },
-                    //       { label: "Yards", value: "Yards" },
-                    //       { label: "Centimeters", value: "Centimeters" },
-                    //       { label: "Meters", value: "Meters" },
-                    //     ],
-                    //   },
-                    //   {
-                    //     label: "Weight",
-                    //     options: [
-                    //       { label: "Ounces", value: "Ounces" },
-                    //       { label: "Pounds", value: "Pounds" },
-                    //       { label: "Grams", value: "Grams" },
-                    //       { label: "Kilograms", value: "Kilograms" },
-                    //     ],
-                    //   },
-                    //   {
-                    //     label: "Volume",
-                    //     options: [
-                    //       { label: "Fluid ounces", value: "Fluid ounces" },
-                    //       { label: "Pints", value: "Pints" },
-                    //       { label: "Quarts", value: "Quarts" },
-                    //       { label: "Gallons", value: "Gallons" },
-                    //       { label: "Milliliters", value: "Milliliters" },
-                    //       { label: "Liters", value: "Liters" },
-                    //       { label: "Cubic inches", value: "Cubic inches" },
-                    //       { label: "Cubic feet", value: "Cubic feet" },
-                    //       { label: "Board feet", value: "Board feet" },
-                    //     ],
-                    //   },
-                    //   {
-                    //     label: "Area",
-                    //     options: [
-                    //       { label: "Square inches", value: "Square inches" },
-                    //       { label: "Square feet", value: "Square feet" },
-                    //       { label: "Square yards", value: "Square yards" },
-                    //       {
-                    //         label: "Square centimeters",
-                    //         value: "Square centimeters",
-                    //       },
-                    //       { label: "Square meters", value: "Square meters" },
-                    //     ],
-                    //   },
-                    //   {
-                    //     label: "Miscellaneous",
-                    //     options: [
-                    //       { label: "Sheets", value: "Sheets" },
-                    //       { label: "Rolls", value: "Rolls" },
-                    //       { label: "Spools", value: "Spools" },
-                    //       { label: "Skeins", value: "Skeins" },
-                    //       { label: "Carats", value: "Carats" },
-                    //       { label: "Drams", value: "Drams" },
-                    //       { label: "Tubs", value: "Tubs" },
-                    //     ],
-                    //   },
-                    // ]}
-                    chakraStyles={{
-                      singleValue: (provided) => ({
-                        ...provided,
-                        fontSize: "xs",
-                      }),
-                      dropdownIndicator: (provided) => ({
-                        ...provided,
-                        px: 2,
-                      }),
-                      groupHeading: (provided) => ({
-                        ...provided,
-                        pl: 2,
-                        fontSize: "xs",
-                        fontWeight: "bold",
-                      }),
-                      option: (provided) => ({
-                        ...provided,
-                        pl: 4,
-                        fontSize: "xs",
-                      }),
-                      noOptionsMessage: (provided) => ({
-                        ...provided,
-                        fontSize: "xs",
-                        fontStyle: "italic",
-                      }),
-                    }}
                     noOptionsMessage={(props) => <Text>No units found.</Text>}
                   />
-                </FormControl>
+                </Box>
               </SimpleGrid>
 
               <TextInput
