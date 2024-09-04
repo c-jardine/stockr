@@ -101,7 +101,7 @@ export function ImportCsvMenuButton() {
             <Text mt={2} fontSize="sm" color="zinc.600">
               Download the template{" "}
               <Link
-                href="/docs/stockr-materials-import-template.csv"
+                href="/docs/craftmate-materials-import-template.csv"
                 fontWeight="bold"
                 color="blue.500"
                 download

@@ -8,7 +8,7 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>Stockr</title>
+        <title>CraftMate</title>
         <meta
           name="description"
           content="A material and product tracker for artisans."
