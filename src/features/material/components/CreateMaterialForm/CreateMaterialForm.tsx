@@ -1,4 +1,5 @@
 import {
+  Box,
   Button,
   Drawer,
   DrawerBody,
@@ -15,6 +16,7 @@ import {
   InputLeftElement,
   SimpleGrid,
   Stack,
+  Text,
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
@@ -24,6 +26,7 @@ import { FaDollarSign, FaPlus } from "react-icons/fa6";
 import { NumericFormat } from "react-number-format";
 
 import { ControlledCreatableSelect } from "~/components/ControlledCreatableSelect";
+import { ControlledSelect } from "~/components/ControlledSelect";
 import { TextInput } from "~/components/TextInput";
 import {
   type CreateMaterialFormType,
@@ -70,6 +73,52 @@ export function CreateMaterialForm() {
     },
   });
 
+  interface SelectInput {
+    label: string;
+    value: string;
+  }
+
+  interface FormattedGroup {
+    label: string;
+    options: SelectInput[];
+  }
+
+  const { data: quantityUnits } = api.material.getQuantityUnits.useQuery();
+  const quantityUnitOptions =
+    quantityUnits?.reduce((groups, unit) => {
+      // Find the existing group or create a new one
+      const group = groups.find((g) => g.label === unit.group);
+
+      const option: SelectInput = {
+        label: unit.name,
+        value: unit.name,
+      };
+
+      if (group) {
+        group.options.push(option);
+      } else {
+        groups.push({
+          label: unit.group,
+          options: [option],
+        });
+      }
+
+      return groups;
+    }, [] as FormattedGroup[]) || [];
+
+  const groupOrder = [
+    "Count",
+    "Weight",
+    "Length",
+    "Area",
+    "Volume",
+    "Miscellaneous",
+  ];
+
+  quantityUnitOptions.sort(
+    (a, b) => groupOrder.indexOf(a.label) - groupOrder.indexOf(b.label)
+  );
+
   const { data: categoriesQuery } = api.material.getCategories.useQuery();
   const categoryOptions = categoriesQuery?.map(({ id, name }) => ({
     label: name,
@@ -97,7 +146,7 @@ export function CreateMaterialForm() {
       >
         New material
       </Button>
-      <Drawer size="sm" {...{ isOpen, onClose }}>
+      <Drawer size="md" {...{ isOpen, onClose }}>
         <DrawerOverlay />
         <DrawerContent>
           <DrawerHeader>New material</DrawerHeader>
@@ -147,14 +196,23 @@ export function CreateMaterialForm() {
                 )}
               </FormControl>
 
-              <SimpleGrid columns={2} gap={4}>
-                <TextInput control={control} name="quantity" label="Quantity" />
-
+              <SimpleGrid columns={5} gap={4}>
                 <TextInput
                   control={control}
-                  name="quantityUnit"
-                  label="Quantity unit"
+                  name="quantity"
+                  label="Quantity"
+                  formControlProps={{ gridColumn: "1 / span 3" }}
                 />
+
+                <Box gridColumn="4 / span 2">
+                  <ControlledSelect
+                    control={control}
+                    name="quantityUnitName"
+                    label="Unit"
+                    options={quantityUnitOptions}
+                    noOptionsMessage={(props) => <Text>No units found.</Text>}
+                  />
+                </Box>
               </SimpleGrid>
 
               <TextInput

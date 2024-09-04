@@ -4,6 +4,7 @@ import {
   FormErrorMessage,
   Heading,
   Icon,
+  Link,
   MenuItem,
   Modal,
   ModalBody,
@@ -15,6 +16,7 @@ import {
   Stack,
   Text,
   useDisclosure,
+  useToast,
 } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import React from "react";
@@ -23,8 +25,9 @@ import type FileUploaderSrc from "react-drag-drop-files/dist/src/FileUploader";
 import { Controller, useForm } from "react-hook-form";
 import { FaFileImport } from "react-icons/fa6";
 import { z } from "zod";
-import { useParseMaterialsImport } from "./hooks";
+
 import { ImportMaterialsOverview } from "./ImportMaterialsOverview";
+import { useParseMaterialsImport } from "./hooks/useParseMaterialsImport";
 
 // Workaround to make sure the component is properly typed.
 const FileUploaderTyped: typeof FileUploaderSrc = FileUploader;
@@ -35,7 +38,7 @@ const schema = z.object({
 
 type FormType = z.infer<typeof schema>;
 
-export function ImportCsv() {
+export function ImportCsvMenuButton() {
   // For focusing on submit button after upload
   const submitRef = React.useRef<HTMLButtonElement>(null);
 
@@ -52,11 +55,7 @@ export function ImportCsv() {
     resolver: zodResolver(schema),
   });
 
-  const { isOpen, onOpen, onClose } = useDisclosure({
-    // onClose: () => {
-    //   reset({ file: undefined });
-    // },
-  });
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   const fileTypes = ["CSV"];
 
@@ -65,7 +64,17 @@ export function ImportCsv() {
     onClose();
   }
 
-  const { mutateAsync, data: parsedData } = useParseMaterialsImport();
+  const toast = useToast();
+
+  const { mutateAsync, data: parsedData } = useParseMaterialsImport({
+    onSuccess: () => {
+      toast({
+        title: "Parsing complete",
+        description: "Your file has been parsed.",
+        status: "success",
+      });
+    },
+  });
 
   async function onSubmit(data: FormType) {
     await mutateAsync(data);
@@ -89,18 +98,17 @@ export function ImportCsv() {
         <ModalContent>
           <ModalHeader>
             <Heading as="h1">Upload CSV</Heading>
-            <Text
-              mt={2}
-              color="zinc.600"
-              fontSize="sm"
-              fontWeight="normal"
-              fontStyle="italic"
-            >
-              Only accepts{" "}
-              <Text as="span" px={1} fontFamily="monospace" bg="zinc.200">
-                .csv
-              </Text>{" "}
-              files.
+            <Text mt={2} fontSize="sm" color="zinc.600">
+              Download the template{" "}
+              <Link
+                href="/docs/stockr-materials-import-template.csv"
+                fontWeight="bold"
+                color="blue.500"
+                download
+              >
+                here
+              </Link>
+              .
             </Text>
           </ModalHeader>
 

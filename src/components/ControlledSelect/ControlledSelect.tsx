@@ -61,13 +61,37 @@ export function ControlledSelect<
       <Select<Option, IsMulti, Group>
         options={options}
         chakraStyles={{
-          option: (provided) => ({
-            ...provided,
-            fontSize: "sm",
-          }),
           multiValueLabel: (provided) => ({
             ...provided,
             fontSize: "xs",
+          }),
+          singleValue: (provided) => ({
+            ...provided,
+            fontSize: "xs",
+          }),
+          dropdownIndicator: (provided) => ({
+            ...provided,
+            px: 2,
+          }),
+          groupHeading: (provided) => ({
+            ...provided,
+            pl: 2,
+            fontSize: "xs",
+            fontWeight: "bold",
+          }),
+          option: (provided) => ({
+            ...provided,
+            pl: 4,
+            fontSize: "xs",
+          }),
+          noOptionsMessage: (provided) => ({
+            ...provided,
+            fontSize: "xs",
+            fontStyle: "italic",
+          }),
+          placeholder: (provided) => ({
+            ...provided,
+            fontSize: "sm",
           }),
         }}
         {...selectProps}

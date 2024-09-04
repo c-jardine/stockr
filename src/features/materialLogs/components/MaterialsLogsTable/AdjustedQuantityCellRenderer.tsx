@@ -1,9 +1,8 @@
 import { Flex, HStack, Icon, Text, useColorModeValue } from "@chakra-ui/react";
 import { Prisma } from "@prisma/client";
-import { FaArrowDown, FaArrowUp } from "react-icons/fa6";
-
 import { type CustomCellRendererProps } from "ag-grid-react";
-
+import { FaArrowDown, FaArrowUp } from "react-icons/fa6";
+import { getQuantityUnitText } from "~/utils";
 import { type MaterialLogsTableRows } from "./MaterialLogsTable";
 
 export function AdjustedQuantityCellRenderer({
@@ -12,65 +11,37 @@ export function AdjustedQuantityCellRenderer({
   const negativeColor = useColorModeValue("red.600", "red.500");
   const positiveColor = useColorModeValue("green.600", "green.500");
 
-  if (!node.data) {
-    return null;
-  }
+  if (!node.data) return null;
 
-  const { originalQuantity, adjustedQuantity, type } = node.data;
+  const { originalQuantity, adjustedQuantity, type, extraData } = node.data;
 
   const prev = new Prisma.Decimal(originalQuantity);
   const adj = new Prisma.Decimal(adjustedQuantity);
-
   const quantityDifference = adj.sub(prev);
 
-  function getIcon() {
-    if (quantityDifference.lessThan(0)) {
-      return FaArrowDown;
-    }
-    if (quantityDifference.greaterThanOrEqualTo(0)) {
-      return FaArrowUp;
-    }
+  const { icon, color } = quantityDifference.isNegative()
+    ? { icon: FaArrowDown, color: negativeColor }
+    : { icon: FaArrowUp, color: positiveColor };
 
-    return null;
-  }
-
-  function getColor() {
-    if (quantityDifference.lessThan(0)) {
-      return negativeColor;
-    }
-    if (quantityDifference.greaterThanOrEqualTo(0)) {
-      return positiveColor;
-    }
-  }
-
-  const icon = getIcon();
-  const color = getColor();
-
-  function getAdjustedBy() {
-    switch (type) {
-      case "SET": {
-        if (adj < prev) {
-          return prev.sub(adj);
-        }
-        if (adj > prev) {
-          return adj.sub(prev);
-        }
-        return adj;
-      }
-      default: {
-        return adj;
-      }
-    }
-  }
-
-  const adjustedBy = getAdjustedBy();
+  const adjustedBy = type === "SET" ? adj.sub(prev).abs() : adj;
 
   return (
     <Flex alignItems="center" h="full">
-      <HStack color={color}>
-        {icon && <Icon as={icon} />}
-        <Text>{adjustedBy?.toNumber()}</Text>
-      </HStack>
+      {adjustedBy.isZero() ? (
+        <Text>—</Text>
+      ) : (
+        <HStack color={color}>
+          <Icon as={icon} />
+          <Text>
+            {adjustedBy.toNumber()}{" "}
+            {getQuantityUnitText({
+              quantity: adjustedBy,
+              quantityUnit: extraData.material.quantityUnit,
+              style: "abbreviation",
+            })}
+          </Text>
+        </HStack>
+      )}
     </Flex>
   );
 }

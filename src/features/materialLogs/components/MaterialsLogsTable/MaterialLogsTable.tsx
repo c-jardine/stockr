@@ -15,6 +15,7 @@ import { CreatedAtRenderer } from "./CreatedAtRenderer";
 import { CreatedByRenderer } from "./CreatedByRenderer";
 import { NewQuantityCellRenderer } from "./NewQuantityCellRenderer";
 import { UpdateTypeRenderer } from "./UpdateTypeRenderer";
+import { PreviousQuantityCellRenderer } from "./PreviousQuantityCellRenderer";
 
 // Table row type definition
 export type MaterialLogsTableRows = {
@@ -72,6 +73,10 @@ export function MaterialLogsTable() {
       headerName: "Type",
       field: "type",
       cellRenderer: UpdateTypeRenderer,
+      cellStyle: {
+        display: "flex",
+        alignItems: "center",
+      },
     },
     {
       headerName: "New quantity",
@@ -81,6 +86,7 @@ export function MaterialLogsTable() {
     {
       headerName: "Previous",
       field: "originalQuantity",
+      cellRenderer: PreviousQuantityCellRenderer,
     },
     {
       headerName: "Adjusted",

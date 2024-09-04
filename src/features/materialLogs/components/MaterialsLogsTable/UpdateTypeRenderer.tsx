@@ -1,4 +1,4 @@
-import { HStack, Text, useColorModeValue } from "@chakra-ui/react";
+import { HStack, Tag, Text, useColorModeValue } from "@chakra-ui/react";
 
 import { type CustomCellRendererProps } from "ag-grid-react";
 
@@ -7,10 +7,13 @@ import { type MaterialLogsTableRows } from "./MaterialLogsTable";
 export function UpdateTypeRenderer({
   node,
 }: CustomCellRendererProps<MaterialLogsTableRows>) {
-  const color = useColorModeValue(
-    node.data ? `${node.data.extraData.type.color}.600` : "unset",
-    node.data ? `${node.data.extraData.type.color}.500` : "unset"
-  );
+  const color = node.data?.extraData.type.color;
+  const styles = {
+    border: "1px",
+    borderColor: useColorModeValue(`${color}.300`, `${color}.900`),
+    bg: useColorModeValue(`${color}.100`, `${color}.950`),
+    color: useColorModeValue(`${color}.800`, `${color}.500`),
+  };
 
   if (!node.data) {
     return null;
@@ -21,8 +24,10 @@ export function UpdateTypeRenderer({
   } = node.data;
 
   return (
-    <HStack h="full" alignItems="center" color={color}>
-      <Text>{type.type}</Text>
-    </HStack>
+    <Tag {...{ ...styles }}>
+      <HStack alignItems="center">
+        <Text fontWeight="semibold">{type.type}</Text>
+      </HStack>
+    </Tag>
   );
 }

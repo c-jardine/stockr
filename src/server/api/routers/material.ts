@@ -17,40 +17,51 @@ import {
 export const materialRouter = createTRPCRouter({
   create: protectedProcedure
     .input(createMaterialFormSchema)
-    .mutation(async ({ ctx, input: { vendor, categories, ...rest } }) => {
-      return ctx.db.material.create({
-        data: {
-          ...rest,
-          ...(vendor && {
-            vendor: {
-              connectOrCreate: {
-                where: {
-                  id: vendor.label,
-                },
-                create: {
-                  name: vendor.label,
-                },
+    .mutation(
+      async ({
+        ctx,
+        input: { quantityUnitName, vendor, categories, ...rest },
+      }) => {
+        return ctx.db.material.create({
+          data: {
+            ...rest,
+            quantityUnit: {
+              connect: {
+                name: quantityUnitName.value,
               },
             },
-          }),
-          ...(categories && {
-            categories: {
-              connectOrCreate: categories.map((category) => ({
-                where: { id: category.value },
-                create: { name: category.label },
-              })),
-            },
-          }),
-          createdBy: { connect: { id: ctx.session.user.id } },
-          updatedBy: { connect: { id: ctx.session.user.id } },
-        },
-      });
-    }),
+            ...(vendor && {
+              vendor: {
+                connectOrCreate: {
+                  where: {
+                    id: vendor.label,
+                  },
+                  create: {
+                    name: vendor.label,
+                  },
+                },
+              },
+            }),
+            ...(categories && {
+              categories: {
+                connectOrCreate: categories.map((category) => ({
+                  where: { id: category.value },
+                  create: { name: category.label },
+                })),
+              },
+            }),
+            createdBy: { connect: { id: ctx.session.user.id } },
+            updatedBy: { connect: { id: ctx.session.user.id } },
+          },
+        });
+      }
+    ),
 
   getAll: protectedProcedure.query(async ({ ctx }) => {
     const materials = await ctx.db.material.findMany({
       orderBy: { name: "asc" },
       include: {
+        quantityUnit: true,
         vendor: true,
         categories: true,
       },
@@ -61,54 +72,59 @@ export const materialRouter = createTRPCRouter({
 
   update: protectedProcedure
     .input(updateMaterialFormSchema)
-    .mutation(async ({ ctx, input: { id, vendor, categories, ...rest } }) => {
-      try {
-        return await ctx.db.material.update({
-          where: {
-            id,
-          },
-          data: {
-            ...rest,
-            ...(vendor && {
-              vendor: {
-                connectOrCreate: {
-                  where: {
-                    id: vendor.value,
-                  },
-                  create: {
-                    name: vendor.label,
+    .mutation(
+      async ({
+        ctx,
+        input: { id, quantityUnit, vendor, categories, ...rest },
+      }) => {
+        try {
+          return await ctx.db.material.update({
+            where: {
+              id,
+            },
+            data: {
+              ...rest,
+              ...(vendor && {
+                vendor: {
+                  connectOrCreate: {
+                    where: {
+                      id: vendor.value,
+                    },
+                    create: {
+                      name: vendor.label,
+                    },
                   },
                 },
-              },
-            }),
-            ...(categories && {
-              categories: {
-                set: [], // Remove all
-                connectOrCreate: categories.map((category) => ({
-                  where: { id: category.value },
-                  create: { name: category.label },
-                })),
-              },
-            }),
-            updatedBy: { connect: { id: ctx.session.user.id } },
-          },
-        });
-      } catch (error) {
-        if (
-          error instanceof Prisma.PrismaClientKnownRequestError &&
-          error.code === "P2002"
-        ) {
+              }),
+              ...(categories && {
+                categories: {
+                  set: [], // Remove all
+                  connectOrCreate: categories.map((category) => ({
+                    where: { id: category.value },
+                    create: { name: category.label },
+                  })),
+                },
+              }),
+              updatedBy: { connect: { id: ctx.session.user.id } },
+            },
+          });
+        } catch (error) {
+          if (
+            error instanceof Prisma.PrismaClientKnownRequestError &&
+            error.code === "P2002"
+          ) {
+            throw new TRPCError({
+              code: "CONFLICT",
+              message: "A record with this SKU already exists.",
+            });
+          }
           throw new TRPCError({
-            code: "CONFLICT",
-            message: "A record with this SKU already exists.",
+            code: "INTERNAL_SERVER_ERROR",
+            message: "An unexpected error occurred.",
           });
         }
-        throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: "An unexpected error occurred.",
-        });
       }
-    }),
+    ),
 
   deleteAll: protectedProcedure
     .input(z.string().array())
@@ -297,7 +313,11 @@ export const materialRouter = createTRPCRouter({
         createdAt: "desc",
       },
       include: {
-        material: true,
+        material: {
+          include: {
+            quantityUnit: true,
+          },
+        },
         type: true,
         createdBy: true,
       },
@@ -319,37 +339,52 @@ export const materialRouter = createTRPCRouter({
   importMaterials: protectedProcedure
     .input(importMaterialsSchema)
     .mutation(async ({ ctx, input }) => {
-      return input.map(async ({ vendor, categories, ...rest }) => {
-        return ctx.db.material.create({
-          include: { _count: true },
-          data: {
-            ...rest,
-            ...(vendor && {
-              vendor: {
-                connectOrCreate: {
-                  where: {
-                    name: vendor.name,
-                  },
-                  create: {
-                    name: vendor.name,
-                  },
+      return input.map(
+        async ({ quantityUnitName, vendor, categories, ...rest }) => {
+          return ctx.db.material.create({
+            include: { _count: true },
+            data: {
+              ...rest,
+              quantityUnit: {
+                connect: {
+                  name: quantityUnitName.value,
                 },
               },
-            }),
-            ...(categories && {
-              categories: {
-                connectOrCreate: categories.map((category) => ({
-                  where: { name: category.name },
-                  create: { name: category.name },
-                })),
-              },
-            }),
-            createdBy: { connect: { id: ctx.session.user.id } },
-            updatedBy: { connect: { id: ctx.session.user.id } },
-          },
-        });
-      });
+              ...(vendor && {
+                vendor: {
+                  connectOrCreate: {
+                    where: {
+                      name: vendor.name,
+                    },
+                    create: {
+                      name: vendor.name,
+                    },
+                  },
+                },
+              }),
+              ...(categories && {
+                categories: {
+                  connectOrCreate: categories.map((category) => ({
+                    where: { name: category.name },
+                    create: { name: category.name },
+                  })),
+                },
+              }),
+              createdBy: { connect: { id: ctx.session.user.id } },
+              updatedBy: { connect: { id: ctx.session.user.id } },
+            },
+          });
+        }
+      );
     }),
+
+  getQuantityUnits: protectedProcedure.query(async ({ ctx }) => {
+    return ctx.db.materialQuantityUnit.findMany({
+      orderBy: {
+        group: "asc",
+      },
+    });
+  }),
 
   getLatest: protectedProcedure.query(async ({ ctx }) => {
     const material = await ctx.db.material.findFirst({

@@ -131,17 +131,6 @@ export function NewQuantityUpdateTypeForm() {
                 label="Color"
                 options={colorList}
               />
-              {/* <FormControl isInvalid={!!errors.color}>
-                <FormLabel>Color</FormLabel>
-                <Flex justifyContent="space-between" alignSelf="center" gap={1}>
-                  {colorList.map((color, index) => {
-                    return <ColorChip key={index} color={color} />;
-                  })}
-                </Flex>
-                {errors.color && (
-                  <FormErrorMessage>{errors.color.message}</FormErrorMessage>
-                )}
-              </FormControl> */}
 
               <ControlledRadioButtonGroup
                 control={control}

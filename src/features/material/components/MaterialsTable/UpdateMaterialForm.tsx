@@ -20,12 +20,8 @@ import {
   Stack,
   Text,
   useColorModeValue,
-  useDisclosure,
-  useToast,
 } from "@chakra-ui/react";
-import { zodResolver } from "@hookform/resolvers/zod";
-import React from "react";
-import { Controller, useForm } from "react-hook-form";
+import { Controller } from "react-hook-form";
 import { FaDollarSign, FaLock } from "react-icons/fa6";
 import { NumericFormat } from "react-number-format";
 
@@ -33,110 +29,31 @@ import { type CustomCellRendererProps } from "ag-grid-react";
 
 import { ControlledCreatableSelect } from "~/components/ControlledCreatableSelect";
 import { TextInput } from "~/components/TextInput";
-import {
-  updateMaterialFormSchema,
-  type UpdateMaterialFormType,
-} from "~/types/material";
-import { isTRPCClientError } from "~/utils";
-import { api } from "~/utils/api";
-import { toNumber } from "~/utils/prisma";
-import { mapToSelectInput, type SelectInput } from "~/utils/selectInput";
+import { type UpdateMaterialFormType } from "~/types/material";
+import { type SelectInput } from "~/utils/selectInput";
 import { type MaterialsTableRows } from "./MaterialsTable";
+import { useUpdateMaterial } from "./hooks/useUpdateMaterial";
 
 export function UpdateMaterialForm(
   props: CustomCellRendererProps<MaterialsTableRows>["data"]
 ) {
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const toast = useToast();
+  const {
+    form: {
+      control,
+      register,
+      handleSubmit,
+      formState: { errors, isSubmitting },
+    },
+    onSubmit,
+    vendorOptions,
+    categoryOptions,
+    disclosure,
+  } = useUpdateMaterial(props);
+
+  const { isOpen, onOpen, onClose } = disclosure;
 
   const bgColor = useColorModeValue("zinc.200", "zinc.900");
   const borderColor = useColorModeValue("zinc.300", "zinc.800");
-
-  // Initialize the form
-  const {
-    control,
-    register,
-    handleSubmit,
-    setFocus,
-    setError,
-    reset,
-    formState: { errors, isSubmitting },
-  } = useForm<UpdateMaterialFormType>({
-    resolver: zodResolver(updateMaterialFormSchema),
-  });
-
-  // Get vendors
-  const { data: vendorsQuery } = api.material.getVendors.useQuery();
-  const vendorOptions = vendorsQuery?.map(({ id, name }) => ({
-    label: name,
-    value: id,
-  }));
-
-  // Get categories
-  const { data: categoriesQuery } = api.material.getCategories.useQuery();
-  const categoryOptions = categoriesQuery?.map(({ id, name }) => ({
-    label: name,
-    value: id,
-  }));
-
-  // Callback to initialize the form when node.data is ready
-  const initializeForm = React.useCallback(
-    (data: MaterialsTableRows) => {
-      const { name, cost, quantity, minQuantity, extraData } = data;
-      reset({
-        id: extraData.id,
-        name,
-        url: extraData.url ?? undefined,
-        sku: extraData.sku ?? undefined,
-        cost: toNumber(cost),
-        quantity: toNumber(quantity),
-        quantityUnit: extraData.quantityUnit ?? undefined,
-        minQuantity: toNumber(minQuantity),
-        vendor: extraData.vendor
-          ? mapToSelectInput(extraData.vendor)
-          : undefined,
-        categories: extraData.categories?.map(mapToSelectInput),
-        notes: extraData.notes ?? undefined,
-      });
-    },
-    [reset]
-  );
-
-  // Initialize the form defaults
-  React.useEffect(() => {
-    if (props) {
-      initializeForm(props);
-    }
-  }, [initializeForm, props]);
-
-  // Update material mutation
-  const utils = api.useUtils();
-  const mutation = api.material.update.useMutation({
-    onSuccess: async ({ name }) => {
-      toast({
-        title: `Material updated`,
-        description: `Successfully updated ${name}`,
-        status: "success",
-      });
-
-      await utils.material.getAll.invalidate();
-      onClose();
-    },
-  });
-
-  async function onSubmit(data: UpdateMaterialFormType) {
-    try {
-      await mutation.mutateAsync(data);
-    } catch (error) {
-      if (isTRPCClientError(error) && error.data?.code === "CONFLICT") {
-        setError("sku", {
-          type: "manual",
-          message: error.message,
-        });
-        setFocus("sku");
-      }
-    }
-  }
 
   if (!props) {
     return null;

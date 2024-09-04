@@ -1,5 +1,4 @@
 import {
-  Flex,
   Tag,
   TagLabel,
   TagLeftIcon,
@@ -56,17 +55,17 @@ export function StatusCellRenderer({
     return "—";
   }
 
-  const stockStatus = getStockStatus(
-    new Prisma.Decimal(node.data.quantity),
-    node.data.extraData.minQuantity
-  );
+  const stockStatus =
+    node.data.quantity &&
+    getStockStatus(
+      new Prisma.Decimal(node.data.quantity),
+      node.data.extraData.minQuantity
+    );
 
   return (
-    <Flex alignItems="center" h="full">
-      <Tag fontSize="xs" fontWeight="light" {...getStyles(stockStatus)} ico>
-        <TagLeftIcon as={FaCircle} boxSize={1.5} />
-        <TagLabel>{stockStatus}</TagLabel>
-      </Tag>
-    </Flex>
+    <Tag fontSize="xs" fontWeight="light" {...getStyles(stockStatus)}>
+      <TagLeftIcon as={FaCircle} boxSize={1.5} />
+      <TagLabel>{stockStatus}</TagLabel>
+    </Tag>
   );
 }
