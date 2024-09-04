@@ -23,6 +23,7 @@ import { FaChevronRight } from "react-icons/fa6";
 import { type CustomCellRendererProps } from "ag-grid-react";
 
 import { Prisma } from "@prisma/client";
+import { FaEdit } from "react-icons/fa";
 import { ControlledCreatableSelect } from "~/components/ControlledCreatableSelect";
 import { TextInput } from "~/components/TextInput";
 import {
@@ -96,9 +97,11 @@ export function QuantityCellRenderer({
   return (
     <>
       <Button
+        rightIcon={<Icon as={FaEdit} />}
         variant="stockUpdate"
         size="sm"
         justifyContent="space-between"
+        w="full"
         onClick={onOpen}
       >
         {node.data?.quantity
