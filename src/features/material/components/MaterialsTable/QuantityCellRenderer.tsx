@@ -13,78 +13,33 @@ import {
   Stack,
   Text,
   useDisclosure,
-  useToast,
 } from "@chakra-ui/react";
-import { zodResolver } from "@hookform/resolvers/zod";
-import React from "react";
-import { useForm } from "react-hook-form";
+import { Prisma } from "@prisma/client";
+import { FaEdit } from "react-icons/fa";
 import { FaChevronRight } from "react-icons/fa6";
 
 import { type CustomCellRendererProps } from "ag-grid-react";
 
-import { Prisma } from "@prisma/client";
-import { FaEdit } from "react-icons/fa";
 import { ControlledCreatableSelect } from "~/components/ControlledCreatableSelect";
 import { TextInput } from "~/components/TextInput";
-import {
-  updateMaterialQuantityFormSchema,
-  type UpdateMaterialQuantityFormType,
-} from "~/types/material";
 import { getQuantityUnitText } from "~/utils";
-import { api } from "~/utils/api";
 import { type MaterialsTableRows } from "./MaterialsTable";
 import { NewQuantityUpdateTypeForm } from "./NewQuantityUpdateTypeForm";
+import { useUpdateQuantity } from "./hooks/useUpdateQuantity";
 
 export function QuantityCellRenderer({
   node,
 }: CustomCellRendererProps<MaterialsTableRows>) {
   const {
-    control,
-    handleSubmit,
-    reset,
-    watch,
-    formState: { isSubmitting },
-  } = useForm<UpdateMaterialQuantityFormType>({
-    defaultValues: {
-      materialId: node.data?.extraData.id ?? undefined,
-      originalQuantity: node.data?.quantity?.toString() ?? "0",
+    form: {
+      control,
+      handleSubmit,
+      watch,
+      formState: { isSubmitting },
     },
-    resolver: zodResolver(updateMaterialQuantityFormSchema),
-  });
-
-  const { data: updateTypeQuery } =
-    api.material.getQuantityUpdateTypes.useQuery();
-  const updateTypeOptions = updateTypeQuery?.map(({ id, type, action }) => ({
-    label: type,
-    value: { id, type, action },
-  }));
-
-  React.useEffect(() => {
-    if (node.data) {
-      reset({
-        materialId: extraData.id,
-        originalQuantity: quantity?.toString() ?? "0",
-      });
-    }
-  }, [node.data, reset]);
-
-  const toast = useToast();
-
-  const utils = api.useUtils();
-  const mutation = api.material.updateQuantity.useMutation({
-    onSuccess: async (data) => {
-      toast({
-        title: "Quantity updated",
-        description: `Successfully updated quantity for ${data[0].name}.`,
-        status: "success",
-      });
-      await utils.material.getAll.invalidate();
-    },
-  });
-
-  async function onSubmit(data: UpdateMaterialQuantityFormType) {
-    await mutation.mutateAsync(data);
-  }
+    onSubmit,
+    updateTypeOptions,
+  } = useUpdateQuantity(node);
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -92,7 +47,23 @@ export function QuantityCellRenderer({
     return null;
   }
 
-  const { quantity, extraData } = node.data;
+  const { name, quantity, extraData } = node.data;
+
+  // Get the adjusted quantity as Prisma.Decimal
+  const adjustedQuantity = watch("adjustedQuantity")
+    ? new Prisma.Decimal(watch("adjustedQuantity"))
+    : quantity ?? new Prisma.Decimal(0);
+
+  // Utility function for getting the full quantity text (12 fl. oz., etc...)
+  function getFullQuantityText(quantity: Prisma.Decimal) {
+    const quantityUnit = getQuantityUnitText({
+      quantity,
+      quantityUnit: extraData.quantityUnit,
+      style: "abbreviation",
+    });
+
+    return `${quantity} ${quantityUnit}`;
+  }
 
   return (
     <>
@@ -104,18 +75,14 @@ export function QuantityCellRenderer({
         w="full"
         onClick={onOpen}
       >
-        {node.data?.quantity
-          ? `${new Prisma.Decimal(quantity!).toString()} ${getQuantityUnitText({
-              quantity,
-              quantityUnit: extraData.quantityUnit,
-              style: "abbreviation",
-            })}`
-          : "—"}
+        {quantity ? getFullQuantityText(quantity) : "—"}
       </Button>
+
       <Modal {...{ isOpen, onClose }}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>{node.data?.name}</ModalHeader>
+          <ModalHeader>{name}</ModalHeader>
+
           <ModalBody>
             <Stack
               as="form"
@@ -138,22 +105,21 @@ export function QuantityCellRenderer({
               <TextInput
                 control={control}
                 name="adjustedQuantity"
-                label="Quantity"
+                label="Adjusted quantity"
               />
               <HStack>
                 <Text fontSize="xs">
-                  {node.data?.quantity
-                    ? new Prisma.Decimal(node.data?.quantity).toString()
-                    : "0"}
+                  {quantity && getFullQuantityText(quantity)}
                 </Text>{" "}
-                <Icon as={FaChevronRight} boxSize={3} />{" "}
+                <Icon as={FaChevronRight} boxSize={3} />
                 <Text fontSize="xs" fontWeight="semibold">
-                  {watch("adjustedQuantity") ?? node.data?.quantity}
+                  {getFullQuantityText(adjustedQuantity ?? quantity)}
                 </Text>
               </HStack>
               <TextInput control={control} name="notes" label="Notes" />
             </Stack>
           </ModalBody>
+
           <ModalFooter gap={4}>
             <ScaleFade in={!isSubmitting} initialScale={0.9}>
               <Button size="sm">Cancel</Button>
