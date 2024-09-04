@@ -3,8 +3,8 @@ import { HStack, Stack, Tag, Text, useColorModeValue } from "@chakra-ui/react";
 import { type CustomCellRendererProps } from "ag-grid-react";
 
 import { ExternalLink } from "~/components/ExternalLink";
+import { MaterialViewer } from "../MaterialViewer/MaterialViewer";
 import { type MaterialsTableRows } from "./MaterialsTable";
-import { UpdateMaterialForm } from "./UpdateMaterialForm";
 
 export function NameCellRenderer({
   node,
@@ -25,7 +25,7 @@ export function NameCellRenderer({
       wrap="wrap"
     >
       <Stack spacing={2}>
-        <UpdateMaterialForm {...node.data} />
+        <MaterialViewer {...node.data} />
         {extraData.categories?.length && (
           <HStack wrap="wrap">
             {extraData.categories?.map((category) => (

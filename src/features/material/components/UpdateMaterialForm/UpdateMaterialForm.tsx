@@ -31,7 +31,7 @@ import { ControlledCreatableSelect } from "~/components/ControlledCreatableSelec
 import { TextInput } from "~/components/TextInput";
 import { type UpdateMaterialFormType } from "~/types/material";
 import { type SelectInput } from "~/utils/selectInput";
-import { type MaterialsTableRows } from "./MaterialsTable";
+import { MaterialsTableRows } from "../MaterialsTable/MaterialsTable";
 import { useUpdateMaterial } from "./hooks/useUpdateMaterial";
 
 export function UpdateMaterialForm(
@@ -63,21 +63,7 @@ export function UpdateMaterialForm(
 
   return (
     <>
-      <Button
-        variant="text"
-        justifyContent="flex-start"
-        alignItems="center"
-        size="sm"
-        fontSize="sm"
-        fontWeight="semibold"
-        w="fit-content"
-        px={2}
-        h="fit-content"
-        py={"0 !important"}
-        onClick={onOpen}
-      >
-        {name}
-      </Button>
+      <Button onClick={onOpen}>Edit details</Button>
       <Drawer {...{ isOpen, onClose }} size="sm">
         <DrawerOverlay />
         <DrawerContent>
