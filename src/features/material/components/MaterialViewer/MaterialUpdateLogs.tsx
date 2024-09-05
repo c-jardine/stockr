@@ -40,7 +40,7 @@ export default function MaterialUpdateLogs({
       {groupedData.map(({ dateGroup, data }) => {
         return (
           <>
-            <Heading as="h4" mb={2} fontSize="xs">
+            <Heading as="h4" mb={2} fontSize="sm">
               {dateGroup}
             </Heading>
             <Stack spacing={0}>
