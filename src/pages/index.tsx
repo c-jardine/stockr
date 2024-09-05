@@ -4,7 +4,7 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>CraftMate</title>
+        <title>Craftmate</title>
         <meta
           name="description"
           content="A material and product tracker for artisans."

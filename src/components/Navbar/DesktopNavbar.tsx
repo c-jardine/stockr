@@ -25,7 +25,7 @@ export function DesktopNavbar() {
       {/* Brand */}
       <Box>
         <Link as={NextLink} href="/" fontWeight="bold">
-          CraftMate
+          Craftmate
         </Link>
       </Box>
 

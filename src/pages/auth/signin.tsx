@@ -45,7 +45,7 @@ export default function SignIn({
         <Text fontSize="sm">
           Start managing your materials, products, and production with{" "}
           <Text as="span" fontWeight="bold">
-            CraftMate
+            Craftmate
           </Text>
           .
         </Text>
