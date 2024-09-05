@@ -8,26 +8,19 @@ import {
   MenuList,
   Stack,
 } from "@chakra-ui/react";
-import { useSession } from "next-auth/react";
 import NextLink from "next/link";
 import { FaHistory } from "react-icons/fa";
 import { FaEllipsis } from "react-icons/fa6";
 
 import { PageHeader } from "~/components/PageHeader";
-import { PageLoader } from "~/components/PageLoader";
 import { CreateMaterialForm } from "~/features/material/components/CreateMaterialForm";
 import { ImportCsvMenuButton } from "~/features/material/components/ImportCsvMenuButton";
 import { ManageCategories } from "~/features/material/components/ManageCategories";
 import { ManageVendors } from "~/features/material/components/ManageVendors";
 import { MaterialsTable } from "~/features/material/components/MaterialsTable/MaterialsTable";
+import { withAuth } from "~/server/auth";
 
 export default function Materials() {
-  const { status } = useSession();
-
-  if (status === "loading") {
-    return <PageLoader />;
-  }
-
   return (
     <Stack spacing={4} h="full">
       <PageHeader>
@@ -59,3 +52,5 @@ export default function Materials() {
     </Stack>
   );
 }
+
+export const getServerSideProps = withAuth();

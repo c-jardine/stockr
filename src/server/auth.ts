@@ -1,5 +1,5 @@
 import { PrismaAdapter } from "@auth/prisma-adapter";
-import { type GetServerSidePropsContext } from "next";
+import { GetServerSideProps, type GetServerSidePropsContext } from "next";
 import {
   getServerSession,
   type DefaultSession,
@@ -89,3 +89,24 @@ export const getServerAuthSession = (ctx: {
 }) => {
   return getServerSession(ctx.req, ctx.res, authOptions);
 };
+
+export function withAuth(getServerSidePropsFunc?: GetServerSideProps) {
+  return async (context: GetServerSidePropsContext) => {
+    const session = await getServerAuthSession(context);
+
+    if (!session) {
+      return {
+        redirect: {
+          destination: "/auth/signin",
+          permanent: false,
+        },
+      };
+    }
+
+    if (getServerSidePropsFunc) {
+      return getServerSidePropsFunc(context);
+    }
+
+    return { props: { session } };
+  };
+}
