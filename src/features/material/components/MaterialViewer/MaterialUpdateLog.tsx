@@ -1,6 +1,17 @@
-import { Avatar, Circle, Heading, HStack, Stack, Tag, Text } from "@chakra-ui/react";
+import {
+  Avatar,
+  Circle,
+  Heading,
+  HStack,
+  Icon,
+  Stack,
+  Tag,
+  Text,
+  useColorModeValue,
+} from "@chakra-ui/react";
 import { type User } from "@prisma/client";
 import React from "react";
+import { FaFile } from "react-icons/fa6";
 
 interface MaterialUpdateLogProps {
   title: React.ReactNode;
@@ -15,6 +26,9 @@ export default function MaterialUpdateLog({
   timestamp,
   createdBy,
 }: MaterialUpdateLogProps) {
+  const bgColor = useColorModeValue("zinc.50", "zinc.900");
+  const borderColor = useColorModeValue("zinc.200", "zinc.800");
+
   return (
     <HStack
       position="relative"
@@ -30,9 +44,11 @@ export default function MaterialUpdateLog({
         outline="2px solid"
         outlineColor="white"
       />
-      <Tag fontSize="2xs" size="sm">{timestamp}</Tag>
+      <Tag fontSize="2xs" size="sm">
+        {timestamp}
+      </Tag>
       <Avatar src={createdBy.image ?? undefined} size="xs" />
-      <Stack spacing={0}>
+      <Stack spacing={2}>
         <Heading as="h3" fontSize="sm">
           {title}
           <Text as="span" fontWeight="normal">
@@ -41,7 +57,19 @@ export default function MaterialUpdateLog({
           </Text>
           {createdBy.name ?? "Unknown"}
         </Heading>
-        {description && <Text fontSize="xs">{description}</Text>}
+        {description && (
+          <Text
+            p={2}
+            rounded="lg"
+            border="1px solid"
+            borderColor={borderColor}
+            bg={bgColor}
+            fontSize="xs"
+            textAlign="left"
+          >
+            {description}
+          </Text>
+        )}
       </Stack>
     </HStack>
   );
