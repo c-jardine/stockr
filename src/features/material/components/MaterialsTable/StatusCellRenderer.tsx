@@ -12,6 +12,7 @@ import { type CustomCellRendererProps } from "ag-grid-react";
 import { Prisma } from "@prisma/client";
 import { type QuantityStatus } from "~/types/status";
 import { getStockStatus } from "~/utils/stockStatus";
+import { Character } from "~/utils/text";
 import { type MaterialsTableRows } from "./MaterialsTable";
 
 export function StatusCellRenderer({
@@ -52,7 +53,7 @@ export function StatusCellRenderer({
   }
 
   if (!node.data?.status) {
-    return "—";
+    return Character.EM_DASH;
   }
 
   const stockStatus =

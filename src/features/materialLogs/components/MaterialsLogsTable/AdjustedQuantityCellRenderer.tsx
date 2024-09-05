@@ -3,6 +3,7 @@ import { Prisma } from "@prisma/client";
 import { type CustomCellRendererProps } from "ag-grid-react";
 import { FaArrowDown, FaArrowUp } from "react-icons/fa6";
 import { getQuantityUnitText } from "~/utils";
+import { Character } from "~/utils/text";
 import { type MaterialLogsTableRows } from "./MaterialLogsTable";
 
 export function AdjustedQuantityCellRenderer({
@@ -28,7 +29,7 @@ export function AdjustedQuantityCellRenderer({
   return (
     <Flex alignItems="center" h="full">
       {adjustedBy.isZero() ? (
-        <Text>—</Text>
+        <Text>{Character.EM_DASH}</Text>
       ) : (
         <HStack color={color}>
           <Icon as={icon} />

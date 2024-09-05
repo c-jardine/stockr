@@ -12,8 +12,9 @@ import {
 } from "node_modules/ag-grid-community/dist/types/core/main";
 
 import { Table } from "~/features/table/components/Table";
-import { getQuantityUnitText } from "~/utils";
+import { getQuantityTextAbbreviated, getQuantityUnitText } from "~/utils";
 import { api, type RouterOutputs } from "~/utils/api";
+import { Character } from "~/utils/text";
 import { NameCellRenderer } from "./NameCellRenderer";
 import { QuantityCellRenderer } from "./QuantityCellRenderer";
 import { StatusCellRenderer } from "./StatusCellRenderer";
@@ -23,7 +24,7 @@ export type MaterialsTableRows = {
   id: string;
   name: string;
   status: string;
-  quantity: Prisma.Decimal | null;
+  quantity: Prisma.Decimal;
   minQuantity: Prisma.Decimal | null;
   cost: Prisma.Decimal | null;
   vendor: string;
@@ -117,16 +118,13 @@ export function MaterialsTable() {
       valueFormatter: (
         params: ValueFormatterParams<MaterialsTableRows, Prisma.Decimal>
       ) => {
-        if (params.value && params.data) {
-          const minQuantity = new Prisma.Decimal(params.value).toString();
-          const unit = getQuantityUnitText({
-            quantity: params.value,
-            quantityUnit: params.data.extraData.quantityUnit,
-            style: "abbreviation",
-          });
-          return `${minQuantity}${unit ? ` ${unit}` : ""}`;
+        if (!params.value || !params.data) {
+          return Character.EM_DASH;
         }
-        return "—";
+        return getQuantityTextAbbreviated(
+          params.value,
+          params.data.extraData.quantityUnit
+        );
       },
       cellStyle: {
         display: "flex",
@@ -148,7 +146,7 @@ export function MaterialsTable() {
             style: "abbreviation",
           })}`;
         }
-        return "—";
+        return Character.EM_DASH;
       },
       cellStyle: {
         display: "flex",

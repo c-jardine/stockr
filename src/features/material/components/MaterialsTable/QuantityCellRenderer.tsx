@@ -51,7 +51,7 @@ export function QuantityCellRenderer({
   const { name, quantity, extraData } = node.data;
 
   const prevQuantityText = getQuantityTextAbbreviated(
-    new Prisma.Decimal(quantity!),
+    quantity,
     extraData.quantityUnit
   );
 

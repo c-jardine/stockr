@@ -3,19 +3,20 @@ import {
   MaterialQuantityUpdateAction,
   Prisma,
 } from "@prisma/client";
+import { Character } from "./text";
 
 export function getStockAsText(
   quantity: Prisma.Decimal | null,
   quantityUnit: string | null
 ) {
   if (!quantity) {
-    return "—";
+    return Character.EM_DASH;
   }
   return `${quantity.toString()} ${quantityUnit}`;
 }
 
 export function getQuantityUnitText(props: {
-  quantity: number | Prisma.Decimal | null;
+  quantity: Prisma.Decimal;
   quantityUnit: MaterialQuantityUnit;
   style: "name" | "full" | "abbreviation";
 }) {
@@ -50,9 +51,13 @@ export function getQuantityUnitText(props: {
  * @returns The quantity text.
  */
 export function getQuantityTextAbbreviated(
-  quantity: Prisma.Decimal,
+  quantity: Prisma.Decimal | null,
   quantityUnit: MaterialQuantityUnit
 ) {
+  if (!quantity) {
+    return Character.EM_DASH;
+  }
+
   const quantityUnitText = getQuantityUnitText({
     quantity,
     quantityUnit: quantityUnit,
