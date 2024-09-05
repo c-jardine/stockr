@@ -1,4 +1,8 @@
-import { MaterialQuantityUnit, Prisma } from "@prisma/client";
+import {
+  MaterialQuantityUnit,
+  MaterialQuantityUpdateAction,
+  Prisma,
+} from "@prisma/client";
 
 export function getStockAsText(
   quantity: Prisma.Decimal | null,
@@ -37,4 +41,58 @@ export function getQuantityUnitText(props: {
     return quantityUnit.plural;
   }
   return quantityUnit.abbrevPlural;
+}
+
+/**
+ * Get the quantity text with abbreviated units (12 fl. oz.).
+ * @param quantity The quantity.
+ * @param quantityUnit The quantity unit object.
+ * @returns The quantity text.
+ */
+export function getQuantityTextAbbreviated(
+  quantity: Prisma.Decimal,
+  quantityUnit: MaterialQuantityUnit
+) {
+  const quantityUnitText = getQuantityUnitText({
+    quantity,
+    quantityUnit: quantityUnit,
+    style: "abbreviation",
+  });
+
+  return `${quantity} ${quantityUnitText}`;
+}
+
+/**
+ * Calculate the new quantity based on the update action type.
+ * @param Object containing the previous quantity, adjusted quantity, and
+ * update action type.
+ * @returns The new quantity.
+ */
+export function calculateUpdatedQuantity({
+  prevQuantity,
+  adjustedQuantity,
+  action,
+}: {
+  prevQuantity: Prisma.Decimal;
+  adjustedQuantity: Prisma.Decimal;
+  action: MaterialQuantityUpdateAction;
+}): Prisma.Decimal | null {
+  if (!prevQuantity) {
+    return null;
+  }
+
+  if (!adjustedQuantity) {
+    return new Prisma.Decimal(prevQuantity);
+  }
+
+  switch (action) {
+    case "DECREASE":
+      return prevQuantity.sub(adjustedQuantity);
+    case "SET":
+      return adjustedQuantity;
+    case "INCREASE":
+      return prevQuantity.add(adjustedQuantity);
+    default:
+      return prevQuantity;
+  }
 }

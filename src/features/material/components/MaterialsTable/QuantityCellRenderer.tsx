@@ -20,9 +20,10 @@ import { FaChevronRight } from "react-icons/fa6";
 
 import { type CustomCellRendererProps } from "ag-grid-react";
 
+import { NumericFormat } from "react-number-format";
 import { ControlledCreatableSelect } from "~/components/ControlledCreatableSelect";
 import { TextInput } from "~/components/TextInput";
-import { getQuantityUnitText } from "~/utils";
+import { calculateUpdatedQuantity, getQuantityTextAbbreviated } from "~/utils";
 import { type MaterialsTableRows } from "./MaterialsTable";
 import { NewQuantityUpdateTypeForm } from "./NewQuantityUpdateTypeForm";
 import { useUpdateQuantity } from "./hooks/useUpdateQuantity";
@@ -49,21 +50,24 @@ export function QuantityCellRenderer({
 
   const { name, quantity, extraData } = node.data;
 
-  // Get the adjusted quantity as Prisma.Decimal
-  const adjustedQuantity = watch("adjustedQuantity")
-    ? new Prisma.Decimal(watch("adjustedQuantity"))
-    : quantity ?? new Prisma.Decimal(0);
+  const prevQuantityText = getQuantityTextAbbreviated(
+    new Prisma.Decimal(quantity!),
+    extraData.quantityUnit
+  );
 
-  // Utility function for getting the full quantity text (12 fl. oz., etc...)
-  function getFullQuantityText(quantity: Prisma.Decimal) {
-    const quantityUnit = getQuantityUnitText({
-      quantity,
-      quantityUnit: extraData.quantityUnit,
-      style: "abbreviation",
+  const newQuantity =
+    quantity &&
+    watch("adjustedQuantity") &&
+    calculateUpdatedQuantity({
+      prevQuantity: new Prisma.Decimal(quantity),
+      adjustedQuantity: new Prisma.Decimal(
+        watch("adjustedQuantity").replaceAll(",", "")
+      ),
+      action: watch("type.value.action"),
     });
-
-    return `${quantity} ${quantityUnit}`;
-  }
+  const newQuantityText = newQuantity
+    ? getQuantityTextAbbreviated(newQuantity, extraData.quantityUnit)
+    : prevQuantityText;
 
   return (
     <>
@@ -75,7 +79,7 @@ export function QuantityCellRenderer({
         w="full"
         onClick={onOpen}
       >
-        {quantity ? getFullQuantityText(quantity) : "—"}
+        {prevQuantityText}
       </Button>
 
       <Modal {...{ isOpen, onClose }}>
@@ -106,14 +110,18 @@ export function QuantityCellRenderer({
                 control={control}
                 name="adjustedQuantity"
                 label="Adjusted quantity"
+                inputProps={{
+                  as: NumericFormat,
+                  allowNegative: false,
+                  decimalScale: 2,
+                  thousandSeparator: ",",
+                }}
               />
               <HStack>
-                <Text fontSize="xs">
-                  {quantity && getFullQuantityText(quantity)}
-                </Text>{" "}
+                <Text fontSize="xs">{prevQuantityText}</Text>{" "}
                 <Icon as={FaChevronRight} boxSize={3} />
                 <Text fontSize="xs" fontWeight="semibold">
-                  {getFullQuantityText(adjustedQuantity ?? quantity)}
+                  {newQuantityText}
                 </Text>
               </HStack>
               <TextInput control={control} name="notes" label="Notes" />
