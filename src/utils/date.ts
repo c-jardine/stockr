@@ -1,4 +1,5 @@
 import { format } from "date-fns/format";
+import { isThisMonth } from "date-fns/isThisMonth";
 import { isThisYear } from "date-fns/isThisYear";
 import { isToday } from "date-fns/isToday";
 import { isYesterday } from "date-fns/isYesterday";
@@ -31,4 +32,22 @@ export function getDateFormat(date: Date) {
     date: format(date, oldDateFormat),
     time: format(date, timeFormat),
   };
+}
+
+export function getHistoryDateLabel(date: Date) {
+  let dateLabel = "";
+
+  if (isToday(date)) {
+    dateLabel = "Today";
+  } else if (isYesterday(date)) {
+    dateLabel = "Yesterday";
+  } else if (isThisMonth(date)) {
+    dateLabel = format(date, "MMMM");
+  } else if (isThisYear(date)) {
+    dateLabel = format(date, "MMMM");
+  } else {
+    dateLabel = format(date, "yyyy");
+  }
+
+  return dateLabel;
 }

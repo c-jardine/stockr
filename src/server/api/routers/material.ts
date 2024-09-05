@@ -160,19 +160,21 @@ export const materialRouter = createTRPCRouter({
         });
 
         // Update and create vendors
-        vendors.map(
-          async ({ id, name }) =>
-            await ctx.db.vendor.upsert({
-              where: {
-                id,
-              },
-              update: {
-                name,
-              },
-              create: {
-                name,
-              },
-            })
+        await Promise.all(
+          vendors.map(
+            async ({ id, name }) =>
+              await ctx.db.vendor.upsert({
+                where: {
+                  id,
+                },
+                update: {
+                  name,
+                },
+                create: {
+                  name,
+                },
+              })
+          )
         );
       });
     }),
@@ -201,19 +203,21 @@ export const materialRouter = createTRPCRouter({
         });
 
         // Update and create categories
-        categories.map(
-          async ({ id, name }) =>
-            await ctx.db.materialCategory.upsert({
-              where: {
-                id,
-              },
-              update: {
-                name,
-              },
-              create: {
-                name,
-              },
-            })
+        await Promise.all(
+          categories.map(
+            async ({ id, name }) =>
+              await ctx.db.materialCategory.upsert({
+                where: {
+                  id,
+                },
+                update: {
+                  name,
+                },
+                create: {
+                  name,
+                },
+              })
+          )
         );
       });
     }),
@@ -325,6 +329,23 @@ export const materialRouter = createTRPCRouter({
 
     return updates ?? null;
   }),
+
+  getQuantityUpdatesById: protectedProcedure
+    .input(z.object({ id: z.string() }))
+    .query(async ({ ctx, input: { id } }) => {
+      return await ctx.db.materialQuantityUpdateLog.findMany({
+        where: {
+          materialId: id,
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+        include: {
+          type: true,
+          createdBy: true,
+        },
+      });
+    }),
 
   getQuantityUpdateTypes: protectedProcedure.query(async ({ ctx }) => {
     const updateTypes = await ctx.db.materialQuantityUpdateType.findMany({
