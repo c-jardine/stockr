@@ -1,20 +1,13 @@
 import { Button, Icon, IconButton, Stack } from "@chakra-ui/react";
-import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { FaArrowLeft } from "react-icons/fa6";
 
 import { PageHeader } from "~/components/PageHeader";
-import { PageLoader } from "~/components/PageLoader";
 import { MaterialLogsTable } from "~/features/materialLogs/components/MaterialsLogsTable";
 import { withAuth } from "~/server/auth";
 
 export default function MaterialHistory() {
-  const { status } = useSession();
   const router = useRouter();
-
-  if (status === "loading") {
-    return <PageLoader />;
-  }
 
   async function handleGoBack() {
     await router.push("/materials");
