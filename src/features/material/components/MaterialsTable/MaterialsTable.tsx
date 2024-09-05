@@ -20,6 +20,7 @@ import { StatusCellRenderer } from "./StatusCellRenderer";
 
 // Table column type definition
 export type MaterialsTableRows = {
+  id: string;
   name: string;
   status: string;
   quantity: Prisma.Decimal | null;
@@ -66,6 +67,7 @@ export function MaterialsTable() {
     if (materials) {
       setRowData(
         materials.map((material) => ({
+          id: material.id,
           name: material.name,
           status: "Format status",
           quantity: material.quantity,

@@ -3,10 +3,10 @@ import { type Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
 import { type AppType } from "next/app";
 
-import { api } from "~/utils/api";
-
 import { RootLayout } from "~/layouts/RootLayout";
 import { theme } from "~/styles/chakra/theme";
+import { toastOptions } from "~/styles/chakra/toast";
+import { api } from "~/utils/api";
 import "../styles/globals.css";
 
 const MyApp: AppType<{ session: Session | null }> = ({
@@ -15,7 +15,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
 }) => {
   return (
     <SessionProvider session={session}>
-      <ChakraProvider theme={theme}>
+      <ChakraProvider theme={theme} toastOptions={toastOptions}>
         <RootLayout>
           <Component {...pageProps} />
         </RootLayout>

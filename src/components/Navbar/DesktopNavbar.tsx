@@ -25,7 +25,7 @@ export function DesktopNavbar() {
       {/* Brand */}
       <Box>
         <Link as={NextLink} href="/" fontWeight="bold">
-          Stockr
+          Craftmate
         </Link>
       </Box>
 
@@ -36,9 +36,17 @@ export function DesktopNavbar() {
             <Link
               key={href}
               href={href}
-              variant={
-                isActiveLink(router, href) ? "navbarLinkActive" : "navbarLink"
-              }
+              variant={(() => {
+                if (href === "/") {
+                  if (router.asPath === "/") {
+                    return "navbarLinkActive";
+                  }
+                  return "navbarLink";
+                }
+                return isActiveLink(router, href)
+                  ? "navbarLinkActive"
+                  : "navbarLink";
+              })()}
             >
               {label}
             </Link>

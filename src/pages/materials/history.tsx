@@ -6,6 +6,7 @@ import { FaArrowLeft } from "react-icons/fa6";
 import { PageHeader } from "~/components/PageHeader";
 import { PageLoader } from "~/components/PageLoader";
 import { MaterialLogsTable } from "~/features/materialLogs/components/MaterialsLogsTable";
+import { withAuth } from "~/server/auth";
 
 export default function MaterialHistory() {
   const { status } = useSession();
@@ -43,3 +44,5 @@ export default function MaterialHistory() {
     </Stack>
   );
 }
+
+export const getServerSideProps = withAuth();
