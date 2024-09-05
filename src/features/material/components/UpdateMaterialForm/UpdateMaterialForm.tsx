@@ -22,7 +22,7 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import { Controller } from "react-hook-form";
-import { FaDollarSign, FaLock } from "react-icons/fa6";
+import { FaDollarSign, FaLock, FaPencil } from "react-icons/fa6";
 import { NumericFormat } from "react-number-format";
 
 import { type CustomCellRendererProps } from "ag-grid-react";
@@ -63,7 +63,9 @@ export function UpdateMaterialForm(
 
   return (
     <>
-      <Button onClick={onOpen}>Edit details</Button>
+      <Button leftIcon={<Icon as={FaPencil} />} onClick={onOpen}>
+        Edit details
+      </Button>
       <Drawer {...{ isOpen, onClose }} size="sm">
         <DrawerOverlay />
         <DrawerContent>
