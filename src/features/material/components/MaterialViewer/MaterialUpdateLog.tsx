@@ -24,8 +24,12 @@ export default function MaterialUpdateLog({
   timestamp,
   createdBy,
 }: MaterialUpdateLogProps) {
-  const bgColor = useColorModeValue("zinc.50", "zinc.900");
-  const borderColor = useColorModeValue("zinc.200", "zinc.800");
+  const indicatorBorderColor = useColorModeValue("zinc.200", "zinc.800");
+  const indicatorCircleBgColor = useColorModeValue("zinc.400", "zinc.400");
+  const indicatorCircleBorderColor = useColorModeValue("white", "zinc.950");
+
+  const descriptionBgColor = useColorModeValue("zinc.50", "zinc.900");
+  const descriptionBorderColor = useColorModeValue("zinc.200", "zinc.800");
 
   return (
     <Stack
@@ -33,16 +37,16 @@ export default function MaterialUpdateLog({
       pl={4}
       py={4}
       borderLeft="3px solid"
-      borderColor="zinc.200"
+      borderColor={indicatorBorderColor}
     >
       <Circle
         position="absolute"
-        bg="zinc.400"
+        bg={indicatorCircleBgColor}
         size={2}
         top="22.5px"
         left="-5px"
         outline="2px solid"
-        outlineColor="white"
+        outlineColor={indicatorCircleBorderColor}
       />
       <Tag fontSize="2xs" size="sm" w="fit-content">
         {timestamp}
@@ -63,8 +67,8 @@ export default function MaterialUpdateLog({
           p={2}
           rounded="lg"
           border="1px solid"
-          borderColor={borderColor}
-          bg={bgColor}
+          borderColor={descriptionBorderColor}
+          bg={descriptionBgColor}
           fontSize="xs"
           textAlign="left"
         >
