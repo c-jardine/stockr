@@ -130,7 +130,9 @@ export function MaterialsTable() {
         if (!params.value || !params.data) {
           return Character.EM_DASH;
         }
-        return `$${params.value} /${params.data.quantityUnit.abbrevSingular}`;
+        return `$${params.value.toString()} /${
+          params.data.quantityUnit.abbrevSingular
+        }`;
       },
     },
     {

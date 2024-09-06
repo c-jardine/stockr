@@ -87,6 +87,11 @@ export function Table<ColType>({
     "ag-theme-quartz-dark"
   );
 
+  const memoizedAutoSizeStrategy = useMemo(
+    () => autoSizeStrategy,
+    [autoSizeStrategy]
+  );
+
   const gridOptions: GridOptions<ColType> = {
     rowData: useMemo(() => rowData, [rowData]),
     columnDefs: useMemo(() => columnDefs, [columnDefs]),
@@ -94,9 +99,7 @@ export function Table<ColType>({
     rowSelection: "multiple",
     rowMultiSelectWithClick: false,
     suppressRowClickSelection: true,
-    autoSizeStrategy: autoSizeStrategy
-      ? useMemo(() => autoSizeStrategy, [autoSizeStrategy])
-      : undefined,
+    autoSizeStrategy: autoSizeStrategy ? memoizedAutoSizeStrategy : undefined,
     onSelectionChanged,
   };
 

@@ -67,7 +67,7 @@ export function useUpdateQuantity(
     if (node.data) {
       initializeForm(node.data);
     }
-  }, [node.data]);
+  }, [node.data, initializeForm]);
 
   return { form, onSubmit, updateTypeOptions };
 }

@@ -75,7 +75,7 @@ export const materialRouter = createTRPCRouter({
     .mutation(
       async ({
         ctx,
-        input: { id, quantityUnit, vendor, categories, ...rest },
+        input: { id, quantityUnit: _quantityUnit, vendor, categories, ...rest },
       }) => {
         try {
           return await ctx.db.material.update({

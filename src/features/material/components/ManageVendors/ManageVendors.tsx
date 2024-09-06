@@ -107,7 +107,9 @@ export function ManageVendors() {
                     />
                     <IconButton
                       icon={<Icon as={FaTrash} color="red.600" boxSize={3} />}
-                      aria-label={`Edit ${name} vendor`}
+                      aria-label={`Edit ${watch(
+                        `vendors.${index}.name`
+                      )} vendor`}
                       variant="outline"
                       size="xs"
                       rounded="md"

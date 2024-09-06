@@ -10,7 +10,6 @@ import {
   type UpdateMaterialFormType,
 } from "~/types/material";
 import { api } from "~/utils/api";
-import { formatQuantityWithUnit } from "~/utils/formatQuantity";
 import { mapToSelectInput } from "~/utils/selectInput";
 import { isTRPCClientError } from "~/utils/trpc";
 import { type MaterialsTableRows } from "../../MaterialsTable/MaterialsTable";
@@ -67,12 +66,7 @@ export function useUpdateMaterial(
         sku: sku ?? undefined,
         cost: cost?.toString(),
         quantity: quantity.toString(),
-        quantityUnit:
-          formatQuantityWithUnit({
-            quantity: quantity,
-            quantityUnit: quantityUnit,
-            style: "abbreviation",
-          }) ?? "",
+        quantityUnit: quantityUnit.name,
         minQuantity: minQuantity?.toString(),
         vendor: vendor ? mapToSelectInput(vendor) : undefined,
         categories: categories?.map(mapToSelectInput),

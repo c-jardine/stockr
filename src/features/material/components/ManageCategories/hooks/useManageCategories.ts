@@ -57,7 +57,7 @@ export default function useManageCategories() {
     if (data) {
       initializeForm({ categories: data });
     }
-  }, [data]);
+  }, [data, initializeForm]);
 
   async function onSubmit(data: UpdateCategoriesFormType) {
     return await mutation.mutateAsync(data);

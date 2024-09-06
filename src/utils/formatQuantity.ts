@@ -72,5 +72,5 @@ export function formatQuantityWithUnitAbbrev(
     style: "abbreviation",
   });
 
-  return `${options.quantity} ${quantityUnitText}`;
+  return `${options.quantity.toString()} ${quantityUnitText}`;
 }

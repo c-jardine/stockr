@@ -3,7 +3,7 @@ import { createMultiStyleConfigHelpers } from "@chakra-ui/styled-system";
 
 const helper = createMultiStyleConfigHelpers(parts.keys);
 
-const baseStyle = helper.definePartsStyle((props) => ({
+const baseStyle = helper.definePartsStyle((_props) => ({
   text: {
     fontSize: "xs",
   },
