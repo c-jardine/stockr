@@ -1,8 +1,8 @@
 import { IncomingForm } from "formidable";
 import fs from "fs";
-import { NextApiRequest, NextApiResponse } from "next";
+import { type NextApiRequest, type NextApiResponse } from "next";
 import Papa from "papaparse";
-import { ImportMaterialsSchema } from "~/types/material";
+import { type ImportMaterialsSchema } from "~/types/material";
 
 // Disable the default body parser
 export const config = {

@@ -6,9 +6,9 @@ import {
   Icon,
   Stack,
   Text,
-  ToastProviderProps,
+  type ToastProviderProps,
   useColorModeValue,
-  UseToastOptions,
+  type UseToastOptions,
 } from "@chakra-ui/react";
 import { FaCheck, FaEllipsis, FaExclamation, FaInfo } from "react-icons/fa6";
 import { IoMdClose } from "react-icons/io";

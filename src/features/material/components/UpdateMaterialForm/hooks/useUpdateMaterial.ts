@@ -1,19 +1,18 @@
 import { useDisclosure, useToast } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import React from "react";
+import { useCallback, useEffect } from "react";
 import { useForm } from "react-hook-form";
 
-import { CustomCellRendererProps } from "ag-grid-react";
+import { type CustomCellRendererProps } from "ag-grid-react";
 
 import {
   updateMaterialFormSchema,
-  UpdateMaterialFormType,
+  type UpdateMaterialFormType,
 } from "~/types/material";
-import { getQuantityUnitText, isTRPCClientError } from "~/utils";
 import { api } from "~/utils/api";
-import { toNumber } from "~/utils/prisma";
 import { mapToSelectInput } from "~/utils/selectInput";
-import { MaterialsTableRows } from "../MaterialsTable";
+import { isTRPCClientError } from "~/utils/trpc";
+import { type MaterialsTableRows } from "../../MaterialsTable/MaterialsTable";
 
 export function useUpdateMaterial(
   props: CustomCellRendererProps<MaterialsTableRows>["data"]
@@ -45,35 +44,40 @@ export function useUpdateMaterial(
   }));
 
   // Callback to initialize the form when node.data is ready
-  const initializeForm = React.useCallback(
+  const initializeForm = useCallback(
     (data: MaterialsTableRows) => {
-      const { name, cost, quantity, minQuantity, extraData } = data;
-      reset({
-        id: extraData.id,
+      const {
+        id,
         name,
-        url: extraData.url ?? undefined,
-        sku: extraData.sku ?? undefined,
-        cost: toNumber(cost),
-        quantity: toNumber(quantity),
-        quantityUnit:
-          getQuantityUnitText({
-            quantity: quantity,
-            quantityUnit: extraData.quantityUnit,
-            style: "abbreviation",
-          }) ?? "",
-        minQuantity: toNumber(minQuantity),
-        vendor: extraData.vendor
-          ? mapToSelectInput(extraData.vendor)
-          : undefined,
-        categories: extraData.categories?.map(mapToSelectInput),
-        notes: extraData.notes ?? undefined,
+        url,
+        sku,
+        cost,
+        quantity,
+        quantityUnit,
+        minQuantity,
+        vendor,
+        categories,
+        notes,
+      } = data;
+      reset({
+        id: id,
+        name,
+        url: url ?? undefined,
+        sku: sku ?? undefined,
+        cost: cost?.toString(),
+        quantity: quantity.toString(),
+        quantityUnit: quantityUnit.name,
+        minQuantity: minQuantity?.toString(),
+        vendor: vendor ? mapToSelectInput(vendor) : undefined,
+        categories: categories?.map(mapToSelectInput),
+        notes: notes ?? undefined,
       });
     },
     [reset]
   );
 
   // Initialize the form defaults
-  React.useEffect(() => {
+  useEffect(() => {
     if (props) {
       initializeForm(props);
     }

@@ -1,16 +1,16 @@
 import { useToast } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import React from "react";
+import { useCallback, useEffect } from "react";
 import { useForm } from "react-hook-form";
 
-import { CustomCellRendererProps } from "ag-grid-react";
+import { type CustomCellRendererProps } from "ag-grid-react";
 
 import {
   updateMaterialQuantityFormSchema,
-  UpdateMaterialQuantityFormType,
+  type UpdateMaterialQuantityFormType,
 } from "~/types/material";
 import { api } from "~/utils/api";
-import { MaterialsTableRows } from "../MaterialsTable";
+import { type MaterialsTableRows } from "../MaterialsTable";
 
 export function useUpdateQuantity(
   node: CustomCellRendererProps<MaterialsTableRows>["node"]
@@ -39,7 +39,7 @@ export function useUpdateQuantity(
 
   const form = useForm<UpdateMaterialQuantityFormType>({
     defaultValues: {
-      materialId: node.data?.extraData.id ?? undefined,
+      materialId: node.data?.id ?? undefined,
       originalQuantity: node.data?.quantity?.toString() ?? "0",
     },
     resolver: zodResolver(updateMaterialQuantityFormSchema),
@@ -53,18 +53,21 @@ export function useUpdateQuantity(
   }
 
   // Initialize form callback
-  const initializeForm = React.useCallback((data: MaterialsTableRows) => {
-    reset({
-      materialId: data.extraData.id,
-      originalQuantity: data.quantity?.toString() ?? "0",
-    });
-  }, []);
+  const initializeForm = useCallback(
+    (data: MaterialsTableRows) => {
+      reset({
+        materialId: data.id,
+        originalQuantity: data.quantity?.toString() ?? "0",
+      });
+    },
+    [reset]
+  );
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (node.data) {
       initializeForm(node.data);
     }
-  }, [node.data, reset]);
+  }, [node.data, initializeForm]);
 
   return { form, onSubmit, updateTypeOptions };
 }

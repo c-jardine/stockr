@@ -1,7 +1,7 @@
 import { Flex, useToast } from "@chakra-ui/react";
-import { Prisma } from "@prisma/client";
+import { type Prisma, type Vendor } from "@prisma/client";
 import { useSession } from "next-auth/react";
-import React from "react";
+import { useEffect, useState } from "react";
 import PuffLoader from "react-spinners/PuffLoader";
 
 import "ag-grid-community/styles/ag-grid.css"; // Mandatory CSS required by the Data Grid
@@ -12,22 +12,16 @@ import {
 } from "node_modules/ag-grid-community/dist/types/core/main";
 
 import { Table } from "~/features/table/components/Table";
-import { getQuantityUnitText } from "~/utils";
 import { api, type RouterOutputs } from "~/utils/api";
+import { formatQuantityWithUnitAbbrev } from "~/utils/formatQuantity";
+import { Character } from "~/utils/text";
 import { NameCellRenderer } from "./NameCellRenderer";
 import { QuantityCellRenderer } from "./QuantityCellRenderer";
 import { StatusCellRenderer } from "./StatusCellRenderer";
 
 // Table column type definition
-export type MaterialsTableRows = {
-  id: string;
-  name: string;
+export type MaterialsTableRows = RouterOutputs["material"]["getAll"][0] & {
   status: string;
-  quantity: Prisma.Decimal | null;
-  minQuantity: Prisma.Decimal | null;
-  cost: Prisma.Decimal | null;
-  vendor: string;
-  extraData: RouterOutputs["material"]["getAll"][0];
 };
 
 export function MaterialsTable() {
@@ -60,22 +54,15 @@ export function MaterialsTable() {
   }
 
   // Materials data as state
-  const [rowData, setRowData] = React.useState<MaterialsTableRows[]>([]);
+  const [rowData, setRowData] = useState<MaterialsTableRows[]>([]);
 
   // Update table data when the data is available
-  React.useEffect(() => {
+  useEffect(() => {
     if (materials) {
       setRowData(
         materials.map((material) => ({
-          id: material.id,
-          name: material.name,
+          ...material,
           status: "Format status",
-          quantity: material.quantity,
-          minQuantity: material.minQuantity,
-          cost: material.cost,
-          vendor: material.vendor?.name ?? "",
-          categories: material.categories.map((category) => category.name),
-          extraData: material,
         }))
       );
     }
@@ -114,45 +101,38 @@ export function MaterialsTable() {
       headerName: "Min. quantity",
       field: "minQuantity",
       filter: true,
-      valueFormatter: (
-        params: ValueFormatterParams<MaterialsTableRows, Prisma.Decimal>
-      ) => {
-        if (params.value && params.data) {
-          const minQuantity = new Prisma.Decimal(params.value).toString();
-          const unit = getQuantityUnitText({
-            quantity: params.value,
-            quantityUnit: params.data.extraData.quantityUnit,
-            style: "abbreviation",
-          });
-          return `${minQuantity}${unit ? ` ${unit}` : ""}`;
-        }
-        return "—";
-      },
       cellStyle: {
         display: "flex",
         alignItems: "center",
+      },
+      valueFormatter: (
+        params: ValueFormatterParams<MaterialsTableRows, Prisma.Decimal>
+      ) => {
+        if (!params.value || !params.data) {
+          return Character.EM_DASH;
+        }
+        return formatQuantityWithUnitAbbrev({
+          quantity: params.value,
+          quantityUnit: params.data.quantityUnit,
+        });
       },
     },
     {
       headerName: "Cost",
       field: "cost",
-      valueFormatter: (
-        params: ValueFormatterParams<MaterialsTableRows, Prisma.Decimal>
-      ) => {
-        if (params.value && params.data) {
-          return `$${new Prisma.Decimal(
-            params.value
-          ).toString()} /${getQuantityUnitText({
-            quantity: params.value,
-            quantityUnit: params.data.extraData.quantityUnit,
-            style: "abbreviation",
-          })}`;
-        }
-        return "—";
-      },
       cellStyle: {
         display: "flex",
         alignItems: "center",
+      },
+      valueFormatter: (
+        params: ValueFormatterParams<MaterialsTableRows, Prisma.Decimal>
+      ) => {
+        if (!params.value || !params.data) {
+          return Character.EM_DASH;
+        }
+        return `$${params.value.toString()} /${
+          params.data.quantityUnit.abbrevSingular
+        }`;
       },
     },
     {
@@ -162,6 +142,15 @@ export function MaterialsTable() {
       cellStyle: {
         display: "flex",
         alignItems: "center",
+      },
+      valueFormatter: (
+        params: ValueFormatterParams<MaterialsTableRows, Vendor>
+      ) => {
+        if (!params.value) {
+          return Character.EM_DASH;
+        }
+
+        return params.value.name;
       },
     },
   ];

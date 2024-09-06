@@ -1,5 +1,5 @@
 import { PrismaAdapter } from "@auth/prisma-adapter";
-import { GetServerSideProps, type GetServerSidePropsContext } from "next";
+import { type GetServerSideProps, type GetServerSidePropsContext } from "next";
 import {
   getServerSession,
   type DefaultSession,

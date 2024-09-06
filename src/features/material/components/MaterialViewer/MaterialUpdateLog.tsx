@@ -1,11 +1,20 @@
-import { Avatar, Circle, Heading, HStack, Stack, Tag, Text } from "@chakra-ui/react";
+import {
+  Avatar,
+  Circle,
+  Heading,
+  HStack,
+  Stack,
+  Tag,
+  Text,
+  useColorModeValue,
+} from "@chakra-ui/react";
 import { type User } from "@prisma/client";
-import React from "react";
+import { type ReactNode } from "react";
 
 interface MaterialUpdateLogProps {
-  title: React.ReactNode;
-  description: React.ReactNode;
-  timestamp: React.ReactNode;
+  title: ReactNode;
+  description: ReactNode;
+  timestamp: ReactNode;
   createdBy: User;
 }
 
@@ -15,24 +24,35 @@ export default function MaterialUpdateLog({
   timestamp,
   createdBy,
 }: MaterialUpdateLogProps) {
+  const indicatorBorderColor = useColorModeValue("zinc.200", "zinc.800");
+  const indicatorCircleBgColor = useColorModeValue("zinc.400", "zinc.400");
+  const indicatorCircleBorderColor = useColorModeValue("white", "zinc.950");
+
+  const descriptionBgColor = useColorModeValue("zinc.50", "zinc.900");
+  const descriptionBorderColor = useColorModeValue("zinc.200", "zinc.800");
+
   return (
-    <HStack
+    <Stack
       position="relative"
       pl={4}
       py={4}
       borderLeft="3px solid"
-      borderColor="zinc.200"
+      borderColor={indicatorBorderColor}
     >
       <Circle
-        bg="zinc.400"
+        position="absolute"
+        bg={indicatorCircleBgColor}
         size={2}
-        ml="-21.5px"
+        top="22.5px"
+        left="-5px"
         outline="2px solid"
-        outlineColor="white"
+        outlineColor={indicatorCircleBorderColor}
       />
-      <Tag fontSize="2xs" size="sm">{timestamp}</Tag>
-      <Avatar src={createdBy.image ?? undefined} size="xs" />
-      <Stack spacing={0}>
+      <Tag fontSize="2xs" size="sm" w="fit-content">
+        {timestamp}
+      </Tag>
+      <HStack>
+        <Avatar src={createdBy.image ?? undefined} size="xs" />
         <Heading as="h3" fontSize="sm">
           {title}
           <Text as="span" fontWeight="normal">
@@ -41,8 +61,20 @@ export default function MaterialUpdateLog({
           </Text>
           {createdBy.name ?? "Unknown"}
         </Heading>
-        {description && <Text fontSize="xs">{description}</Text>}
-      </Stack>
-    </HStack>
+      </HStack>
+      {description && (
+        <Text
+          p={2}
+          rounded="lg"
+          border="1px solid"
+          borderColor={descriptionBorderColor}
+          bg={descriptionBgColor}
+          fontSize="xs"
+          textAlign="left"
+        >
+          {description}
+        </Text>
+      )}
+    </Stack>
   );
 }

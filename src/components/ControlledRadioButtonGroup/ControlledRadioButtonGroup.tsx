@@ -5,6 +5,7 @@ import {
   HStack,
   useRadioGroup,
 } from "@chakra-ui/react";
+import { type ReactNode } from "react";
 import {
   type FieldValues,
   useController,
@@ -16,7 +17,7 @@ import { RadioButton } from "./RadioButton";
 interface ControlledRadioButtonGroupProps<
   FormValues extends FieldValues = FieldValues
 > extends UseControllerProps<FormValues> {
-  label?: string | React.ReactNode;
+  label?: string | ReactNode;
   options: { label: string; value: string }[];
 }
 

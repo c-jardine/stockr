@@ -16,7 +16,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import React from "react";
+import { useEffect } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { FaBuildingUser, FaPlus, FaTrash } from "react-icons/fa6";
 
@@ -24,7 +24,7 @@ import { PageLoader } from "~/components/PageLoader";
 import { TextInput } from "~/components/TextInput";
 import {
   updateVendorsFormSchema,
-  UpdateVendorsFormType,
+  type UpdateVendorsFormType,
 } from "~/types/material";
 import { api } from "~/utils/api";
 
@@ -37,12 +37,10 @@ export function ManageVendors() {
     },
     resolver: zodResolver(updateVendorsFormSchema),
   });
-  const { fields, append, prepend, remove, swap, move, insert } = useFieldArray(
-    {
-      control: methods.control,
-      name: "vendors",
-    }
-  );
+  const { fields, append, remove } = useFieldArray({
+    control: methods.control,
+    name: "vendors",
+  });
 
   const toast = useToast();
 
@@ -70,7 +68,7 @@ export function ManageVendors() {
     formState: { isSubmitting },
   } = methods;
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (data) {
       reset({ vendors: data });
     }
@@ -109,7 +107,9 @@ export function ManageVendors() {
                     />
                     <IconButton
                       icon={<Icon as={FaTrash} color="red.600" boxSize={3} />}
-                      aria-label={`Edit ${name} vendor`}
+                      aria-label={`Edit ${watch(
+                        `vendors.${index}.name`
+                      )} vendor`}
                       variant="outline"
                       size="xs"
                       rounded="md"

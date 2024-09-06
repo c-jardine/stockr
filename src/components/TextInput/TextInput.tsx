@@ -7,21 +7,22 @@ import {
   type FormControlProps,
   type InputProps,
 } from "@chakra-ui/react";
-import React from "react";
+import { type ReactNode } from "react";
 import {
   useController,
   type FieldValues,
   type UseControllerProps,
 } from "react-hook-form";
 import { FaCircle } from "react-icons/fa6";
+import { type NumericFormatProps } from "react-number-format";
 
 interface TextInputProps<FormValues extends FieldValues = FieldValues>
   extends UseControllerProps<FormValues> {
   label?: string;
   isRequired?: boolean;
   formControlProps?: FormControlProps;
-  inputProps?: InputProps;
-  children?: React.ReactNode;
+  inputProps?: InputProps & NumericFormatProps;
+  children?: ReactNode;
 }
 
 export function TextInput<FormValues extends FieldValues = FieldValues>({

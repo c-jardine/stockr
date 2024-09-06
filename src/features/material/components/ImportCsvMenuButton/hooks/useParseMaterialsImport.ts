@@ -1,4 +1,4 @@
-import { useMutation, UseMutationOptions } from "@tanstack/react-query";
+import { useMutation, type UseMutationOptions } from "@tanstack/react-query";
 
 async function parseMaterialsImport(data: { file: File | File[] }) {
   const { file } = data;

@@ -1,8 +1,11 @@
 import { Flex, HStack, Icon, Text, useColorModeValue } from "@chakra-ui/react";
 import { Prisma } from "@prisma/client";
-import { type CustomCellRendererProps } from "ag-grid-react";
 import { FaArrowDown, FaArrowUp } from "react-icons/fa6";
-import { getQuantityUnitText } from "~/utils";
+
+import { type CustomCellRendererProps } from "ag-grid-react";
+
+import { formatQuantityWithUnitAbbrev } from "~/utils/formatQuantity";
+import { Character } from "~/utils/text";
 import { type MaterialLogsTableRows } from "./MaterialLogsTable";
 
 export function AdjustedQuantityCellRenderer({
@@ -13,7 +16,7 @@ export function AdjustedQuantityCellRenderer({
 
   if (!node.data) return null;
 
-  const { originalQuantity, adjustedQuantity, type, extraData } = node.data;
+  const { originalQuantity, adjustedQuantity, type, material } = node.data;
 
   const prev = new Prisma.Decimal(originalQuantity);
   const adj = new Prisma.Decimal(adjustedQuantity);
@@ -23,21 +26,19 @@ export function AdjustedQuantityCellRenderer({
     ? { icon: FaArrowDown, color: negativeColor }
     : { icon: FaArrowUp, color: positiveColor };
 
-  const adjustedBy = type === "SET" ? adj.sub(prev).abs() : adj;
+  const adjustedBy = type.type === "SET" ? adj.sub(prev).abs() : adj;
 
   return (
     <Flex alignItems="center" h="full">
       {adjustedBy.isZero() ? (
-        <Text>—</Text>
+        <Text>{Character.EM_DASH}</Text>
       ) : (
         <HStack color={color}>
           <Icon as={icon} />
           <Text>
-            {adjustedBy.toNumber()}{" "}
-            {getQuantityUnitText({
+            {formatQuantityWithUnitAbbrev({
               quantity: adjustedBy,
-              quantityUnit: extraData.material.quantityUnit,
-              style: "abbreviation",
+              quantityUnit: material.quantityUnit,
             })}
           </Text>
         </HStack>

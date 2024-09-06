@@ -9,13 +9,13 @@ import { type MaterialsTableRows } from "./MaterialsTable";
 export function NameCellRenderer({
   node,
 }: CustomCellRendererProps<MaterialsTableRows>) {
+  const skuColor = useColorModeValue("zinc.500", "zinc.500");
+
   if (!node.data) {
     return null;
   }
 
-  const { extraData } = node.data;
-
-  const skuColor = useColorModeValue("zinc.500", "zinc.500");
+  const { url, sku, vendor, categories } = node.data;
 
   return (
     <HStack
@@ -26,26 +26,24 @@ export function NameCellRenderer({
     >
       <Stack spacing={2}>
         <MaterialViewer {...node.data} />
-        {extraData.categories?.length && (
+        {categories?.length > 0 && (
           <HStack wrap="wrap">
-            {extraData.categories?.map((category) => (
+            {categories.map((category) => (
               <Tag key={category.id}>{category.name}</Tag>
             ))}
           </HStack>
         )}
       </Stack>
       <Stack alignItems="flex-end" alignSelf="center" spacing={2}>
-        {extraData.url && (
-          <ExternalLink href={extraData.url}>
+        {url && (
+          <ExternalLink href={url}>
             View
-            {extraData.vendor?.name
-              ? ` on ${extraData.vendor.name}`
-              : " website"}
+            {vendor?.name ? ` on ${vendor.name}` : " website"}
           </ExternalLink>
         )}
-        {extraData.sku && (
+        {sku && (
           <Text px={1} color={skuColor} fontStyle="italic" lineHeight="normal">
-            SKU: {extraData.sku}
+            SKU: {sku}
           </Text>
         )}
       </Stack>

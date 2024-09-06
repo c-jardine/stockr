@@ -21,26 +21,19 @@ import {
   Text,
   useDisclosure,
 } from "@chakra-ui/react";
-import { Prisma } from "@prisma/client";
-import React from "react";
+import { type ReactNode } from "react";
 import { FaEllipsis, FaTrash } from "react-icons/fa6";
 
 import { type CustomCellRendererProps } from "ag-grid-react";
 
-import { getQuantityUnitText } from "~/utils";
 import { api } from "~/utils/api";
+import { formatQuantityWithUnitAbbrev } from "~/utils/formatQuantity";
 import { toNumber } from "~/utils/prisma";
 import { type MaterialsTableRows } from "../MaterialsTable/MaterialsTable";
 import { UpdateMaterialForm } from "../UpdateMaterialForm/UpdateMaterialForm";
 import MaterialUpdateLogs from "./MaterialUpdateLogs";
 
-function Detail({
-  title,
-  details,
-}: {
-  title: string;
-  details: React.ReactNode;
-}) {
+function Detail({ title, details }: { title: string; details: ReactNode }) {
   return (
     <Stack spacing={0}>
       <Heading as="h3" fontSize="xs" fontWeight="semibold" color="zinc.400">
@@ -60,23 +53,22 @@ export function MaterialViewer(
     return null;
   }
 
-  const { id, name, cost, quantity, minQuantity, vendor, extraData } = props;
+  const {
+    id,
+    name,
+    sku,
+    cost,
+    quantity,
+    quantityUnit,
+    minQuantity,
+    vendor,
+    categories,
+  } = props;
 
   const { data: updates } = api.material.getQuantityUpdatesById.useQuery({
     id,
   });
 
-  function getQuantityUnit(quantity: Prisma.Decimal | null) {
-    if (!quantity) {
-      return null;
-    }
-
-    return getQuantityUnitText({
-      quantity,
-      quantityUnit: extraData.quantityUnit,
-      style: "abbreviation",
-    });
-  }
   return (
     <>
       <Button
@@ -101,9 +93,9 @@ export function MaterialViewer(
             <Heading as="h2" fontSize="2xl">
               {name}
             </Heading>
-            {extraData.categories.length > 0 && (
+            {categories.length > 0 && (
               <Flex wrap="wrap" gap={2}>
-                {extraData.categories.map(({ id, name }) => (
+                {categories.map(({ id, name }) => (
                   <Tag key={id}>{name}</Tag>
                 ))}
               </Flex>
@@ -130,22 +122,24 @@ export function MaterialViewer(
               <SimpleGrid columns={3} gap={4}>
                 <Detail
                   title="Stock level"
-                  details={`${toNumber(quantity)} ${getQuantityUnit(quantity)}`}
+                  details={formatQuantityWithUnitAbbrev({
+                    quantity,
+                    quantityUnit,
+                  })}
                 />
                 <Detail
                   title="Unit cost"
-                  details={`$${toNumber(cost)} /${getQuantityUnit(
-                    new Prisma.Decimal(1)
-                  )}`}
+                  details={`$${toNumber(cost)} /${quantityUnit.abbrevSingular}`}
                 />
                 <Detail
                   title="Min. quantity"
-                  details={`${toNumber(minQuantity)} ${getQuantityUnit(
-                    minQuantity
-                  )}`}
+                  details={formatQuantityWithUnitAbbrev({
+                    quantity: minQuantity,
+                    quantityUnit,
+                  })}
                 />
-                <Detail title="SKU" details={extraData.sku} />
-                <Detail title="Vendor" details={vendor} />
+                <Detail title="SKU" details={sku} />
+                <Detail title="Vendor" details={vendor?.name} />
               </SimpleGrid>
               <Heading as="h2" fontSize="lg">
                 Updates

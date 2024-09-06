@@ -1,9 +1,9 @@
 import { Text } from "@chakra-ui/react";
-import { Prisma } from "@prisma/client";
 
 import { type CustomCellRendererProps } from "ag-grid-react";
 
-import { getQuantityUnitText } from "~/utils";
+import { formatQuantityWithUnitAbbrev } from "~/utils/formatQuantity";
+import { calculateAdjustedQuantity } from "~/utils/quantityAdjustment";
 import { type MaterialLogsTableRows } from "./MaterialLogsTable";
 
 export function NewQuantityCellRenderer({
@@ -13,37 +13,19 @@ export function NewQuantityCellRenderer({
     return null;
   }
 
-  const { originalQuantity, adjustedQuantity, type, extraData } = node.data;
+  const { originalQuantity, adjustedQuantity, type, material } = node.data;
 
-  const prev = new Prisma.Decimal(originalQuantity);
-  const adj = new Prisma.Decimal(adjustedQuantity);
-
-  function getAdjustedBy() {
-    switch (type) {
-      case "DECREASE": {
-        return prev.sub(adj);
-      }
-      case "SET": {
-        return adj;
-      }
-      case "INCREASE": {
-        return prev.add(adj);
-      }
-      default: {
-        return adj;
-      }
-    }
-  }
-
-  const adjustedBy = getAdjustedBy();
+  const adjustedBy = calculateAdjustedQuantity({
+    previousQuantity: originalQuantity,
+    adjustmentAmount: adjustedQuantity,
+    action: type.action,
+  });
 
   return (
     <Text>
-      {adjustedBy?.toNumber()}{" "}
-      {getQuantityUnitText({
+      {formatQuantityWithUnitAbbrev({
         quantity: adjustedBy,
-        quantityUnit: extraData.material.quantityUnit,
-        style: "abbreviation",
+        quantityUnit: material.quantityUnit,
       })}
     </Text>
   );

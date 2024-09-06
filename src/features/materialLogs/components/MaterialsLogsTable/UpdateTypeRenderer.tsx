@@ -7,7 +7,7 @@ import { type MaterialLogsTableRows } from "./MaterialLogsTable";
 export function UpdateTypeRenderer({
   node,
 }: CustomCellRendererProps<MaterialLogsTableRows>) {
-  const color = node.data?.extraData.type.color;
+  const color = node.data?.type.color;
   const styles = {
     border: "1px",
     borderColor: useColorModeValue(`${color}.300`, `${color}.900`),
@@ -19,9 +19,7 @@ export function UpdateTypeRenderer({
     return null;
   }
 
-  const {
-    extraData: { type },
-  } = node.data;
+  const { type } = node.data;
 
   return (
     <Tag {...{ ...styles }}>

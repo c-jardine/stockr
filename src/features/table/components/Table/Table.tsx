@@ -15,7 +15,7 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { Manrope } from "next/font/google"; // Override table theme font
-import React from "react";
+import { useMemo, useState } from "react";
 
 import { AgGridReact, type AgGridReactProps } from "ag-grid-react";
 import {
@@ -56,7 +56,7 @@ export function Table<ColType>({
 }: TableProps<ColType>) {
   const { gridRef, gridApi } = useGridApi();
 
-  const [selectedRows, setSelectedRows] = React.useState<string[]>([]);
+  const [selectedRows, setSelectedRows] = useState<string[]>([]);
 
   function onSelectionChanged() {
     // TODO: Terrible typing. Fix it!
@@ -87,16 +87,19 @@ export function Table<ColType>({
     "ag-theme-quartz-dark"
   );
 
+  const memoizedAutoSizeStrategy = useMemo(
+    () => autoSizeStrategy,
+    [autoSizeStrategy]
+  );
+
   const gridOptions: GridOptions<ColType> = {
-    rowData: React.useMemo(() => rowData, [rowData]),
-    columnDefs: React.useMemo(() => columnDefs, [columnDefs]),
+    rowData: useMemo(() => rowData, [rowData]),
+    columnDefs: useMemo(() => columnDefs, [columnDefs]),
     suppressCellFocus: true,
     rowSelection: "multiple",
     rowMultiSelectWithClick: false,
     suppressRowClickSelection: true,
-    autoSizeStrategy: autoSizeStrategy
-      ? React.useMemo(() => autoSizeStrategy, [autoSizeStrategy])
-      : undefined,
+    autoSizeStrategy: autoSizeStrategy ? memoizedAutoSizeStrategy : undefined,
     onSelectionChanged,
   };
 

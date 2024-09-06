@@ -17,7 +17,7 @@ const text = defineStyle({
   },
 });
 
-const primary = defineStyle((props) => ({
+const primary = defineStyle((_props) => ({
   bg: "blue.600",
   color: "blue.50",
   fontSize: "sm",

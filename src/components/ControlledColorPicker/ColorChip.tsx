@@ -12,15 +12,11 @@ import { FaCheck } from "react-icons/fa6";
 interface RadioButtonProps extends UseRadioProps {
   color: string;
   containerProps?: BoxProps;
-  innerContainerProps?: BoxProps;
-  children?: React.ReactNode;
 }
 
 export function ColorChip({
   color,
   containerProps,
-  innerContainerProps,
-  children,
   ...props
 }: RadioButtonProps) {
   const chipColor = useColorModeValue(`${color}.600`, `${color}.500`);
