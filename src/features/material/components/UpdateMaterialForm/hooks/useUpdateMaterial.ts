@@ -11,7 +11,6 @@ import {
 } from "~/types/material";
 import { api } from "~/utils/api";
 import { formatQuantityWithUnit } from "~/utils/formatQuantity";
-import { toNumber } from "~/utils/prisma";
 import { mapToSelectInput } from "~/utils/selectInput";
 import { isTRPCClientError } from "~/utils/trpc";
 import { MaterialsTableRows } from "../../MaterialsTable/MaterialsTable";
@@ -66,15 +65,15 @@ export function useUpdateMaterial(
         name,
         url: url ?? undefined,
         sku: sku ?? undefined,
-        cost: toNumber(cost),
-        quantity: toNumber(quantity),
+        cost: cost?.toString(),
+        quantity: quantity.toString(),
         quantityUnit:
           formatQuantityWithUnit({
             quantity: quantity,
             quantityUnit: quantityUnit,
             style: "abbreviation",
           }) ?? "",
-        minQuantity: toNumber(minQuantity),
+        minQuantity: minQuantity?.toString(),
         vendor: vendor ? mapToSelectInput(vendor) : undefined,
         categories: categories?.map(mapToSelectInput),
         notes: notes ?? undefined,

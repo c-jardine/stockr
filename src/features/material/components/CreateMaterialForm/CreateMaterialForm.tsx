@@ -34,6 +34,8 @@ export function CreateMaterialForm() {
     form: {
       control,
       register,
+      watch,
+      setValue,
       handleSubmit,
       formState: { errors, isSubmitting },
     },
@@ -77,7 +79,7 @@ export function CreateMaterialForm() {
               <TextInput control={control} name="sku" label="SKU" />
 
               <FormControl isInvalid={!!errors.cost}>
-                <FormLabel>Cost</FormLabel>
+                <FormLabel>Cost {typeof watch("cost")}</FormLabel>
                 <Controller
                   control={control}
                   name="cost"
@@ -93,7 +95,7 @@ export function CreateMaterialForm() {
                         decimalScale={2}
                         thousandSeparator=","
                         value={value}
-                        onValueChange={({ floatValue }) => onChange(floatValue)}
+                        onChange={onChange}
                         onBlur={onBlur}
                       />
                     </InputGroup>
@@ -110,6 +112,12 @@ export function CreateMaterialForm() {
                   name="quantity"
                   label="Quantity"
                   formControlProps={{ gridColumn: "1 / span 3" }}
+                  inputProps={{
+                    as: NumericFormat,
+                    allowNegative: false,
+                    decimalScale: 2,
+                    thousandSeparator: ",",
+                  }}
                 />
 
                 <Box gridColumn="4 / span 2">
@@ -127,6 +135,12 @@ export function CreateMaterialForm() {
                 control={control}
                 name="minQuantity"
                 label="Min. quantity level"
+                inputProps={{
+                  as: NumericFormat,
+                  allowNegative: false,
+                  decimalScale: 2,
+                  thousandSeparator: ",",
+                }}
               />
 
               <ControlledCreatableSelect<

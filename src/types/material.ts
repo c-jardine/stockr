@@ -7,13 +7,13 @@ export const createMaterialFormSchema = z.object({
   name: z.string().min(1, "Required"),
   url: CustomZod.OPTIONAL_URL,
   sku: z.string().optional(),
-  cost: z.number().min(0).optional(),
-  quantity: z.string().optional(),
+  cost: CustomZod.PRISMA_POSITIVE_DECIMAL.optional(),
+  quantity: CustomZod.PRISMA_POSITIVE_DECIMAL,
   quantityUnitName: z.object({
     label: z.string(),
     value: z.string(),
   }),
-  minQuantity: z.string().optional(),
+  minQuantity: CustomZod.PRISMA_POSITIVE_DECIMAL.optional(),
   notes: z.string().optional(),
   vendor: z
     .object({
@@ -36,10 +36,10 @@ export const updateMaterialFormSchema = z.object({
   name: z.string().min(1, "Required"),
   url: CustomZod.OPTIONAL_URL,
   sku: z.string().optional(),
-  cost: z.number().optional(),
-  quantity: z.number().optional(),
+  cost: CustomZod.PRISMA_POSITIVE_DECIMAL.optional(),
+  quantity: CustomZod.PRISMA_POSITIVE_DECIMAL.optional(),
   quantityUnit: z.string(),
-  minQuantity: z.number().optional(),
+  minQuantity: CustomZod.PRISMA_POSITIVE_DECIMAL.optional(),
   notes: z.string().optional(),
   vendor: z
     .object({
@@ -116,7 +116,7 @@ export const importMaterialsSchema = z
     url: CustomZod.OPTIONAL_URL,
     sku: z.string().optional(),
     cost: z.string().optional(),
-    quantity: z.string().optional(),
+    quantity: CustomZod.PRISMA_POSITIVE_DECIMAL,
     quantityUnitName: z.object({
       label: z.string(),
       value: z.string(),
