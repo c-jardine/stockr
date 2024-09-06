@@ -25,6 +25,9 @@ import { NumericFormat } from "react-number-format";
 import { ControlledCreatableSelect } from "~/components/ControlledCreatableSelect";
 import { ControlledSelect } from "~/components/ControlledSelect";
 import { TextInput } from "~/components/TextInput";
+import useMaterialCategoriesOptions from "~/hooks/useMaterialCategoriesOptions";
+import useMaterialQuantityUnitOptions from "~/hooks/useMaterialQuantityUnitOptions";
+import useMaterialVendorsOptions from "~/hooks/useMaterialVendorsOptions";
 import { type CreateMaterialFormType } from "~/types/material";
 import { SelectInput } from "~/utils/selectInput";
 import useCreateMaterial from "./hooks/useCreateMaterial";
@@ -35,16 +38,17 @@ export function CreateMaterialForm() {
       control,
       register,
       watch,
-      setValue,
       handleSubmit,
       formState: { errors, isSubmitting },
     },
     onSubmit,
     disclosure: { isOpen, onOpen, onClose },
-    quantityUnitOptions,
-    vendorOptions,
-    categoryOptions,
   } = useCreateMaterial();
+
+  const { quantityUnitOptions } = useMaterialQuantityUnitOptions();
+  const { vendorOptions } = useMaterialVendorsOptions();
+  const { categoryOptions } = useMaterialCategoriesOptions();
+
   return (
     <>
       <Button
