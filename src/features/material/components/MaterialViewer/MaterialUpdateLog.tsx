@@ -25,8 +25,12 @@ export default function MaterialUpdateLog({
   createdBy,
 }: MaterialUpdateLogProps) {
   const indicatorBorderColor = useColorModeValue("zinc.200", "zinc.800");
-  const indicatorCircleBgColor = useColorModeValue("zinc.400", "zinc.400");
+  const indicatorCircleBgColor = useColorModeValue("blue.400", "blue.400");
   const indicatorCircleBorderColor = useColorModeValue("white", "zinc.950");
+
+  const timestampColor = useColorModeValue("blue.700", "blue.500");
+  const timestampBgColor = useColorModeValue("blue.100", "blue.950");
+  const timestampBorderColor = useColorModeValue("blue.200", "blue.900");
 
   const descriptionBgColor = useColorModeValue("zinc.50", "zinc.900");
   const descriptionBorderColor = useColorModeValue("zinc.200", "zinc.800");
@@ -48,7 +52,15 @@ export default function MaterialUpdateLog({
         outline="2px solid"
         outlineColor={indicatorCircleBorderColor}
       />
-      <Tag fontSize="2xs" size="sm" w="fit-content">
+      <Tag
+        fontSize="2xs"
+        size="sm"
+        w="fit-content"
+        border="1px solid"
+        borderColor={timestampBorderColor}
+        bg={timestampBgColor}
+        color={timestampColor}
+      >
         {timestamp}
       </Tag>
       <HStack>
