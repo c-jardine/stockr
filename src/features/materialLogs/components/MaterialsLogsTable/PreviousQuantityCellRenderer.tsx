@@ -2,7 +2,7 @@ import { Text } from "@chakra-ui/react";
 
 import { type CustomCellRendererProps } from "ag-grid-react";
 
-import { getQuantityTextAbbreviated } from "~/utils";
+import { formatQuantityWithUnitAbbrev } from "~/utils/formatQuantity";
 import { type MaterialLogsTableRows } from "./MaterialLogsTable";
 
 export function PreviousQuantityCellRenderer({
@@ -16,7 +16,10 @@ export function PreviousQuantityCellRenderer({
 
   return (
     <Text>
-      {getQuantityTextAbbreviated(originalQuantity, material.quantityUnit)}
+      {formatQuantityWithUnitAbbrev({
+        quantity: originalQuantity,
+        quantityUnit: material.quantityUnit,
+      })}
     </Text>
   );
 }

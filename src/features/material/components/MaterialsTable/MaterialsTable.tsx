@@ -12,8 +12,8 @@ import {
 } from "node_modules/ag-grid-community/dist/types/core/main";
 
 import { Table } from "~/features/table/components/Table";
-import { getQuantityTextAbbreviated } from "~/utils";
 import { api, type RouterOutputs } from "~/utils/api";
+import { formatQuantityWithUnitAbbrev } from "~/utils/formatQuantity";
 import { Character } from "~/utils/text";
 import { NameCellRenderer } from "./NameCellRenderer";
 import { QuantityCellRenderer } from "./QuantityCellRenderer";
@@ -111,10 +111,10 @@ export function MaterialsTable() {
         if (!params.value || !params.data) {
           return Character.EM_DASH;
         }
-        return getQuantityTextAbbreviated(
-          params.value,
-          params.data.quantityUnit
-        );
+        return formatQuantityWithUnitAbbrev({
+          quantity: params.value,
+          quantityUnit: params.data.quantityUnit,
+        });
       },
     },
     {

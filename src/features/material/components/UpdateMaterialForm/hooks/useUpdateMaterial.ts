@@ -9,10 +9,11 @@ import {
   updateMaterialFormSchema,
   UpdateMaterialFormType,
 } from "~/types/material";
-import { getQuantityUnitText, isTRPCClientError } from "~/utils";
 import { api } from "~/utils/api";
+import { formatQuantityWithUnit } from "~/utils/formatQuantity";
 import { toNumber } from "~/utils/prisma";
 import { mapToSelectInput } from "~/utils/selectInput";
+import { isTRPCClientError } from "~/utils/trpc";
 import { MaterialsTableRows } from "../../MaterialsTable/MaterialsTable";
 
 export function useUpdateMaterial(
@@ -68,7 +69,7 @@ export function useUpdateMaterial(
         cost: toNumber(cost),
         quantity: toNumber(quantity),
         quantityUnit:
-          getQuantityUnitText({
+          formatQuantityWithUnit({
             quantity: quantity,
             quantityUnit: quantityUnit,
             style: "abbreviation",

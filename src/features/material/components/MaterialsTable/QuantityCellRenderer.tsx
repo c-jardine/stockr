@@ -17,13 +17,14 @@ import {
 import { Prisma } from "@prisma/client";
 import { FaEdit } from "react-icons/fa";
 import { FaChevronRight } from "react-icons/fa6";
+import { NumericFormat } from "react-number-format";
 
 import { type CustomCellRendererProps } from "ag-grid-react";
 
-import { NumericFormat } from "react-number-format";
 import { ControlledCreatableSelect } from "~/components/ControlledCreatableSelect";
 import { TextInput } from "~/components/TextInput";
-import { calculateUpdatedQuantity, getQuantityTextAbbreviated } from "~/utils";
+import { formatQuantityWithUnitAbbrev } from "~/utils/formatQuantity";
+import { calculateAdjustedQuantity } from "~/utils/quantityAdjustment";
 import { type MaterialsTableRows } from "./MaterialsTable";
 import { NewQuantityUpdateTypeForm } from "./NewQuantityUpdateTypeForm";
 import { useUpdateQuantity } from "./hooks/useUpdateQuantity";
@@ -50,20 +51,23 @@ export function QuantityCellRenderer({
 
   const { name, quantity, quantityUnit } = node.data;
 
-  const prevQuantityText = getQuantityTextAbbreviated(quantity, quantityUnit);
+  const prevQuantityText = formatQuantityWithUnitAbbrev({
+    quantity,
+    quantityUnit,
+  });
 
   const newQuantity =
     quantity &&
     watch("adjustedQuantity") &&
-    calculateUpdatedQuantity({
-      prevQuantity: new Prisma.Decimal(quantity),
-      adjustedQuantity: new Prisma.Decimal(
+    calculateAdjustedQuantity({
+      previousQuantity: new Prisma.Decimal(quantity),
+      adjustmentAmount: new Prisma.Decimal(
         watch("adjustedQuantity").replaceAll(",", "")
       ),
       action: watch("type.value.action"),
     });
   const newQuantityText = newQuantity
-    ? getQuantityTextAbbreviated(newQuantity, quantityUnit)
+    ? formatQuantityWithUnitAbbrev({ quantity: newQuantity, quantityUnit })
     : prevQuantityText;
 
   return (

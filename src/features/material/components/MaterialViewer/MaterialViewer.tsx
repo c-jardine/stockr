@@ -26,8 +26,8 @@ import { FaEllipsis, FaTrash } from "react-icons/fa6";
 
 import { type CustomCellRendererProps } from "ag-grid-react";
 
-import { getQuantityTextAbbreviated } from "~/utils";
 import { api } from "~/utils/api";
+import { formatQuantityWithUnitAbbrev } from "~/utils/formatQuantity";
 import { toNumber } from "~/utils/prisma";
 import { type MaterialsTableRows } from "../MaterialsTable/MaterialsTable";
 import { UpdateMaterialForm } from "../UpdateMaterialForm/UpdateMaterialForm";
@@ -128,7 +128,10 @@ export function MaterialViewer(
               <SimpleGrid columns={3} gap={4}>
                 <Detail
                   title="Stock level"
-                  details={getQuantityTextAbbreviated(quantity, quantityUnit)}
+                  details={formatQuantityWithUnitAbbrev({
+                    quantity,
+                    quantityUnit,
+                  })}
                 />
                 <Detail
                   title="Unit cost"
@@ -136,10 +139,10 @@ export function MaterialViewer(
                 />
                 <Detail
                   title="Min. quantity"
-                  details={getQuantityTextAbbreviated(
-                    minQuantity,
-                    quantityUnit
-                  )}
+                  details={formatQuantityWithUnitAbbrev({
+                    quantity: minQuantity,
+                    quantityUnit,
+                  })}
                 />
                 <Detail title="SKU" details={sku} />
                 <Detail title="Vendor" details={vendor?.name} />
