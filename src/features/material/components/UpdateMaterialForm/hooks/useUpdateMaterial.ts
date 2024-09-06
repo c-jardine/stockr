@@ -1,6 +1,6 @@
 import { useDisclosure, useToast } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import React from "react";
+import { useCallback, useEffect } from "react";
 import { useForm } from "react-hook-form";
 
 import { CustomCellRendererProps } from "ag-grid-react";
@@ -45,7 +45,7 @@ export function useUpdateMaterial(
   }));
 
   // Callback to initialize the form when node.data is ready
-  const initializeForm = React.useCallback(
+  const initializeForm = useCallback(
     (data: MaterialsTableRows) => {
       const {
         id,
@@ -83,7 +83,7 @@ export function useUpdateMaterial(
   );
 
   // Initialize the form defaults
-  React.useEffect(() => {
+  useEffect(() => {
     if (props) {
       initializeForm(props);
     }

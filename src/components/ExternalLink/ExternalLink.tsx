@@ -1,10 +1,10 @@
 import { Icon, IconProps, Link, LinkProps } from "@chakra-ui/react";
-import React from "react";
+import { ReactNode } from "react";
 import { FaExternalLinkAlt } from "react-icons/fa";
 
 interface ExternalLinkProps {
   href: string;
-  children: React.ReactNode;
+  children: ReactNode;
   linkProps?: LinkProps;
   iconProps?: IconProps;
 }

@@ -19,7 +19,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import React from "react";
+import { useRef } from "react";
 import { FileUploader } from "react-drag-drop-files";
 import type FileUploaderSrc from "react-drag-drop-files/dist/src/FileUploader";
 import { Controller, useForm } from "react-hook-form";
@@ -40,14 +40,14 @@ type FormType = z.infer<typeof schema>;
 
 export function ImportCsvMenuButton() {
   // For focusing on submit button after upload
-  const submitRef = React.useRef<HTMLButtonElement>(null);
+  const submitRef = useRef<HTMLButtonElement>(null);
 
   const {
     control,
     watch,
     handleSubmit,
     reset,
-    formState: { errors, isSubmitting, isDirty },
+    formState: { errors, isSubmitting },
   } = useForm<FormType>({
     defaultValues: {
       file: undefined,

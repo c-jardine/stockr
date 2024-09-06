@@ -5,12 +5,12 @@ import {
   HStack,
   type StackProps,
 } from "@chakra-ui/react";
-import React from "react";
+import { ReactNode } from "react";
 
 import { Section } from "../Section";
 
 interface PageHeaderContentProps extends StackProps {
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
 function PageHeaderContent({ children, ...props }: PageHeaderContentProps) {
@@ -22,7 +22,7 @@ function PageHeaderContent({ children, ...props }: PageHeaderContentProps) {
 }
 
 interface PageHeaderTitleProps extends HeadingProps {
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
 function PageHeaderTitle({ children, ...props }: PageHeaderTitleProps) {
@@ -34,7 +34,7 @@ function PageHeaderTitle({ children, ...props }: PageHeaderTitleProps) {
 }
 
 interface PageHeaderProps extends ContainerProps {
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
 export function PageHeader({ children, ...props }: PageHeaderProps) {

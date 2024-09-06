@@ -16,7 +16,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import React from "react";
+import { useEffect } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { FaBuildingUser, FaPlus, FaTrash } from "react-icons/fa6";
 
@@ -70,7 +70,7 @@ export function ManageVendors() {
     formState: { isSubmitting },
   } = methods;
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (data) {
       reset({ vendors: data });
     }

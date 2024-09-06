@@ -1,4 +1,4 @@
-import React from "react";
+import { useMemo } from "react";
 
 import { api } from "~/utils/api";
 import { SelectInput } from "~/utils/selectInput";
@@ -13,7 +13,7 @@ export default function useMaterialQuantityUnitOptions() {
 
   const { data } = query;
 
-  const quantityUnitOptions = React.useMemo(() => {
+  const quantityUnitOptions = useMemo(() => {
     if (data) {
       return (
         data.reduce((groups, unit) => {

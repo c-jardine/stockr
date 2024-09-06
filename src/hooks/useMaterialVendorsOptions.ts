@@ -1,4 +1,4 @@
-import React from "react";
+import { useMemo } from "react";
 
 import { api } from "~/utils/api";
 
@@ -7,7 +7,7 @@ export default function useMaterialVendorsOptions() {
 
   const { data } = query;
 
-  const vendorOptions = React.useMemo(() => {
+  const vendorOptions = useMemo(() => {
     return (
       data?.map(({ name }) => ({
         label: name,

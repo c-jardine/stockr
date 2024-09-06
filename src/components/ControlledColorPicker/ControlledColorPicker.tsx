@@ -5,18 +5,19 @@ import {
   HStack,
   useRadioGroup,
 } from "@chakra-ui/react";
-
+import { ReactNode } from "react";
 import {
   type FieldValues,
   useController,
   type UseControllerProps,
 } from "react-hook-form";
+
 import { ColorChip } from "./ColorChip";
 
 interface ControlledColorPickerProps<
   FormValues extends FieldValues = FieldValues
 > extends UseControllerProps<FormValues> {
-  label?: string | React.ReactNode;
+  label?: string | ReactNode;
   options: { label: string; value: string }[];
 }
 

@@ -14,11 +14,13 @@ import {
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
+
 import { CustomCellRendererProps } from "ag-grid-react";
 import {
   type ColDef,
   type ValueFormatterParams,
 } from "node_modules/ag-grid-community/dist/types/core/main";
+
 import { Table } from "~/features/table/components/Table";
 import { api } from "~/utils/api";
 
@@ -54,7 +56,7 @@ export function ImportMaterialsOverview({ data }: { data: TableRows[] }) {
         status: "success",
       });
 
-      // await utils.material.getAll.invalidate();
+      await utils.material.getAll.invalidate();
       onClose();
     },
   });
@@ -62,10 +64,6 @@ export function ImportMaterialsOverview({ data }: { data: TableRows[] }) {
   async function handleImport() {
     await mutation.mutateAsync(data);
   }
-
-  //   React.useEffect(() => {
-  //     handleImport();
-  //   }, []);
 
   const colDefs: ColDef<TableRows>[] = [
     {

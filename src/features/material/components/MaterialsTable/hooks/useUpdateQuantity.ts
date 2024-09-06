@@ -1,6 +1,6 @@
 import { useToast } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import React from "react";
+import { useCallback, useEffect } from "react";
 import { useForm } from "react-hook-form";
 
 import { CustomCellRendererProps } from "ag-grid-react";
@@ -53,14 +53,14 @@ export function useUpdateQuantity(
   }
 
   // Initialize form callback
-  const initializeForm = React.useCallback((data: MaterialsTableRows) => {
+  const initializeForm = useCallback((data: MaterialsTableRows) => {
     reset({
       materialId: data.id,
       originalQuantity: data.quantity?.toString() ?? "0",
     });
   }, []);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (node.data) {
       initializeForm(node.data);
     }

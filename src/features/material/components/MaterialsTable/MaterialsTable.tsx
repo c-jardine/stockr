@@ -1,7 +1,7 @@
 import { Flex, useToast } from "@chakra-ui/react";
 import { Prisma, Vendor } from "@prisma/client";
 import { useSession } from "next-auth/react";
-import React from "react";
+import { useEffect, useState } from "react";
 import PuffLoader from "react-spinners/PuffLoader";
 
 import "ag-grid-community/styles/ag-grid.css"; // Mandatory CSS required by the Data Grid
@@ -54,10 +54,10 @@ export function MaterialsTable() {
   }
 
   // Materials data as state
-  const [rowData, setRowData] = React.useState<MaterialsTableRows[]>([]);
+  const [rowData, setRowData] = useState<MaterialsTableRows[]>([]);
 
   // Update table data when the data is available
-  React.useEffect(() => {
+  useEffect(() => {
     if (materials) {
       setRowData(
         materials.map((material) => ({

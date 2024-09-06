@@ -21,7 +21,7 @@ import {
   Text,
   useDisclosure,
 } from "@chakra-ui/react";
-import React from "react";
+import { ReactNode } from "react";
 import { FaEllipsis, FaTrash } from "react-icons/fa6";
 
 import { type CustomCellRendererProps } from "ag-grid-react";
@@ -33,13 +33,7 @@ import { type MaterialsTableRows } from "../MaterialsTable/MaterialsTable";
 import { UpdateMaterialForm } from "../UpdateMaterialForm/UpdateMaterialForm";
 import MaterialUpdateLogs from "./MaterialUpdateLogs";
 
-function Detail({
-  title,
-  details,
-}: {
-  title: string;
-  details: React.ReactNode;
-}) {
+function Detail({ title, details }: { title: string; details: ReactNode }) {
   return (
     <Stack spacing={0}>
       <Heading as="h3" fontSize="xs" fontWeight="semibold" color="zinc.400">

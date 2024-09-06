@@ -1,4 +1,4 @@
-import React from "react";
+import { useMemo } from "react";
 
 import { api } from "~/utils/api";
 
@@ -7,7 +7,7 @@ export default function useMaterialCategoriesOptions() {
 
   const { data } = query;
 
-  const categoryOptions = React.useMemo(() => {
+  const categoryOptions = useMemo(() => {
     return (
       data?.map(({ id, name }) => ({
         label: name,

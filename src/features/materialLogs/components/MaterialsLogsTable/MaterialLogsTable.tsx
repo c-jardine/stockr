@@ -1,13 +1,13 @@
 import { Flex } from "@chakra-ui/react";
+import { Prisma } from "@prisma/client";
 import { useSession } from "next-auth/react";
-import React from "react";
+import { useEffect, useState } from "react";
 import PuffLoader from "react-spinners/PuffLoader";
 
 import "ag-grid-community/styles/ag-grid.css"; // Mandatory CSS required by the Data Grid
 import "ag-grid-community/styles/ag-theme-quartz.css"; // Optional Theme applied to the Data Grid
 import { type ColDef } from "node_modules/ag-grid-community/dist/types/core/main";
 
-import { Prisma } from "@prisma/client";
 import { Table } from "~/features/table/components/Table";
 import { api, type RouterOutputs } from "~/utils/api";
 import { AdjustedQuantityCellRenderer } from "./AdjustedQuantityCellRenderer";
@@ -36,12 +36,12 @@ export function MaterialLogsTable() {
   );
 
   // Materials data as state
-  const [rowData, setRowData] = React.useState<MaterialLogsTableRows[]>([]);
+  const [rowData, setRowData] = useState<MaterialLogsTableRows[]>([]);
 
   // Update table data when the data is available
-  React.useEffect(() => {
+  useEffect(() => {
     if (updates) {
-      console.log("DATA", updates)
+      console.log("DATA", updates);
       setRowData(
         updates.map((update) => ({
           ...update,

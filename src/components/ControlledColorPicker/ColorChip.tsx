@@ -7,13 +7,14 @@ import {
   useRadio,
   type UseRadioProps,
 } from "@chakra-ui/react";
+import { ReactNode } from "react";
 import { FaCheck } from "react-icons/fa6";
 
 interface RadioButtonProps extends UseRadioProps {
   color: string;
   containerProps?: BoxProps;
   innerContainerProps?: BoxProps;
-  children?: React.ReactNode;
+  children?: ReactNode;
 }
 
 export function ColorChip({

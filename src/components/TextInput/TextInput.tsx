@@ -7,7 +7,7 @@ import {
   type FormControlProps,
   type InputProps,
 } from "@chakra-ui/react";
-import React from "react";
+import { ReactNode } from "react";
 import {
   useController,
   type FieldValues,
@@ -22,7 +22,7 @@ interface TextInputProps<FormValues extends FieldValues = FieldValues>
   isRequired?: boolean;
   formControlProps?: FormControlProps;
   inputProps?: InputProps & NumericFormatProps;
-  children?: React.ReactNode;
+  children?: ReactNode;
 }
 
 export function TextInput<FormValues extends FieldValues = FieldValues>({

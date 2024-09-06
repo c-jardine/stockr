@@ -1,7 +1,8 @@
 import { useDisclosure, useToast } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import React from "react";
+import { useEffect } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
+
 import {
   updateCategoriesFormSchema,
   UpdateCategoriesFormType,
@@ -41,7 +42,7 @@ export default function useManageCategories() {
 
   const { reset } = form;
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (data) {
       reset({ categories: data });
     }

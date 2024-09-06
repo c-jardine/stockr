@@ -5,12 +5,12 @@ import {
   type BoxProps,
   type UseRadioProps,
 } from "@chakra-ui/react";
-import React from "react";
+import { ReactNode } from "react";
 
 interface RadioButtonProps extends UseRadioProps {
   containerProps?: BoxProps;
   innerContainerProps?: BoxProps;
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
 export function RadioButton({

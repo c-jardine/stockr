@@ -4,7 +4,7 @@ import {
   type GroupBase,
   type CreatableProps as SelectProps,
 } from "chakra-react-select";
-import React from "react";
+import { ReactNode } from "react";
 import {
   useController,
   type FieldValues,
@@ -18,7 +18,7 @@ interface ControlledSelectProps<
   Group extends GroupBase<Option> = GroupBase<Option>
 > extends Omit<SelectProps<Option, IsMulti, Group>, "name" | "defaultValue">,
     UseControllerProps<FormValues> {
-  label?: string | React.ReactNode;
+  label?: string | ReactNode;
 }
 
 /**

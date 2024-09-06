@@ -9,12 +9,12 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import { type User } from "@prisma/client";
-import React from "react";
+import { ReactNode } from "react";
 
 interface MaterialUpdateLogProps {
-  title: React.ReactNode;
-  description: React.ReactNode;
-  timestamp: React.ReactNode;
+  title: ReactNode;
+  description: ReactNode;
+  timestamp: ReactNode;
   createdBy: User;
 }
 
