@@ -2,7 +2,7 @@ import { Flex, HStack, Icon, Text, useColorModeValue } from "@chakra-ui/react";
 import { Prisma } from "@prisma/client";
 import { type CustomCellRendererProps } from "ag-grid-react";
 import { FaArrowDown, FaArrowUp } from "react-icons/fa6";
-import { getQuantityUnitText } from "~/utils";
+import { getQuantityTextAbbreviated } from "~/utils";
 import { Character } from "~/utils/text";
 import { type MaterialLogsTableRows } from "./MaterialLogsTable";
 
@@ -34,12 +34,7 @@ export function AdjustedQuantityCellRenderer({
         <HStack color={color}>
           <Icon as={icon} />
           <Text>
-            {adjustedBy.toNumber()}{" "}
-            {getQuantityUnitText({
-              quantity: adjustedBy,
-              quantityUnit: material.quantityUnit,
-              style: "abbreviation",
-            })}
+            {getQuantityTextAbbreviated(adjustedBy, material.quantityUnit)}
           </Text>
         </HStack>
       )}

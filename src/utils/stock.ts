@@ -90,14 +90,17 @@ export function calculateUpdatedQuantity({
     return new Prisma.Decimal(prevQuantity);
   }
 
+  const prev = new Prisma.Decimal(prevQuantity);
+  const adj = new Prisma.Decimal(adjustedQuantity);
+
   switch (action) {
     case "DECREASE":
-      return prevQuantity.sub(adjustedQuantity);
+      return prev.sub(adj);
     case "SET":
-      return adjustedQuantity;
+      return adj;
     case "INCREASE":
-      return prevQuantity.add(adjustedQuantity);
+      return prev.add(adj);
     default:
-      return prevQuantity;
+      return prev;
   }
 }

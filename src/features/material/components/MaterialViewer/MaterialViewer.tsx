@@ -21,13 +21,12 @@ import {
   Text,
   useDisclosure,
 } from "@chakra-ui/react";
-import { Prisma } from "@prisma/client";
 import React from "react";
 import { FaEllipsis, FaTrash } from "react-icons/fa6";
 
 import { type CustomCellRendererProps } from "ag-grid-react";
 
-import { getQuantityTextAbbreviated, getQuantityUnitText } from "~/utils";
+import { getQuantityTextAbbreviated } from "~/utils";
 import { api } from "~/utils/api";
 import { toNumber } from "~/utils/prisma";
 import { type MaterialsTableRows } from "../MaterialsTable/MaterialsTable";
@@ -76,17 +75,6 @@ export function MaterialViewer(
     id,
   });
 
-  function getQuantityUnit(quantity: Prisma.Decimal | null) {
-    if (!quantity) {
-      return null;
-    }
-
-    return getQuantityUnitText({
-      quantity,
-      quantityUnit: quantityUnit,
-      style: "abbreviation",
-    });
-  }
   return (
     <>
       <Button
@@ -144,9 +132,7 @@ export function MaterialViewer(
                 />
                 <Detail
                   title="Unit cost"
-                  details={`$${toNumber(cost)} /${getQuantityUnit(
-                    new Prisma.Decimal(1)
-                  )}`}
+                  details={`$${toNumber(cost)} /${quantityUnit.abbrevSingular}`}
                 />
                 <Detail
                   title="Min. quantity"

@@ -23,16 +23,6 @@ export type MaterialLogsTableRows =
     name: string;
     newQuantity: Prisma.Decimal;
   };
-// {
-//   name: string;
-//   type: MaterialQuantityUpdateAction;
-//   newQuantity: number;
-//   originalQuantity: number;
-//   adjustedQuantity: number;
-//   createdBy: string;
-//   createdAt: Date;
-//   extraData: RouterOutputs["material"]["getQuantityUpdates"][0];
-// };
 
 export function MaterialLogsTable() {
   const { data: session } = useSession();
@@ -51,6 +41,7 @@ export function MaterialLogsTable() {
   // Update table data when the data is available
   React.useEffect(() => {
     if (updates) {
+      console.log("DATA", updates)
       setRowData(
         updates.map((update) => ({
           ...update,

@@ -12,7 +12,7 @@ import {
 } from "node_modules/ag-grid-community/dist/types/core/main";
 
 import { Table } from "~/features/table/components/Table";
-import { getQuantityTextAbbreviated, getQuantityUnitText } from "~/utils";
+import { getQuantityTextAbbreviated } from "~/utils";
 import { api, type RouterOutputs } from "~/utils/api";
 import { Character } from "~/utils/text";
 import { NameCellRenderer } from "./NameCellRenderer";
@@ -127,16 +127,10 @@ export function MaterialsTable() {
       valueFormatter: (
         params: ValueFormatterParams<MaterialsTableRows, Prisma.Decimal>
       ) => {
-        if (params.value && params.data) {
-          return `$${new Prisma.Decimal(
-            params.value
-          ).toString()} /${getQuantityUnitText({
-            quantity: params.value,
-            quantityUnit: params.data.quantityUnit,
-            style: "abbreviation",
-          })}`;
+        if (!params.value || !params.data) {
+          return Character.EM_DASH;
         }
-        return Character.EM_DASH;
+        return `$${params.value} /${params.data.quantityUnit.abbrevSingular}`;
       },
     },
     {

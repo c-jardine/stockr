@@ -1,9 +1,8 @@
 import { Text } from "@chakra-ui/react";
-import { Prisma } from "@prisma/client";
 
 import { type CustomCellRendererProps } from "ag-grid-react";
 
-import { getQuantityUnitText } from "~/utils";
+import { getQuantityTextAbbreviated } from "~/utils";
 import { type MaterialLogsTableRows } from "./MaterialLogsTable";
 
 export function PreviousQuantityCellRenderer({
@@ -15,16 +14,9 @@ export function PreviousQuantityCellRenderer({
 
   const { originalQuantity, material } = node.data;
 
-  const prev = new Prisma.Decimal(originalQuantity);
-
   return (
     <Text>
-      {prev?.toNumber()}{" "}
-      {getQuantityUnitText({
-        quantity: prev,
-        quantityUnit: material.quantityUnit,
-        style: "abbreviation",
-      })}
+      {getQuantityTextAbbreviated(originalQuantity, material.quantityUnit)}
     </Text>
   );
 }
