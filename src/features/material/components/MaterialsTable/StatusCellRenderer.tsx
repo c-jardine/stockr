@@ -56,12 +56,10 @@ export function StatusCellRenderer({
     return Character.EM_DASH;
   }
 
+  const { quantity, minQuantity } = node.data;
+
   const stockStatus =
-    node.data.quantity &&
-    getStockStatus(
-      new Prisma.Decimal(node.data.quantity),
-      node.data.extraData.minQuantity
-    );
+    quantity && getStockStatus(new Prisma.Decimal(quantity), minQuantity);
 
   return (
     <Tag fontSize="xs" fontWeight="light" {...getStyles(stockStatus)}>

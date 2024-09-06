@@ -39,7 +39,7 @@ export function useUpdateQuantity(
 
   const form = useForm<UpdateMaterialQuantityFormType>({
     defaultValues: {
-      materialId: node.data?.extraData.id ?? undefined,
+      materialId: node.data?.id ?? undefined,
       originalQuantity: node.data?.quantity?.toString() ?? "0",
     },
     resolver: zodResolver(updateMaterialQuantityFormSchema),
@@ -55,7 +55,7 @@ export function useUpdateQuantity(
   // Initialize form callback
   const initializeForm = React.useCallback((data: MaterialsTableRows) => {
     reset({
-      materialId: data.extraData.id,
+      materialId: data.id,
       originalQuantity: data.quantity?.toString() ?? "0",
     });
   }, []);

@@ -60,7 +60,17 @@ export function MaterialViewer(
     return null;
   }
 
-  const { id, name, cost, quantity, minQuantity, vendor, extraData } = props;
+  const {
+    id,
+    name,
+    sku,
+    cost,
+    quantity,
+    quantityUnit,
+    minQuantity,
+    vendor,
+    categories,
+  } = props;
 
   const { data: updates } = api.material.getQuantityUpdatesById.useQuery({
     id,
@@ -73,7 +83,7 @@ export function MaterialViewer(
 
     return getQuantityUnitText({
       quantity,
-      quantityUnit: extraData.quantityUnit,
+      quantityUnit: quantityUnit,
       style: "abbreviation",
     });
   }
@@ -101,9 +111,9 @@ export function MaterialViewer(
             <Heading as="h2" fontSize="2xl">
               {name}
             </Heading>
-            {extraData.categories.length > 0 && (
+            {categories.length > 0 && (
               <Flex wrap="wrap" gap={2}>
-                {extraData.categories.map(({ id, name }) => (
+                {categories.map(({ id, name }) => (
                   <Tag key={id}>{name}</Tag>
                 ))}
               </Flex>
@@ -130,10 +140,7 @@ export function MaterialViewer(
               <SimpleGrid columns={3} gap={4}>
                 <Detail
                   title="Stock level"
-                  details={getQuantityTextAbbreviated(
-                    quantity,
-                    extraData.quantityUnit
-                  )}
+                  details={getQuantityTextAbbreviated(quantity, quantityUnit)}
                 />
                 <Detail
                   title="Unit cost"
@@ -145,11 +152,11 @@ export function MaterialViewer(
                   title="Min. quantity"
                   details={getQuantityTextAbbreviated(
                     minQuantity,
-                    extraData.quantityUnit
+                    quantityUnit
                   )}
                 />
-                <Detail title="SKU" details={extraData.sku} />
-                <Detail title="Vendor" details={vendor} />
+                <Detail title="SKU" details={sku} />
+                <Detail title="Vendor" details={vendor?.name} />
               </SimpleGrid>
               <Heading as="h2" fontSize="lg">
                 Updates

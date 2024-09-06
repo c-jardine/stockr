@@ -13,7 +13,7 @@ import { getQuantityUnitText, isTRPCClientError } from "~/utils";
 import { api } from "~/utils/api";
 import { toNumber } from "~/utils/prisma";
 import { mapToSelectInput } from "~/utils/selectInput";
-import { MaterialsTableRows } from "../MaterialsTable";
+import { MaterialsTableRows } from "../../MaterialsTable/MaterialsTable";
 
 export function useUpdateMaterial(
   props: CustomCellRendererProps<MaterialsTableRows>["data"]
@@ -47,26 +47,36 @@ export function useUpdateMaterial(
   // Callback to initialize the form when node.data is ready
   const initializeForm = React.useCallback(
     (data: MaterialsTableRows) => {
-      const { name, cost, quantity, minQuantity, extraData } = data;
-      reset({
-        id: extraData.id,
+      const {
+        id,
         name,
-        url: extraData.url ?? undefined,
-        sku: extraData.sku ?? undefined,
+        url,
+        sku,
+        cost,
+        quantity,
+        quantityUnit,
+        minQuantity,
+        vendor,
+        categories,
+        notes,
+      } = data;
+      reset({
+        id: id,
+        name,
+        url: url ?? undefined,
+        sku: sku ?? undefined,
         cost: toNumber(cost),
         quantity: toNumber(quantity),
         quantityUnit:
           getQuantityUnitText({
             quantity: quantity,
-            quantityUnit: extraData.quantityUnit,
+            quantityUnit: quantityUnit,
             style: "abbreviation",
           }) ?? "",
         minQuantity: toNumber(minQuantity),
-        vendor: extraData.vendor
-          ? mapToSelectInput(extraData.vendor)
-          : undefined,
-        categories: extraData.categories?.map(mapToSelectInput),
-        notes: extraData.notes ?? undefined,
+        vendor: vendor ? mapToSelectInput(vendor) : undefined,
+        categories: categories?.map(mapToSelectInput),
+        notes: notes ?? undefined,
       });
     },
     [reset]

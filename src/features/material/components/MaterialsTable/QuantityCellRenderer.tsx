@@ -48,12 +48,9 @@ export function QuantityCellRenderer({
     return null;
   }
 
-  const { name, quantity, extraData } = node.data;
+  const { name, quantity, quantityUnit } = node.data;
 
-  const prevQuantityText = getQuantityTextAbbreviated(
-    quantity,
-    extraData.quantityUnit
-  );
+  const prevQuantityText = getQuantityTextAbbreviated(quantity, quantityUnit);
 
   const newQuantity =
     quantity &&
@@ -66,7 +63,7 @@ export function QuantityCellRenderer({
       action: watch("type.value.action"),
     });
   const newQuantityText = newQuantity
-    ? getQuantityTextAbbreviated(newQuantity, extraData.quantityUnit)
+    ? getQuantityTextAbbreviated(newQuantity, quantityUnit)
     : prevQuantityText;
 
   return (

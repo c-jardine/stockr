@@ -1,5 +1,5 @@
 import { Flex, useToast } from "@chakra-ui/react";
-import { Prisma } from "@prisma/client";
+import { Prisma, Vendor } from "@prisma/client";
 import { useSession } from "next-auth/react";
 import React from "react";
 import PuffLoader from "react-spinners/PuffLoader";
@@ -20,15 +20,8 @@ import { QuantityCellRenderer } from "./QuantityCellRenderer";
 import { StatusCellRenderer } from "./StatusCellRenderer";
 
 // Table column type definition
-export type MaterialsTableRows = {
-  id: string;
-  name: string;
+export type MaterialsTableRows = RouterOutputs["material"]["getAll"][0] & {
   status: string;
-  quantity: Prisma.Decimal;
-  minQuantity: Prisma.Decimal | null;
-  cost: Prisma.Decimal | null;
-  vendor: string;
-  extraData: RouterOutputs["material"]["getAll"][0];
 };
 
 export function MaterialsTable() {
@@ -68,15 +61,8 @@ export function MaterialsTable() {
     if (materials) {
       setRowData(
         materials.map((material) => ({
-          id: material.id,
-          name: material.name,
+          ...material,
           status: "Format status",
-          quantity: material.quantity,
-          minQuantity: material.minQuantity,
-          cost: material.cost,
-          vendor: material.vendor?.name ?? "",
-          categories: material.categories.map((category) => category.name),
-          extraData: material,
         }))
       );
     }
@@ -115,6 +101,10 @@ export function MaterialsTable() {
       headerName: "Min. quantity",
       field: "minQuantity",
       filter: true,
+      cellStyle: {
+        display: "flex",
+        alignItems: "center",
+      },
       valueFormatter: (
         params: ValueFormatterParams<MaterialsTableRows, Prisma.Decimal>
       ) => {
@@ -123,17 +113,17 @@ export function MaterialsTable() {
         }
         return getQuantityTextAbbreviated(
           params.value,
-          params.data.extraData.quantityUnit
+          params.data.quantityUnit
         );
-      },
-      cellStyle: {
-        display: "flex",
-        alignItems: "center",
       },
     },
     {
       headerName: "Cost",
       field: "cost",
+      cellStyle: {
+        display: "flex",
+        alignItems: "center",
+      },
       valueFormatter: (
         params: ValueFormatterParams<MaterialsTableRows, Prisma.Decimal>
       ) => {
@@ -142,15 +132,11 @@ export function MaterialsTable() {
             params.value
           ).toString()} /${getQuantityUnitText({
             quantity: params.value,
-            quantityUnit: params.data.extraData.quantityUnit,
+            quantityUnit: params.data.quantityUnit,
             style: "abbreviation",
           })}`;
         }
         return Character.EM_DASH;
-      },
-      cellStyle: {
-        display: "flex",
-        alignItems: "center",
       },
     },
     {
@@ -160,6 +146,15 @@ export function MaterialsTable() {
       cellStyle: {
         display: "flex",
         alignItems: "center",
+      },
+      valueFormatter: (
+        params: ValueFormatterParams<MaterialsTableRows, Vendor>
+      ) => {
+        if (!params.value) {
+          return Character.EM_DASH;
+        }
+
+        return params.value.name;
       },
     },
   ];
