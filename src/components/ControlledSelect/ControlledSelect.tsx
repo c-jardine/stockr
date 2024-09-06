@@ -4,7 +4,7 @@ import {
   type GroupBase,
   type CreatableProps as SelectProps,
 } from "chakra-react-select";
-import { ReactNode } from "react";
+import { type ReactNode } from "react";
 import {
   useController,
   type FieldValues,

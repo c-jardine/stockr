@@ -15,7 +15,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 
-import { CustomCellRendererProps } from "ag-grid-react";
+import { type CustomCellRendererProps } from "ag-grid-react";
 import {
   type ColDef,
   type ValueFormatterParams,

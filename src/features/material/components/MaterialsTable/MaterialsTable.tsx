@@ -1,5 +1,5 @@
 import { Flex, useToast } from "@chakra-ui/react";
-import { Prisma, Vendor } from "@prisma/client";
+import { type Prisma, type Vendor } from "@prisma/client";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import PuffLoader from "react-spinners/PuffLoader";

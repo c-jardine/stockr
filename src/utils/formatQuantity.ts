@@ -1,4 +1,4 @@
-import { MaterialQuantityUnit, Prisma } from "@prisma/client";
+import { type MaterialQuantityUnit, Prisma } from "@prisma/client";
 import { Character } from "./text";
 
 interface FormatQuantityWithUnitOptions {

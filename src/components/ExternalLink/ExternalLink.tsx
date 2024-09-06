@@ -1,5 +1,5 @@
-import { Icon, IconProps, Link, LinkProps } from "@chakra-ui/react";
-import { ReactNode } from "react";
+import { Icon, type IconProps, Link, type LinkProps } from "@chakra-ui/react";
+import { type ReactNode } from "react";
 import { FaExternalLinkAlt } from "react-icons/fa";
 
 interface ExternalLinkProps {

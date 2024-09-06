@@ -21,7 +21,7 @@ import {
   Text,
   useDisclosure,
 } from "@chakra-ui/react";
-import { ReactNode } from "react";
+import { type ReactNode } from "react";
 import { FaEllipsis, FaTrash } from "react-icons/fa6";
 
 import { type CustomCellRendererProps } from "ag-grid-react";

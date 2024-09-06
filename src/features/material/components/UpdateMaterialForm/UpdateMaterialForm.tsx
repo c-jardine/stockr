@@ -31,7 +31,7 @@ import { ControlledCreatableSelect } from "~/components/ControlledCreatableSelec
 import { TextInput } from "~/components/TextInput";
 import { type UpdateMaterialFormType } from "~/types/material";
 import { type SelectInput } from "~/utils/selectInput";
-import { MaterialsTableRows } from "../MaterialsTable/MaterialsTable";
+import { type MaterialsTableRows } from "../MaterialsTable/MaterialsTable";
 import { useUpdateMaterial } from "./hooks/useUpdateMaterial";
 
 export function UpdateMaterialForm(

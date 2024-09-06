@@ -1,11 +1,12 @@
 import { useDisclosure, useToast } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
+import useMaterialCategoriesOptions from "~/hooks/material/useMaterialCategoriesOptions";
 
 import {
   updateCategoriesFormSchema,
-  UpdateCategoriesFormType,
+  type UpdateCategoriesFormType,
 } from "~/types/material";
 import { api } from "~/utils/api";
 
@@ -25,7 +26,10 @@ export default function useManageCategories() {
     name: "categories",
   });
 
-  const { data, isLoading } = api.material.getCategories.useQuery();
+  const {
+    query: { data },
+  } = useMaterialCategoriesOptions();
+
   const mutation = api.material.updateCategories.useMutation({
     onSuccess: async () => {
       toast({
@@ -42,11 +46,18 @@ export default function useManageCategories() {
 
   const { reset } = form;
 
+  const initializeForm = useCallback(
+    (data: UpdateCategoriesFormType) => {
+      reset(data);
+    },
+    [reset]
+  );
+
   useEffect(() => {
     if (data) {
-      reset({ categories: data });
+      initializeForm({ categories: data });
     }
-  }, [data, reset]);
+  }, [data]);
 
   async function onSubmit(data: UpdateCategoriesFormType) {
     return await mutation.mutateAsync(data);

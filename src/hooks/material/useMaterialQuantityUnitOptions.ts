@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 
 import { api } from "~/utils/api";
-import { SelectInput } from "~/utils/selectInput";
+import { type SelectInput } from "~/utils/selectInput";
 
 interface FormattedGroup {
   label: string;
@@ -35,7 +35,7 @@ export default function useMaterialQuantityUnitOptions() {
           }
 
           return groups;
-        }, [] as FormattedGroup[]) || []
+        }, [] as FormattedGroup[]) ?? []
       );
     }
     return [];

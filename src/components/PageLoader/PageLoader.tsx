@@ -1,5 +1,5 @@
-import { Stack, StackProps } from "@chakra-ui/react";
-import { LoaderSizeProps } from "react-spinners/helpers/props";
+import { Stack, type StackProps } from "@chakra-ui/react";
+import { type LoaderSizeProps } from "react-spinners/helpers/props";
 import PuffLoader from "react-spinners/PuffLoader";
 
 interface PageLoaderProps extends StackProps {

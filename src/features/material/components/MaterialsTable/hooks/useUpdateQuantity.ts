@@ -3,14 +3,14 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useCallback, useEffect } from "react";
 import { useForm } from "react-hook-form";
 
-import { CustomCellRendererProps } from "ag-grid-react";
+import { type CustomCellRendererProps } from "ag-grid-react";
 
 import {
   updateMaterialQuantityFormSchema,
-  UpdateMaterialQuantityFormType,
+  type UpdateMaterialQuantityFormType,
 } from "~/types/material";
 import { api } from "~/utils/api";
-import { MaterialsTableRows } from "../MaterialsTable";
+import { type MaterialsTableRows } from "../MaterialsTable";
 
 export function useUpdateQuantity(
   node: CustomCellRendererProps<MaterialsTableRows>["node"]
@@ -53,18 +53,21 @@ export function useUpdateQuantity(
   }
 
   // Initialize form callback
-  const initializeForm = useCallback((data: MaterialsTableRows) => {
-    reset({
-      materialId: data.id,
-      originalQuantity: data.quantity?.toString() ?? "0",
-    });
-  }, []);
+  const initializeForm = useCallback(
+    (data: MaterialsTableRows) => {
+      reset({
+        materialId: data.id,
+        originalQuantity: data.quantity?.toString() ?? "0",
+      });
+    },
+    [reset]
+  );
 
   useEffect(() => {
     if (node.data) {
       initializeForm(node.data);
     }
-  }, [node.data, reset]);
+  }, [node.data]);
 
   return { form, onSubmit, updateTypeOptions };
 }

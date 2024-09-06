@@ -24,7 +24,7 @@ import { PageLoader } from "~/components/PageLoader";
 import { TextInput } from "~/components/TextInput";
 import {
   updateVendorsFormSchema,
-  UpdateVendorsFormType,
+  type UpdateVendorsFormType,
 } from "~/types/material";
 import { api } from "~/utils/api";
 
@@ -37,12 +37,10 @@ export function ManageVendors() {
     },
     resolver: zodResolver(updateVendorsFormSchema),
   });
-  const { fields, append, prepend, remove, swap, move, insert } = useFieldArray(
-    {
-      control: methods.control,
-      name: "vendors",
-    }
-  );
+  const { fields, append, remove } = useFieldArray({
+    control: methods.control,
+    name: "vendors",
+  });
 
   const toast = useToast();
 

@@ -3,7 +3,7 @@ import {
   type ContainerProps,
   useColorModeValue,
 } from "@chakra-ui/react";
-import { ReactNode } from "react";
+import { type ReactNode } from "react";
 
 interface SectionProps extends ContainerProps {
   children: ReactNode;

@@ -58,7 +58,9 @@ export function ManageCategories() {
                   />
                   <IconButton
                     icon={<Icon as={FaTrash} color="red.600" boxSize={3} />}
-                    aria-label={`Edit ${name} category`}
+                    aria-label={`Edit ${watch(
+                      `categories.${index}.name`
+                    )} category`}
                     variant="outline"
                     size="xs"
                     rounded="md"

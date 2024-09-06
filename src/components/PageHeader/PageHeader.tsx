@@ -5,7 +5,7 @@ import {
   HStack,
   type StackProps,
 } from "@chakra-ui/react";
-import { ReactNode } from "react";
+import { type ReactNode } from "react";
 
 import { Section } from "../Section";
 

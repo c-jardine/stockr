@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 
 import {
   createMaterialFormSchema,
-  CreateMaterialFormType,
+  type CreateMaterialFormType,
 } from "~/types/material";
 import { api } from "~/utils/api";
 

@@ -9,13 +9,13 @@ import { type MaterialsTableRows } from "./MaterialsTable";
 export function NameCellRenderer({
   node,
 }: CustomCellRendererProps<MaterialsTableRows>) {
+  const skuColor = useColorModeValue("zinc.500", "zinc.500");
+
   if (!node.data) {
     return null;
   }
 
-  const { name, url, sku, vendor, categories } = node.data;
-
-  const skuColor = useColorModeValue("zinc.500", "zinc.500");
+  const { url, sku, vendor, categories } = node.data;
 
   return (
     <HStack

@@ -12,7 +12,7 @@ export default function useMaterialCategoriesOptions() {
       data?.map(({ id, name }) => ({
         label: name,
         value: id,
-      })) || []
+      })) ?? []
     );
   }, [data]);
 

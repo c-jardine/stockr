@@ -25,11 +25,11 @@ import { NumericFormat } from "react-number-format";
 import { ControlledCreatableSelect } from "~/components/ControlledCreatableSelect";
 import { ControlledSelect } from "~/components/ControlledSelect";
 import { TextInput } from "~/components/TextInput";
-import useMaterialCategoriesOptions from "~/hooks/useMaterialCategoriesOptions";
-import useMaterialQuantityUnitOptions from "~/hooks/useMaterialQuantityUnitOptions";
-import useMaterialVendorsOptions from "~/hooks/useMaterialVendorsOptions";
+import useMaterialCategoriesOptions from "~/hooks/material/useMaterialCategoriesOptions";
+import useMaterialQuantityUnitOptions from "~/hooks/material/useMaterialQuantityUnitOptions";
+import useMaterialVendorsOptions from "~/hooks/material/useMaterialVendorsOptions";
 import { type CreateMaterialFormType } from "~/types/material";
-import { SelectInput } from "~/utils/selectInput";
+import { type SelectInput } from "~/utils/selectInput";
 import useCreateMaterial from "./hooks/useCreateMaterial";
 
 export function CreateMaterialForm() {
@@ -130,7 +130,7 @@ export function CreateMaterialForm() {
                     name="quantityUnitName"
                     label="Unit"
                     options={quantityUnitOptions}
-                    noOptionsMessage={(props) => <Text>No units found.</Text>}
+                    noOptionsMessage={() => <Text>No units found.</Text>}
                   />
                 </Box>
               </SimpleGrid>
