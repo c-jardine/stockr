@@ -13,7 +13,7 @@ export function PreviousQuantityCellRenderer({
     return null;
   }
 
-  const { originalQuantity, extraData } = node.data;
+  const { originalQuantity, material } = node.data;
 
   const prev = new Prisma.Decimal(originalQuantity);
 
@@ -22,7 +22,7 @@ export function PreviousQuantityCellRenderer({
       {prev?.toNumber()}{" "}
       {getQuantityUnitText({
         quantity: prev,
-        quantityUnit: extraData.material.quantityUnit,
+        quantityUnit: material.quantityUnit,
         style: "abbreviation",
       })}
     </Text>

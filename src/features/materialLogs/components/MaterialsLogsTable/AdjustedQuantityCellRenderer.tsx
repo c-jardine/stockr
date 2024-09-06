@@ -14,7 +14,7 @@ export function AdjustedQuantityCellRenderer({
 
   if (!node.data) return null;
 
-  const { originalQuantity, adjustedQuantity, type, extraData } = node.data;
+  const { originalQuantity, adjustedQuantity, type, material } = node.data;
 
   const prev = new Prisma.Decimal(originalQuantity);
   const adj = new Prisma.Decimal(adjustedQuantity);
@@ -24,7 +24,7 @@ export function AdjustedQuantityCellRenderer({
     ? { icon: FaArrowDown, color: negativeColor }
     : { icon: FaArrowUp, color: positiveColor };
 
-  const adjustedBy = type === "SET" ? adj.sub(prev).abs() : adj;
+  const adjustedBy = type.type === "SET" ? adj.sub(prev).abs() : adj;
 
   return (
     <Flex alignItems="center" h="full">
@@ -37,7 +37,7 @@ export function AdjustedQuantityCellRenderer({
             {adjustedBy.toNumber()}{" "}
             {getQuantityUnitText({
               quantity: adjustedBy,
-              quantityUnit: extraData.material.quantityUnit,
+              quantityUnit: material.quantityUnit,
               style: "abbreviation",
             })}
           </Text>

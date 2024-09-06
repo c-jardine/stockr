@@ -1,5 +1,4 @@
 import { Flex } from "@chakra-ui/react";
-import { type MaterialQuantityUpdateAction } from "@prisma/client";
 import { useSession } from "next-auth/react";
 import React from "react";
 import PuffLoader from "react-spinners/PuffLoader";
@@ -8,26 +7,32 @@ import "ag-grid-community/styles/ag-grid.css"; // Mandatory CSS required by the 
 import "ag-grid-community/styles/ag-theme-quartz.css"; // Optional Theme applied to the Data Grid
 import { type ColDef } from "node_modules/ag-grid-community/dist/types/core/main";
 
+import { Prisma } from "@prisma/client";
 import { Table } from "~/features/table/components/Table";
 import { api, type RouterOutputs } from "~/utils/api";
 import { AdjustedQuantityCellRenderer } from "./AdjustedQuantityCellRenderer";
 import { CreatedAtRenderer } from "./CreatedAtRenderer";
 import { CreatedByRenderer } from "./CreatedByRenderer";
 import { NewQuantityCellRenderer } from "./NewQuantityCellRenderer";
-import { UpdateTypeRenderer } from "./UpdateTypeRenderer";
 import { PreviousQuantityCellRenderer } from "./PreviousQuantityCellRenderer";
+import { UpdateTypeRenderer } from "./UpdateTypeRenderer";
 
 // Table row type definition
-export type MaterialLogsTableRows = {
-  name: string;
-  type: MaterialQuantityUpdateAction;
-  newQuantity: number;
-  originalQuantity: number;
-  adjustedQuantity: number;
-  createdBy: string;
-  createdAt: Date;
-  extraData: RouterOutputs["material"]["getQuantityUpdates"][0];
-};
+export type MaterialLogsTableRows =
+  RouterOutputs["material"]["getQuantityUpdates"][0] & {
+    name: string;
+    newQuantity: Prisma.Decimal;
+  };
+// {
+//   name: string;
+//   type: MaterialQuantityUpdateAction;
+//   newQuantity: number;
+//   originalQuantity: number;
+//   adjustedQuantity: number;
+//   createdBy: string;
+//   createdAt: Date;
+//   extraData: RouterOutputs["material"]["getQuantityUpdates"][0];
+// };
 
 export function MaterialLogsTable() {
   const { data: session } = useSession();
@@ -48,14 +53,9 @@ export function MaterialLogsTable() {
     if (updates) {
       setRowData(
         updates.map((update) => ({
+          ...update,
           name: update.material.name,
-          type: update.type.action,
-          newQuantity: update.adjustedQuantity as unknown as number,
-          originalQuantity: update.originalQuantity as unknown as number,
-          adjustedQuantity: update.adjustedQuantity as unknown as number,
-          createdBy: update.createdBy.name ?? "Unknown",
-          createdAt: update.createdAt,
-          extraData: update, // Pass all data so cell renderers can use it
+          newQuantity: update.adjustedQuantity,
         }))
       );
     }

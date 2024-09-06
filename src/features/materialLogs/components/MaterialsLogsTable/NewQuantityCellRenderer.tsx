@@ -13,13 +13,13 @@ export function NewQuantityCellRenderer({
     return null;
   }
 
-  const { originalQuantity, adjustedQuantity, type, extraData } = node.data;
+  const { originalQuantity, adjustedQuantity, type, material } = node.data;
 
   const prev = new Prisma.Decimal(originalQuantity);
   const adj = new Prisma.Decimal(adjustedQuantity);
 
   function getAdjustedBy() {
-    switch (type) {
+    switch (type.type) {
       case "DECREASE": {
         return prev.sub(adj);
       }
@@ -42,7 +42,7 @@ export function NewQuantityCellRenderer({
       {adjustedBy?.toNumber()}{" "}
       {getQuantityUnitText({
         quantity: adjustedBy,
-        quantityUnit: extraData.material.quantityUnit,
+        quantityUnit: material.quantityUnit,
         style: "abbreviation",
       })}
     </Text>

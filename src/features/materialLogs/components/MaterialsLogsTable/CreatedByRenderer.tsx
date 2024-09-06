@@ -12,9 +12,7 @@ export function CreatedByRenderer({
   }
 
   const {
-    extraData: {
-      createdBy: { name, image },
-    },
+    createdBy: { name, image },
   } = node.data;
 
   return (
